@@ -22,29 +22,30 @@ func NewService(db *sql.DB) *Service {
 }
 
 // Handler для получения всех пользователей
-func (s *Service) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+func (service *Service) GetUsersHandler(writer http.ResponseWriter, reader *http.Request) {
+	if reader.Method != http.MethodGet {
+		http.Error(writer, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	rows, err := s.db.Query("SELECT id, name, email FROM users")
+	rows, err := service.db.Query("SELECT id, name FROM users")
 	if err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		http.Error(writer, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
 
 	var users []User
+
 	for rows.Next() {
 		var user User
-		if err := rows.Scan(&user.ID, &user.Name, &user.Email); err != nil {
-			http.Error(w, "Internal server error", http.StatusInternalServerError)
+		if err := rows.Scan(&user.ID, &user.Name); err != nil {
+			http.Error(writer, "Internal server error", http.StatusInternalServerError)
 			return
 		}
 		users = append(users, user)
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)
+	writer.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(writer).Encode(users)
 }

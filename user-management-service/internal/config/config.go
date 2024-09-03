@@ -3,6 +3,7 @@ package config
 import "os"
 
 type Config struct {
+	Port          string
 	ServerAddress string
 	DBConfig      DBConfig
 }
@@ -26,7 +27,8 @@ func getEnv(key, defaultValue string) string {
 var AppConfig Config
 
 func LoadConfig() Config {
-	AppConfig.ServerAddress = getEnv("SERVER_ADDRESS", "127.0.0.1:5432")
+	AppConfig.Port = getEnv("PORT", "8080")
+	AppConfig.ServerAddress = getEnv("SERVER_ADDRESS", "localhost")
 	AppConfig.DBConfig.User = getEnv("POSTGRES_USER", "postgres")
 	AppConfig.DBConfig.Password = getEnv("POSTGRES_PASSWORD", "barghest")
 	AppConfig.DBConfig.Name = getEnv("POSTGRES_DB", "users")

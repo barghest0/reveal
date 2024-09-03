@@ -23,7 +23,7 @@ func main() {
 
 	http.HandleFunc("/users", userService.GetUsersHandler)
 
-	log.Printf("Server starting on port %s", config.DBConfig.Port)
-	log.Fatal(http.ListenAndServe(":"+config.DBConfig.Port, nil))
+	log.Printf("Server starting on port %s", config.ServerAddress+":"+config.Port)
+	log.Fatal(http.ListenAndServe(":"+config.Port, nil))
 
 }
