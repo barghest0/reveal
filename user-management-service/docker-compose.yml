@@ -1,25 +1,25 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-
-  db:
-    image: postgres:13
+  postgres:
+    image: postgres:latest
+    container_name: postgres
     environment:
-      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: barghest
       POSTGRES_DB: users
-      DB_PORT: 5432
-      DB_HOST: localhost
+    ports:
+      - "5432:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data
-    restart: always
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: app
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:barghest@postgres:5432/users?sslmode=disable
+    command: ["./main"]
 
 volumes:
-  db-data:
-
+  pgdata:
