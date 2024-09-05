@@ -10,8 +10,8 @@ import (
 
 func ConnectDB(config *config.DBConfig) (*sql.DB, error) {
 
-	connection := fmt.Sprintf("user=%s password=%s dbname=%s port=5432 host=%s sslmode=disable", config.User, config.Password, config.Name, config.Host)
-	// connection := fmt.Sprintf("postgres://%s:%s@%s:5432/%s?sslmode=disable", config.User, config.Password, config.Host, config.Name)
+	// connection := fmt.Sprintf("user=%s password=%s dbname=%s port=5432 host=%s sslmode=disable", config.User, config.Password, config.Name, config.Host)
+	connection := fmt.Sprintf("postgres://postgres:barghest@localhost:5432/users?sslmode=disable", config.User, config.Password, config.Host, config.Name)
 
 	db, error := sql.Open("postgres", connection)
 
