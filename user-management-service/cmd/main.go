@@ -17,13 +17,11 @@ func main() {
 		log.Fatalf("failed to connect to the databalse: %v", error)
 	}
 
-	defer database.Close()
-
 	userService := user.NewService(database)
 
 	http.HandleFunc("/users", userService.GetUsersHandler)
 
-	log.Printf("Server starting on port %s", config.ServerAddress+":"+config.Port)
-	log.Fatal(http.ListenAndServe(":"+config.Port, nil))
+	log.Printf("Server starting on port %s", config.ServerHost+":"+config.Port)
+	http.ListenAndServe(":"+config.Port, nil)
 
 }

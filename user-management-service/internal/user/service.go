@@ -30,7 +30,7 @@ func (service *Service) GetUsersHandler(writer http.ResponseWriter, reader *http
 
 	rows, err := service.db.Query("SELECT id, name FROM users")
 	if err != nil {
-		http.Error(writer, "Internal server error", http.StatusInternalServerError)
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
@@ -40,7 +40,7 @@ func (service *Service) GetUsersHandler(writer http.ResponseWriter, reader *http
 	for rows.Next() {
 		var user User
 		if err := rows.Scan(&user.ID, &user.Name); err != nil {
-			http.Error(writer, "Internal server error", http.StatusInternalServerError)
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		users = append(users, user)
