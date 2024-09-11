@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"api/services"
+	"github.com/gorilla/mux"
 )
 
 // Handler для получения пользователя по ID
@@ -20,16 +21,15 @@ func CreateGetUserHandler(userService services.UserService) *GetUserHandler {
 
 // Обработчик запроса
 func (handler *GetUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	idStr := r.URL.Query().Get("id")
-
-	id, err := strconv.Atoi(idStr)
+	vars := mux.Vars(r)
+	userID, err := strconv.Atoi(vars["id"])
 
 	if err != nil {
 		http.Error(w, "Неверный формат ID", http.StatusBadRequest)
 		return
 	}
 
-	user, err := handler.userService.GetUserByID(id)
+	user, err := handler.userService.GetUserByID(userID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return

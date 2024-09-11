@@ -8,8 +8,8 @@ import (
 type UserService interface {
 	GetAllUsers() ([]models.User, error)
 	GetUserByID(id int) (models.User, error)
-	CreateUser(user *models.User) error
-	UpdateUser(user *models.User) error
+	CreateUser(user models.User) error
+	UpdateUser(user models.User) error
 	DeleteUser(id int) error
 }
 
@@ -30,12 +30,12 @@ func (service *userService) GetUserByID(id int) (models.User, error) {
 }
 
 // Создание нового пользователя
-func (service *userService) CreateUser(user *models.User) error {
+func (service *userService) CreateUser(user models.User) error {
 	return models.CreateUser(service.db, user)
 }
 
 // Обновление данных пользователя
-func (service *userService) UpdateUser(user *models.User) error {
+func (service *userService) UpdateUser(user models.User) error {
 	return models.UpdateUser(service.db, user)
 }
 

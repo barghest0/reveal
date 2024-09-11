@@ -42,12 +42,12 @@ func GetUser(db *sql.DB, id int) (User, error) {
 }
 
 // Создание нового пользователя
-func CreateUser(db *sql.DB, user *User) error {
+func CreateUser(db *sql.DB, user User) error {
 	return db.QueryRow("INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id", user.Name, user.Email).Scan(&user.ID)
 }
 
 // Обновление данных пользователя
-func UpdateUser(db *sql.DB, user *User) error {
+func UpdateUser(db *sql.DB, user User) error {
 	_, err := db.Exec("UPDATE users SET name = $1, email = $2 WHERE id = $3", user.Name, user.Email, user.ID)
 	return err
 }
