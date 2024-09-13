@@ -1,4 +1,4 @@
-package com.example.user_service.ui.theme
+package com.user_service.shared.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

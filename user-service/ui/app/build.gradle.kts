@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.user_service"
+    namespace = "com.user_service"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.user_service"
+        applicationId = "com.user_service"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
