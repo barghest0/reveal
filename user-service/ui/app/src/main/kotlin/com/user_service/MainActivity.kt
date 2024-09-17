@@ -6,8 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.navigation.compose.rememberNavController
 import com.user_service.features.registration.ui.RegistrationScreen
 import com.user_service.shared.ui.theme.UserserviceTheme
+import com.user_service.app.navigation.ui.AppNavigation
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,12 +18,12 @@ class MainActivity : ComponentActivity() {
     setContent {
       UserserviceTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-          RegistrationScreen()
+          // RegistrationScreen()
           // Create the NavController
-          // val navController = rememberNavController()
-          //
-          // // Set up the NavHost
-          // AppNavigation(navController = navController)
+          val navController = rememberNavController()
+
+          // Set up the NavHost
+          AppNavigation(navController = navController)
         }
       }
     }
