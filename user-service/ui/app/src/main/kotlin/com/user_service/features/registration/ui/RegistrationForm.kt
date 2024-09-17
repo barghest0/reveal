@@ -12,22 +12,23 @@ fun RegistrationForm(
         username: String,
         email: String,
         password: String,
+        updateField: (String, String)->Unit,
         onRegisterClicked: (String, String, String) -> Unit
 ) {
   Column {
     OutlinedTextField(
             value = username,
-            onValueChange = { /* Handle username change */},
+            onValueChange = {username -> updateField("username", username) },
             label = { /* Label for username field */}
     )
     OutlinedTextField(
             value = email,
-            onValueChange = { /* Handle email change */},
+            onValueChange = { email -> updateField("email", email) },
             label = { /* Label for email field */}
     )
     OutlinedTextField(
             value = password,
-            onValueChange = { /* Handle password change */},
+            onValueChange = { password -> updateField("email", password)},
             label = { /* Label for password field */},
     )
     Button(onClick = { onRegisterClicked(username, email, password) }) { Text("Register") }
@@ -37,5 +38,5 @@ fun RegistrationForm(
 @Preview
 @Composable
 fun PreviewRegistrationForm() {
-  RegistrationForm(username = "", email = "", password = "", onRegisterClicked = { _, _, _ -> })
+  RegistrationForm(username = "", email = "", password = "", updateField = {_,_ ->}, onRegisterClicked = { _, _, _ -> })
 }
