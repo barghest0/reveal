@@ -22,12 +22,12 @@ fun RegistrationScreen(
 
   Column {
     RegistrationForm(
-            username = state.name,
+            name = state.name,
             email = state.email,
             password = state.password,
-            updateField = {field,value-> viewModel.updateField(field,value)},
-            onRegisterClicked = { username, email, password ->
-              viewModel.register(username, email, password)
+            updateField = {field, value -> viewModel.updateField(field,value)},
+            onRegisterClicked = { name, email, password ->
+              viewModel.register(name, email, password)
             }
     )
 

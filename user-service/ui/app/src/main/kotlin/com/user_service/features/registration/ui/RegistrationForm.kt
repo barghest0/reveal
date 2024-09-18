@@ -9,7 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun RegistrationForm(
-        username: String,
+        name: String,
         email: String,
         password: String,
         updateField: (String, String)->Unit,
@@ -17,8 +17,8 @@ fun RegistrationForm(
 ) {
   Column {
     OutlinedTextField(
-            value = username,
-            onValueChange = {username -> updateField("username", username) },
+            value = name,
+            onValueChange = {name -> updateField("name", name) },
             label = { /* Label for username field */}
     )
     OutlinedTextField(
@@ -28,15 +28,15 @@ fun RegistrationForm(
     )
     OutlinedTextField(
             value = password,
-            onValueChange = { password -> updateField("email", password)},
+            onValueChange = { password -> updateField("password", password)},
             label = { /* Label for password field */},
     )
-    Button(onClick = { onRegisterClicked(username, email, password) }) { Text("Register") }
+    Button(onClick = { onRegisterClicked(name, email, password) }) { Text("Register") }
   }
 }
 
 @Preview
 @Composable
 fun PreviewRegistrationForm() {
-  RegistrationForm(username = "", email = "", password = "", updateField = {_,_ ->}, onRegisterClicked = { _, _, _ -> })
+  RegistrationForm(name = "", email = "", password = "", updateField = {_,_ ->}, onRegisterClicked = { _, _, _ -> })
 }

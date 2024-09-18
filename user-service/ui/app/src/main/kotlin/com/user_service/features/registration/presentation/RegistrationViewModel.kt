@@ -21,8 +21,8 @@ class RegistrationViewModel(private val registrationUseCase: RegistrationUseCase
     fun updateField(field: String, value: String) {
         uiState.value = when (field) {
           "name" -> uiState.value.copy(name = value)
-          "password" -> uiState.value.copy(password = value)
           "email" -> uiState.value.copy(email = value)
+          "password" -> uiState.value.copy(password = value)
           else -> uiState.value
         }
     }
