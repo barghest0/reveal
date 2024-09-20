@@ -39,6 +39,10 @@ dependencies {
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.activity.compose)
   implementation(platform(libs.androidx.compose.bom))
+  implementation(libs.ktor.client.core) // Основная библиотека Ktor Client
+  implementation(libs.ktor.client.cio) // Движок CIO для HTTP запросов
+  implementation(libs.ktor.client.content.negotiation) // Для работы с ContentNegotiation
+  implementation(libs.ktor.serialization.kotlinx.json) // Для сериализации JSON с помощью Kotlinx
   implementation(libs.androidx.ui)
   implementation(libs.androidx.ui.graphics)
   implementation(libs.androidx.navigation.compose)
@@ -52,7 +56,3 @@ dependencies {
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
 }
-
-
-
-
