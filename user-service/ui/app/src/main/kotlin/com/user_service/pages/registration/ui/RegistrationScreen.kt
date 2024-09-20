@@ -1,4 +1,4 @@
-package com.user_service.features.registration.ui
+package com.user_service.pages.registration.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.user_service.entities.user.data.model.repository.UserRepository
 import com.user_service.features.registration.domain.RegistrationUseCase
 import com.user_service.features.registration.presentation.RegistrationViewModel
+import com.user_service.features.registration.ui.RegistrationForm
 
 @Composable
 fun RegistrationScreen(
@@ -36,8 +37,3 @@ fun RegistrationScreen(
   }
 }
 
-@Preview
-@Composable
-fun PreviewRegistrationScreen() {
-  Surface(color = MaterialTheme.colorScheme.background) { RegistrationScreen() }
-}

@@ -1,11 +1,15 @@
 package com.user_service.features.registration.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 
 @Composable
 fun RegistrationForm(
@@ -15,28 +19,24 @@ fun RegistrationForm(
         updateField: (String, String)->Unit,
         onRegisterClicked: (String, String, String) -> Unit
 ) {
-  Column {
+  Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
     OutlinedTextField(
             value = name,
             onValueChange = {name -> updateField("name", name) },
-            label = { /* Label for username field */}
+            label = { Text("Name") }
     )
     OutlinedTextField(
             value = email,
             onValueChange = { email -> updateField("email", email) },
-            label = { /* Label for email field */}
+            label = { Text("Email")}
     )
     OutlinedTextField(
             value = password,
             onValueChange = { password -> updateField("password", password)},
-            label = { /* Label for password field */},
+            label = { Text("Password")},
     )
     Button(onClick = { onRegisterClicked(name, email, password) }) { Text("Register") }
   }
 }
 
-@Preview
-@Composable
-fun PreviewRegistrationForm() {
-  RegistrationForm(name = "", email = "", password = "", updateField = {_,_ ->}, onRegisterClicked = { _, _, _ -> })
-}
+
