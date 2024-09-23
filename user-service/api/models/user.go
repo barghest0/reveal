@@ -7,9 +7,10 @@ import (
 
 // Структура User представляет модель пользователя
 type User struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 // Получение всех пользователей
@@ -43,7 +44,7 @@ func GetUser(db *sql.DB, id int) (User, error) {
 
 // Создание нового пользователя
 func CreateUser(db *sql.DB, user User) error {
-	return db.QueryRow("INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id", user.Name, user.Email).Scan(&user.ID)
+	return db.QueryRow("INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id", user.Name, user.Email, user.Password).Scan(&user.ID)
 }
 
 // Обновление данных пользователя
