@@ -15,12 +15,11 @@ class RegistrationViewModel(private val registrationUseCase: RegistrationUseCase
       if (isActive) {
 
         val isSuccess = registrationUseCase.execute(name, email, password)
-        uiState.value = uiState.value.copy(error = isSuccess)
-        // if (isSuccess) {
-        //   uiState.value = uiState.value.copy(error = null)
-        // } else {
-        //   uiState.value = uiState.value.copy(error = "Registration failed")
-        // }
+        if (isSuccess) {
+          uiState.value = uiState.value.copy(error = null)
+        } else {
+          uiState.value = uiState.value.copy(error = "Registration failed")
+        }
       }
     }
   }

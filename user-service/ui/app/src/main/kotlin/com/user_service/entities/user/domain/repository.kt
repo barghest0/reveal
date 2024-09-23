@@ -1,31 +1,33 @@
-package com.user_service.entities.user.data.model.repository
+package com.user_service.entities.user.model.repository
 
-import com.user_service.entities.user.data.model.User
+import com.user_service.entities.user.model.User
 import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
+import io.ktor.client.call.body
+import io.ktor.client.request.post
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.util.InternalAPI
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class UserRepository(private val client: HttpClient) {
-  suspend fun register(user: User): String {
-    try {
-      client.use {
-        val response: HttpResponse =
-            client.get("http://10.0.2.2:8080/users/2")
+  @OptIn(InternalAPI::class)
+  suspend fun register(user: User): Boolean {
+    return try {
+      val response =
+          client.post("http://10.0.2.2:8080/register") {
+            contentType(ContentType.Application.Json)
+            body = Json.encodeToString(user)
+          }
 
-        val text = response.bodyAsText()
+      val text = response.body<String>()
 
-        println(text)
-
-        return text
-      }
+      println(text)
+      true
     } catch (exception: Exception) {
+
       println(exception)
-
-      return "${exception}"
-    } finally {
-
-      client.close()
+      false
     }
   }
 }

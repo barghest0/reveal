@@ -10,13 +10,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.user_service.entities.user.data.model.repository.UserRepository
+import com.user_service.entities.user.model.repository.UserRepository
 import com.user_service.features.registration.domain.RegistrationUseCase
 import com.user_service.features.registration.presentation.RegistrationViewModel
 import com.user_service.features.registration.ui.RegistrationForm
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
 
 @Composable
 fun RegistrationScreen(
@@ -24,7 +25,7 @@ fun RegistrationScreen(
       RegistrationViewModel(
           RegistrationUseCase(
               UserRepository(
-                  HttpClient(CIO) { install(HttpTimeout) { requestTimeoutMillis = 3000 } })))
+                  HttpClient(CIO) { install(ContentNegotiation) { json() } })))
     }
 ) {
   val state by viewModel.uiState
