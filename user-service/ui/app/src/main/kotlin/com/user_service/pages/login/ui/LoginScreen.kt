@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
 fun LoginScreen() {
-  Box(modifier = Modifier.fillMaxSize()) { Column { Text("Login") } }
+  Box(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.align(Alignment.Center)) { Text("Login") }
+  }
 }
