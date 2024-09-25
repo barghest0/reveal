@@ -15,7 +15,7 @@ class UserRepository(private val client: HttpClient) {
   suspend fun register(user: User): Boolean {
     return try {
       val response =
-          client.post("http://10.0.2.2:8080/register") {
+          client.post("http://192.168.3.2:8080/register") {
             contentType(ContentType.Application.Json)
             body = Json.encodeToString(user)
           }
