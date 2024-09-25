@@ -13,12 +13,11 @@ class RegistrationViewModel(private val registrationUseCase: RegistrationUseCase
   fun register(name: String, email: String, password: String) {
     viewModelScope.launch {
       if (isActive) {
-
         val isSuccess = registrationUseCase.execute(name, email, password)
         if (isSuccess) {
-          uiState.value = uiState.value.copy(error = null)
+          uiState.value = uiState.value.copy(error = null, success = true)
         } else {
-          uiState.value = uiState.value.copy(error = "Registration failed")
+          uiState.value = uiState.value.copy(error = "Registration failed", success = false)
         }
       }
     }
@@ -39,5 +38,6 @@ data class RegistrationUiState(
     val name: String = "",
     val email: String = "",
     val password: String = "",
-    val error: String? = null
+    val error: String? = null,
+    val success: Boolean = false
 )
