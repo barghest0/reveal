@@ -1,6 +1,7 @@
 package services
 
 import (
+	"api/auth"
 	"api/models"
 	"database/sql"
 )
@@ -11,6 +12,7 @@ type UserService interface {
 	CreateUser(user models.User) error
 	UpdateUser(user models.User) error
 	DeleteUser(id int) error
+	Login(name string, password string) (models.User, error)
 }
 
 type userService struct {
@@ -26,7 +28,7 @@ func (service *userService) GetAllUsers() ([]models.User, error) {
 }
 
 func (service *userService) GetUserByID(id int) (models.User, error) {
-	return models.GetUser(service.db, id)
+	return models.GetUserByID(service.db, id)
 }
 
 // Создание нового пользователя
@@ -42,4 +44,17 @@ func (service *userService) UpdateUser(user models.User) error {
 // Удаление пользователя
 func (service *userService) DeleteUser(id int) error {
 	return models.DeleteUser(service.db, id)
+}
+
+func (service *userService) Login(name string, password string) (models.User, error) {
+	user, err := models.GetUserByUsername(service.db, name)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	if auth.CheckPasswordHash(password, user.Password) {
+		return models.User{}, sql.ErrNoRows
+	}
+
+	return user, nil
 }

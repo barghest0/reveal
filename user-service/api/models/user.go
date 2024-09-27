@@ -33,9 +33,18 @@ func GetUsers(db *sql.DB) ([]User, error) {
 }
 
 // Получение пользователя по ID
-func GetUser(db *sql.DB, id int) (User, error) {
+func GetUserByID(db *sql.DB, id int) (User, error) {
 	var user User
 	err := db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", id).Scan(&user.ID, &user.Name, &user.Email)
+	if err == sql.ErrNoRows {
+		return user, errors.New("пользователь не найден")
+	}
+	return user, err
+}
+
+func GetUserByUsername(db *sql.DB, name string) (User, error) {
+	var user User
+	err := db.QueryRow("SELECT id, name, email FROM users WHERE name = $1", name).Scan(&user.ID, &user.Name, &user.Email)
 	if err == sql.ErrNoRows {
 		return user, errors.New("пользователь не найден")
 	}
