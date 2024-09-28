@@ -1,8 +1,10 @@
 package handlers
 
 import (
+	"api/auth"
 	"api/services"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/golang-jwt/jwt"
@@ -18,6 +20,7 @@ func CreateProfileUserHandler(userService services.UserService) *ProfileUserHand
 
 func (handler *ProfileUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("token")
+	log.Println(r.Cookies(), "profile handler", err)
 	if err != nil {
 		if err == http.ErrNoCookie {
 			w.WriteHeader(http.StatusUnauthorized)
@@ -31,7 +34,7 @@ func (handler *ProfileUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
+		return auth.JwtKey, nil
 	})
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
