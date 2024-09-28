@@ -26,15 +26,23 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import com.user_service.shared.session.PreferencesManager
+
+var client = HttpClient(CIO) { install(ContentNegotiation) { json() } }
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController,
-    viewModel: LoginViewModel = remember {
-      LoginViewModel(
-          LoginUseCase(UserRepository(HttpClient(CIO) { install(ContentNegotiation) { json() } })))
-    }
+    navController: NavHostController
 ) {
+
+  val context = LocalContext.current
+    val viewModel: LoginViewModel = remember {
+        LoginViewModel(
+            LoginUseCase(UserRepository(client)),
+            PreferencesManager(context) // передаем контекст здесь
+        )
+    }
 
   val state by viewModel.uiState
 

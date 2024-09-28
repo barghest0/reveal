@@ -17,10 +17,10 @@ class UserRepository(private val client: HttpClient) {
   suspend fun register(user: User): Boolean {
     return try {
       val response =
-          client.post("http://192.168.3.2:8080/register") {
-            contentType(ContentType.Application.Json)
-            body = Json.encodeToString(user)
-          }
+              client.post("http://192.168.3.2:8080/register") {
+                contentType(ContentType.Application.Json)
+                body = Json.encodeToString(user)
+              }
 
       val text = response.body<String>()
 
@@ -34,37 +34,21 @@ class UserRepository(private val client: HttpClient) {
   }
 
   @OptIn(InternalAPI::class)
-  suspend fun login(name: String, password: String): Boolean {
+  suspend fun login(name: String, password: String): String? {
     return try {
 
       val response =
-          client.post("http://192.168.3.2:8080/login") {
-            contentType(ContentType.Application.Json)
-            body = Json.encodeToString(LoginRequest(name, password))
-          }
+              client.post("http://192.168.3.2:8080/login") {
+                contentType(ContentType.Application.Json)
+                body = Json.encodeToString(Credentials(name, password))
+              }
 
-      val text = response.body<String>()
-
-      println(text)
-      true
+      response.headers["Authorization"]?.removePrefix("Bearer ")
     } catch (exception: Exception) {
-
       println(exception)
-      false
-    }
-  }
-
-  @OptIn(InternalAPI::class)
-  suspend fun getProfile(): User? {
-    return try {
-      val response = client.get("http://192.168.3.2:8080/profile") {}
-      println("response $response")
-      response.body<User>()
-    } catch (exception: Exception) {
-      println("exception $exception")
-      null
+      return null
     }
   }
 }
 
-@Serializable data class LoginRequest(val name: String, val password: String)
+@Serializable data class Credentials(val name: String, val password: String)
