@@ -47,7 +47,7 @@ fun RegistrationScreen(
               email = state.email,
               password = state.password,
               updateField = { field, value -> viewModel.updateField(field, value) },
-              onRegisterClicked = { name, email, password ->
+              onClickRegister = { name, email, password ->
                 viewModel.register(name, email, password)
               })
 
