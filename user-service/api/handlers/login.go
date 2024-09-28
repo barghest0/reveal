@@ -58,19 +58,7 @@ func (handler *LoginUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	var cookie = http.Cookie{
-		Name:     "token",
-		Value:    tokenString,
-		Expires:  expirationTime,
-		SameSite: http.SameSiteNoneMode,
-		Secure:   false,
-		Path:     "/",
-		HttpOnly: true,
-	}
-
-	http.SetCookie(w, &cookie)
-
-	log.Println(r.Cookies(), "login handler")
+	w.Header().Set("Authorization", "Bearer "+tokenString)
 
 	w.WriteHeader(http.StatusOK)
 }
