@@ -1,5 +1,6 @@
 package com.user_service.app.navigation.ui
 
+import ProfileScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -11,6 +12,7 @@ import com.user_service.pages.registration.ui.RegistrationScreen
 fun AppNavigation(navController: NavHostController) {
   NavHost(navController = navController, startDestination = "registration") {
     composable("registration") { RegistrationScreen(navController) }
-    composable("login") { LoginScreen() }
+    composable("login") { LoginScreen(navController) }
+    composable("profile") { ProfileScreen(navController) }
   }
 }

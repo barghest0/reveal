@@ -1,4 +1,4 @@
-package com.user_service.features.registration.ui
+package com.user_service.features.login.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
@@ -7,12 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun RegistrationForm(
+fun LoginForm(
     name: String,
-    email: String,
     password: String,
     updateField: (String, String) -> Unit,
-    onClickRegister: (String, String, String) -> Unit
+    onClickLogin: (String, String) -> Unit
 ) {
   Column() {
     OutlinedTextField(
@@ -20,14 +19,10 @@ fun RegistrationForm(
         onValueChange = { name -> updateField("name", name) },
         label = { Text("Name") })
     OutlinedTextField(
-        value = email,
-        onValueChange = { email -> updateField("email", email) },
-        label = { Text("Email") })
-    OutlinedTextField(
         value = password,
         onValueChange = { password -> updateField("password", password) },
         label = { Text("Password") },
     )
-    Button(onClick = { onClickRegister(name, email, password) }) { Text("Register") }
+    Button(onClick = { onClickLogin(name, password) }) { Text("Login") }
   }
 }
