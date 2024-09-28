@@ -1,14 +1,15 @@
 package handlers
 
 import (
+	"api/auth"
 	"api/services"
 	"encoding/json"
-	"github.com/golang-jwt/jwt"
+	"log"
 	"net/http"
 	"time"
-)
 
-var jwtKey = []byte("key")
+	"github.com/golang-jwt/jwt"
+)
 
 type Credentials struct {
 	Name     string `json:"name"`
@@ -42,7 +43,7 @@ func (handler *LoginUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	expirationTime := time.Now().Add(5 * time.Minute)
+	expirationTime := time.Now().Add(60 * time.Minute)
 	claims := &Claims{
 		Name: user.Name,
 		StandardClaims: jwt.StandardClaims{
@@ -51,17 +52,13 @@ func (handler *LoginUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString(auth.JwtKey)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expirationTime,
-	})
+	w.Header().Set("Authorization", "Bearer "+tokenString)
 
 	w.WriteHeader(http.StatusOK)
 }

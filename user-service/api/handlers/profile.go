@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"api/auth"
 	"api/services"
 	"encoding/json"
 	"net/http"
@@ -17,21 +18,12 @@ func CreateProfileUserHandler(userService services.UserService) *ProfileUserHand
 }
 
 func (handler *ProfileUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	tokenString := r.Header.Get("Authorization")
 
-	tokenStr := cookie.Value
-
+	tokenStr := tokenString[len("Bearer "):]
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
+		return auth.JwtKey, nil
 	})
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
