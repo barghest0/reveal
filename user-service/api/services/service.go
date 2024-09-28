@@ -9,6 +9,7 @@ import (
 type UserService interface {
 	GetAllUsers() ([]models.User, error)
 	GetUserByID(id int) (models.User, error)
+	GetUserByUsername(names string) (models.User, error)
 	CreateUser(user models.User) error
 	UpdateUser(user models.User) error
 	DeleteUser(id int) error
@@ -44,6 +45,10 @@ func (service *userService) UpdateUser(user models.User) error {
 // Удаление пользователя
 func (service *userService) DeleteUser(id int) error {
 	return models.DeleteUser(service.db, id)
+}
+
+func (service *userService) GetUserByUsername(name string) (models.User, error) {
+	return models.GetUserByUsername(service.db, name)
 }
 
 func (service *userService) Login(name string, password string) (models.User, error) {

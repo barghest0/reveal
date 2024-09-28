@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-var jwtKey = []byte("my_secret_key")
+var jwtKey = []byte("key")
 
 type Credentials struct {
 	Name     string `json:"name"`
