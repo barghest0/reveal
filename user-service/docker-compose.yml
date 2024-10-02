@@ -10,7 +10,7 @@ services:
       POSTGRES_DB: users
     ports: [5432:5432]
     volumes: [pgdata:/var/lib/postgresql/data]
-    networks: [user]
+    networks: [user-service]
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
@@ -19,9 +19,10 @@ services:
       PGADMIN_DEFAULT_EMAIL: barghest391@gmail.com
       PGADMIN_DEFAULT_PASSWORD: barghest
     ports: [5050:80]
-    networks: [user]
-  app:
-    build: .
+    networks: [user-service]
+  api:
+    build:
+      context: ./api
     container_name: app
     depends_on: [db]
     command: [./main]
@@ -34,9 +35,15 @@ services:
       POSTGRES_PASSWORD: barghest
       POSTGRES_DB: users
     ports: [8080:8080]
-    networks: [user]
+    networks: [user-service]
+  # ui:
+  #   build: 
+  #     context: ./ui
+  #   container_name: ui
+  #   ports: [3000:3000]
+  #   networks: [user-service]
 networks:
-  user:
+  user-service:
     driver: bridge
 volumes:
   pgdata:
