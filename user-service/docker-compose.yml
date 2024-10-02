@@ -1,31 +1,11 @@
 ---
 version: '3.8'
 services:
-  db:
-    image: postgres:16
-    container_name: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: barghest
-      POSTGRES_DB: users
-    ports: [5432:5432]
-    volumes: [pgdata:/var/lib/postgresql/data]
-    networks: [user-service]
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: barghest391@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: barghest
-    ports: [5050:80]
-    networks: [user-service]
-  api:
+  users-api:
     build:
       context: ./api
-    container_name: app
-    depends_on: [db]
-    command: [./main]
+      dockerfile: ./api/Dockerfile
+    container_name: users-api
     environment:
       PORT: 8080
       SERVER_HOST: localhost
@@ -35,15 +15,4 @@ services:
       POSTGRES_PASSWORD: barghest
       POSTGRES_DB: users
     ports: [8080:8080]
-    networks: [user-service]
-  # ui:
-  #   build: 
-  #     context: ./ui
-  #   container_name: ui
-  #   ports: [3000:3000]
-  #   networks: [user-service]
-networks:
-  user-service:
-    driver: bridge
-volumes:
-  pgdata:
+    networks: [kong-network]
