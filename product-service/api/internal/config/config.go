@@ -37,8 +37,8 @@ func LoadDBConfig() DBConfig {
 
 	DBConfig.User = getEnv("POSTGRES_USER", "postgres")
 	DBConfig.Password = getEnv("POSTGRES_PASSWORD", "barghest")
-	DBConfig.Name = getEnv("POSTGRES_DB", "users")
-	DBConfig.Host = getEnv("DB_HOST", "localhost")
+	DBConfig.Name = getEnv("POSTGRES_DB", "products")
+	DBConfig.Host = getEnv("DB_HOST", "postgres")
 	DBConfig.Port = getEnv("DB_PORT", "5432")
 
 	return DBConfig

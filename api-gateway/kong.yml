@@ -1,0 +1,13 @@
+---
+_format_version: '2.1'
+services:
+  - name: user-service
+    url: http://user-service:8001
+    routes:
+      - name: users-route
+        paths: [/user]
+  - name: product-service
+    url: http://product-service:8002
+    routes:
+      - name: products-route
+        paths: [/product]

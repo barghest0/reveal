@@ -1,48 +1,13 @@
 ---
 version: '3.8'
 services:
-  user-service:
-    build: ./user-service/api
-    container_name: users-service
-    command: [./main]
-    depends_on: [postgres]
-    environment:
-      PORT: 8080
-      SERVER_HOST: localhost
-      DB_HOST: postgres
-      DB_PORT: 5432
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: barghest
-      POSTGRES_DB: users
-    ports: [8080:8080]
-    networks: [kong-network]
-  # product-service:
-  #   build:
-  #     context: ./product-service
-  #   container_name: product-service
-  #   ports:
-  #     - 8002:8000  # Измените на нужный порт
-  #   networks: [kong-network]
-  kong:
-    image: kong:latest
-    ports:
-      - 8000:8000  # Порт для API
-      - 8001:8001  # Порт для админки
-    environment:
-      KONG_DATABASE: postgres
-      KONG_PG_HOST: postgres  # Имя сервиса PostgreSQL
-      KONG_PG_USER: postgres
-      KONG_PG_PASSWORD: barghest  # Убедитесь, что этот пароль соответствует паролю PostgreSQL
-      KONG_PG_DATABASE: kong  # Имя базы данных Kong
-    networks: [kong-network]
-    depends_on: [postgres]
   postgres:
     image: postgres:16
     container_name: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: barghest
-      POSTGRES_DB: users
+      POSTGRES_DB: kong
     ports: [5432:5432]
     volumes: [pgdata:/var/lib/postgresql/data]
     networks: [kong-network]
@@ -55,8 +20,59 @@ services:
       PGADMIN_DEFAULT_PASSWORD: barghest
     ports: [5050:80]
     networks: [kong-network]
-volumes:
-  pgdata:
+  kong:
+    image: kong:latest
+    restart: always
+    container_name: kong
+    ports:
+      - 8000:8000  # Port for accessing the API
+      - 8443:8443  # Port for HTTPS access
+      - 8001:8001  # Port for admin API
+    environment:
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_LOG_LEVEL: debug
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres
+      KONG_PG_USER: postgres
+      KONG_PG_PASSWORD: barghest
+      KONG_PG_DATABASE: kong
+    networks: [kong-network]
+    depends_on: [postgres]
+    volumes: [./kong.yml:/usr/local/kong/declarative/kong.yml]
+  user-service:
+    build: ./user-service/api/
+    container_name: user-service
+    depends_on: [postgres]
+    environment:
+      PORT: 8081
+      SERVER_HOST: localhost
+      DB_HOST: postgres
+      DB_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: barghest
+      POSTGRES_DB: users
+    ports: [8081:8081]
+    networks: [kong-network]
+  product-service:
+    build: ./product-service/api/
+    container_name: product-service
+    depends_on: [postgres]
+    environment:
+      PORT: 8082
+      SERVER_HOST: localhost
+      DB_HOST: postgres
+      DB_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: barghest
+      POSTGRES_DB: products
+    ports: [8082:8082]
+    networks: [kong-network]
 networks:
   kong-network:
     driver: bridge
+volumes:
+  pgdata:
