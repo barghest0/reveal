@@ -7,10 +7,10 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: barghest
-      POSTGRES_DB: users
+      POSTGRES_DB: products
     ports: [5432:5432]
     volumes: [pgdata:/var/lib/postgresql/data]
-    networks: [user]
+    networks: [products-network]
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
@@ -19,24 +19,23 @@ services:
       PGADMIN_DEFAULT_EMAIL: barghest391@gmail.com
       PGADMIN_DEFAULT_PASSWORD: barghest
     ports: [5050:80]
-    networks: [user]
-  user-service:
+    networks: [products-network]
+  product-service:
     build: .
-    container_name: user-service
-    depends_on: [db]
-    command: [./main]
+    container_name: product-service
+    depends_on: [postgres]
     environment:
       PORT: 8080
       SERVER_HOST: localhost
-      DB_HOST: db
+      DB_HOST: postgres
       DB_PORT: 5432
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: barghest
-      POSTGRES_DB: users
+      POSTGRES_DB: products
     ports: [8080:8080]
-    networks: [user]
+    networks: [products-network]
 networks:
-  user:
+  products-network:
     driver: bridge
 volumes:
   pgdata:

@@ -23,7 +23,6 @@ WORKDIR /app
 # Копируем бинарник из этапа сборки
 COPY --from=builder /app/main .
 
-
 # Открываем порт
 EXPOSE 8080
 
