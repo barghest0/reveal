@@ -1,48 +1,6 @@
 ---
 version: '3.8'
 services:
-  postgres:
-    image: postgres:16
-    container_name: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: barghest
-      POSTGRES_DB: kong
-    ports: [5432:5432]
-    volumes: [pgdata:/var/lib/postgresql/data]
-    networks: [kong-network]
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: barghest391@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: barghest
-    ports: [5050:80]
-    networks: [kong-network]
-  kong:
-    image: kong:latest
-    restart: always
-    container_name: kong
-    ports:
-      - 8000:8000  # Port for accessing the API
-      - 8443:8443  # Port for HTTPS access
-      - 8001:8001  # Port for admin API
-    environment:
-      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
-      KONG_PROXY_ACCESS_LOG: /dev/stdout
-      KONG_ADMIN_ACCESS_LOG: /dev/stdout
-      KONG_PROXY_ERROR_LOG: /dev/stderr
-      KONG_ADMIN_ERROR_LOG: /dev/stderr
-      KONG_LOG_LEVEL: debug
-      KONG_DATABASE: postgres
-      KONG_PG_HOST: postgres
-      KONG_PG_USER: postgres
-      KONG_PG_PASSWORD: barghest
-      KONG_PG_DATABASE: kong
-    networks: [kong-network]
-    depends_on: [postgres]
-    volumes: [./kong.yml:/usr/local/kong/declarative/kong.yml]
   user-service:
     build: ./user-service/api/
     container_name: user-service
@@ -56,7 +14,7 @@ services:
       POSTGRES_PASSWORD: barghest
       POSTGRES_DB: users
     ports: [8081:8081]
-    networks: [kong-network]
+    networks: [marketplace-network]
   product-service:
     build: ./product-service/api/
     container_name: product-service
@@ -70,9 +28,37 @@ services:
       POSTGRES_PASSWORD: barghest
       POSTGRES_DB: products
     ports: [8082:8082]
-    networks: [kong-network]
+    networks: [marketplace-network]
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: barghest
+      POSTGRES_DB: kong
+    ports: [5432:5432]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    networks: [marketplace-network]
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: barghest391@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: barghest
+    ports: [5050:5050]
+    networks: [marketplace-network]
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./api-gateway/nginx.conf:/etc/nginx/nginx.conf
+    networks: [marketplace-network]
+
 networks:
-  kong-network:
+  marketplace-network:
     driver: bridge
 volumes:
   pgdata:
