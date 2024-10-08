@@ -1,13 +1,42 @@
----
 _format_version: '2.1'
 services:
   - name: user-service
-    url: http://user-service:8080
+    host: user-service
+    protocol: http
+    port: 8081
     routes:
       - name: user-route
         paths: [/users]
+        methods:
+          - GET
+          - POST
   - name: product-service
-    url: http://product-service:8080
+    host: product-service
+    protocol: http
+    port: 8082
     routes:
       - name: product-route
         paths: [/products]
+        methods:
+          - GET
+          - POST
+
+
+
+plugins:
+  - name: key-auth
+    service: user-service
+    config:
+      key_names:
+        - api_key
+      hide_credentials: false
+
+  - name: key-auth
+    service: product-service
+    config:
+      key_names:
+        - api_key
+      hide_credentials: false
+
+
+  
