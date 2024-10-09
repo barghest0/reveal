@@ -7,7 +7,6 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: barghest
-      #db
       POSTGRES_DB: kong
     ports: [5432:5432]
     volumes: [pgdata:/var/lib/postgresql/data]
@@ -22,8 +21,7 @@ services:
     ports: [5050:80]
     networks: [marketplace-network]
   kong:
-    #image
-    image: kong/kong-gateway:2.7.2.0-alpine
+    build: ./api-gateway 
     restart: always
     container_name: kong
     environment:
@@ -31,7 +29,6 @@ services:
       KONG_PG_HOST: postgres
       KONG_PG_USER: postgres
       KONG_PG_PASSWORD: barghest
-      KONG_DECLARATIVE_CONFIG: "/usr/local/kong/declarative/kong.yml"
       KONG_PROXY_ACCESS_LOG: "/dev/stdout"
       KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
       KONG_PROXY_ERROR_LOG: "/dev/stderr"
@@ -39,29 +36,18 @@ services:
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
       KONG_ADMIN_GUI_URL: "http://localhost:8002"
     depends_on: [postgres]
-    #путь
-    volumes:
-      - ./api-gateway/kong.yml:/usr/local/kong/declarative/kong.yml
     ports:
       - "8000:8000"
-      - "8443:8443"
       - "8001:8001"
-      - "8444:8444"
       - "8002:8002"
-      - "8445:8445"
-      - "8003:8003"
-      - "8004:8004"
     networks: [marketplace-network]
-    # command
-    command: >
-      sh -c "kong migrations bootstrap && kong start"
   user-service:
     build: ./user-service/api/
     container_name: user-service
     depends_on: [postgres]
     environment:
       PORT: 8081
-      SERVER_HOST: user-service
+      SERVER_HOST: localhost 
       DB_HOST: postgres
       DB_PORT: 5432
       POSTGRES_USER: postgres
@@ -75,7 +61,7 @@ services:
     depends_on: [postgres]
     environment:
       PORT: 8082
-      SERVER_HOST: product-service 
+      SERVER_HOST: localhost 
       DB_HOST: postgres
       DB_PORT: 5432
       POSTGRES_USER: postgres
