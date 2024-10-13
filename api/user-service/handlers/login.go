@@ -4,7 +4,6 @@ import (
 	"api/auth"
 	"api/services"
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
 
