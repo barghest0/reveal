@@ -2,7 +2,7 @@
 package handlers
 
 import (
-	"api/models"
+	"api/model"
 	"api/services"
 	"encoding/json"
 	"github.com/gorilla/mux"
@@ -29,7 +29,7 @@ func (handler *UpdateUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 	}
 
 	// Чтение данных пользователя из тела запроса
-	var user models.User
+	var user model.User
 	err = json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
