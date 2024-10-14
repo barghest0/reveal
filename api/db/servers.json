@@ -1,0 +1,13 @@
+{
+    "Servers": {
+        "marketplace": {
+            "Name": "marketplace",
+            "Group": "Servers",
+            "Host": "postgres",
+            "Port": 5432,
+            "Username": "postgres",
+            "Password": "barghest"
+        }
+    }
+}
+

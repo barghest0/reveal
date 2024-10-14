@@ -4,6 +4,9 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx
+    depends_on:
+      - user-service
+      - product-service
     ports:
       - "80:80"
     volumes:
@@ -16,7 +19,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: barghest
     ports: [5432:5432]
-    volumes: [pgdata:/var/lib/postgresql/data]
+    volumes: 
+      - pgdata:/var/lib/postgresql/data 
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks: [marketplace-network]
   pgadmin:
     container_name: pgadmin4_container
@@ -27,6 +32,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: barghest
     ports: [5050:80]
     networks: [marketplace-network]
+    volumes:
+        - ./db/servers.json:/pgadmin4/servers.json 
   user-service:
     build: ./user-service
     container_name: user-service
