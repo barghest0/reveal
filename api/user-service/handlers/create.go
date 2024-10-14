@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"api/models"
+	"api/model"
 	"api/services"
 	"encoding/json"
 	"net/http"
@@ -16,7 +16,7 @@ func CreateCreateUserHandler(userService services.UserService) *CreateUserHandle
 }
 
 func (handler *CreateUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	var user models.User
+	var user model.User
 
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
