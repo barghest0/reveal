@@ -1,13 +1,18 @@
 {
     "Servers": {
-        "marketplace": {
+        "1": {
             "Name": "marketplace",
             "Group": "Servers",
             "Host": "postgres",
+            "MaintenanceDB": "postgres",
+            "Shared": true,
             "Port": 5432,
             "Username": "postgres",
-            "Password": "barghest"
+            "Password": "barghest",
+            "SSLMode": "prefer",
+            "ConnectNow": true
         }
     }
 }
+
 
