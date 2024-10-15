@@ -3,10 +3,11 @@ package model
 import "time"
 
 type Cart struct {
-	ID        int       `json:"id"`
-	UserId    int       `json:"user_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"update_at"`
+	ID        int        `json:"id"`
+	UserId    int        `json:"user_id"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"update_at"`
+	Items     []CartItem `gorm:"foreignKey:CartID"`
 }
 
 type CartItem struct {
