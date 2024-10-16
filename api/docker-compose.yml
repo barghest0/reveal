@@ -19,6 +19,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: barghest
       POSTGRES_DB: postgres
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
     ports: [5432:5432]
     volumes: 
       - pgdata:/var/lib/postgresql/data 
@@ -33,14 +38,17 @@ services:
       PGADMIN_DEFAULT_PASSWORD: barghest
     ports: [5050:80]
     networks: [marketplace-network]
+    depends_on: 
+      postgres: 
+        condition: service_healthy
     volumes:
         - ./db/servers.json:/pgadmin4/servers.json 
-        - ./db/pgpass.json:/pgpass
-        # - pgadmin-data:/var/lib/pgadmin
   user-service:
     build: ./user-service
     container_name: user-service
-    depends_on: [postgres]
+    depends_on: 
+      postgres: 
+        condition: service_healthy
     environment:
       PORT: 8081
       SERVER_HOST: localhost 
@@ -54,7 +62,9 @@ services:
   product-service:
     build: ./product-service
     container_name: product-service
-    depends_on: [postgres]
+    depends_on: 
+      postgres: 
+        condition: service_healthy 
     environment:
       PORT: 8082
       SERVER_HOST: localhost 
