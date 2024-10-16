@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "user-service"
+rootProject.name = "reveal"
 include(":app")
  
