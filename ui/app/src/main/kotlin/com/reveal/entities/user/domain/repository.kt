@@ -24,7 +24,7 @@ class UserRepository(private val client: HttpClient) {
 
       val text = response.body<String>()
 
-      println(text)
+      println("register ${response} ${text}")
       true
     } catch (exception: Exception) {
 

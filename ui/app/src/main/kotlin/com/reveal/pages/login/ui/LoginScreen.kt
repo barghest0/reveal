@@ -70,10 +70,10 @@ fun LoginScreen(
               text = annotatedText,
               onClick = { offset ->
                 annotatedText
-                    .getStringAnnotations(tag = "login", start = offset, end = offset)
+                    .getStringAnnotations(tag = "registration", start = offset, end = offset)
                     .firstOrNull()
                     ?.let {
-                      navController.navigate("login") // Переход на экран логина
+                      navController.navigate("registration") // Переход на экран регистрации
                     }
               })
 
