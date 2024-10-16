@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-  namespace = "com.user_service"
+  namespace = "com.reveal"
   compileSdk = 34
 
   defaultConfig {
-    applicationId = "com.user_service"
+    applicationId = "com.reveal"
     minSdk = 24
     targetSdk = 34
     versionCode = 1
