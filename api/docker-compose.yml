@@ -75,7 +75,20 @@ services:
       POSTGRES_DB: products
     ports: [8082:8082]
     networks: [marketplace-network]
-  
+  cart-service:
+    build: ./cart-service
+    container_name: cart-service
+    depends_on: [postgres]
+    environment:
+      PORT: 8083
+      SERVER_HOST: localhost 
+      DB_HOST: postgres
+      DB_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: barghest
+      POSTGRES_DB: cart
+    ports: [8083:8083]
+    networks: [marketplace-network]   
 
 networks:
   marketplace-network:

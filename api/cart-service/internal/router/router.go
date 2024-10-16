@@ -12,4 +12,6 @@ func InitRoutes(router *gin.Engine, db *gorm.DB) {
 	cartHandler := &handler.CartHandler{DB: db}
 
 	router.GET("/cart/:userId/items", cartHandler.GetCartItems)
+	router.POST("/cart", cartHandler.CreateCart)
+	router.POST("/cart/items", cartHandler.AddItemToCart)
 }

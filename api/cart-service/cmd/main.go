@@ -14,13 +14,13 @@ const (
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
-	password = "2001"
+	password = "barghest"
 	dbname   = "cart_service"
 )
 
 func main() {
 	// connection string
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	dsn := fmt.Sprintf("host=postgres port=%d user=%s password=%s dbname=%s sslmode=disable", port, user, password, dbname)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
