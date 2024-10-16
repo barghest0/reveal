@@ -17,7 +17,7 @@ class UserProfileRepository(
     return try {
       val token = tokenManager.getToken()
       val response =
-              client.get("http://192.168.3.2:8080/profile") {
+              client.get("http://192.168.3.2/users/profile") {
                 header(HttpHeaders.Authorization, "Bearer $token")
               }
       val string = response.body<String>()
