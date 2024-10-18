@@ -2,21 +2,19 @@ package model
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Cart struct {
 	ID        uint       `json:"id"`
 	UserId    uint       `json:"user_id"`
 	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"update_at"`
-	Items     []CartItem `gorm:"foreignKey:CartID"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	Items     []CartItem `gorm:"foreignKey:CartId;constraint:OnDelete:CASCADE;"`
 }
 
 type CartItem struct {
-	gorm.Model
-	CartId    uint    `json:"cart_id"`
+	ID        uint    `gorm:"primaryKey"`
+	CartId    uint    `json:"cart_id" gorm:"index"`
 	ProductID uint    `json:"product_id"`
 	Quantity  uint    `json:"quantity"`
 	Price     float64 `json:"price"`

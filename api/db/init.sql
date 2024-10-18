@@ -1,4 +1,4 @@
 CREATE DATABASE users;
 CREATE DATABASE products;
-CREATE DATABASE cart_service;
+CREATE DATABASE cart;
 

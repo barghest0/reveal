@@ -1,35 +1,35 @@
 package main
 
 import (
-	"cart-service/internal/model"
-	"fmt"
-	"log"
+	"net/http"
 
 	_ "github.com/lib/pq"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "barghest"
-	dbname   = "cart_service"
-)
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")                              // Разрешить доступ с любых доменов
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")            // Разрешенные методы
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, withCredentials") // Разрешенные заголовки
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
 
 func main() {
-	// connection string
-	dsn := fmt.Sprintf("host=postgres port=%d user=%s password=%s dbname=%s sslmode=disable", port, user, password, dbname)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	// app_config := config.LoadConfig()
+	// db_config := config.LoadDBConfig()
 
-	if err != nil {
-		log.Fatalln(err)
-	}
+	// database, error := db.ConnectDB(db_config)
 
-	if err := db.AutoMigrate(&model.Cart{}, &model.CartItem{}); err != nil {
-		log.Fatalf("Failed to migrate database: %v", err)
-	}
+	// if error != nil {
+	// 	log.Fatalf("Failed to conect to the databalse: %v", error)
+	// }
 
-	log.Println("Successfully connected to the database")
 }
