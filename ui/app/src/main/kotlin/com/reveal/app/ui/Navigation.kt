@@ -1,18 +1,26 @@
-package com.reveal.app.navigation.ui
+package app
 
-import ProfileScreen
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.reveal.pages.login.ui.LoginScreen
-import com.reveal.pages.registration.ui.RegistrationScreen
+import pages.login.LoginScreen
+import pages.profile.ProfileScreen
+import pages.registration.RegistrationScreen
+import widgets.NavigationBar
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
-  NavHost(navController = navController, startDestination = "registration") {
-    composable("registration") { RegistrationScreen(navController) }
-    composable("login") { LoginScreen(navController) }
-    composable("profile") { ProfileScreen(navController) }
+  Surface(color = MaterialTheme.colorScheme.background) {
+    Scaffold(bottomBar = { NavigationBar(navController) }) { innerPadding ->
+      NavHost(navController = navController, startDestination = "registration") {
+        composable("registration") { RegistrationScreen(navController) }
+        composable("login") { LoginScreen(navController) }
+        composable("profile") { ProfileScreen(navController) }
+      }
+    }
   }
 }

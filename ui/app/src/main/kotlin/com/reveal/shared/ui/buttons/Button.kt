@@ -1,4 +1,4 @@
-package com.reveal.yourapp.core.ui.components
+package shared.ui.buttons
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text

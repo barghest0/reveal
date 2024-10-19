@@ -1,4 +1,4 @@
-package com.reveal.yourapp.core.ui.components
+package shared.ui.fields
 
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable

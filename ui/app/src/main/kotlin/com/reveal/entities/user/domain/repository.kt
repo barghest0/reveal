@@ -1,6 +1,5 @@
-package com.reveal.entities.user.model.repository
+package entities.user
 
-import com.reveal.entities.user.model.User
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

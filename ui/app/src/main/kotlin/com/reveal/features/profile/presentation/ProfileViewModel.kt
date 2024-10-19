@@ -1,8 +1,10 @@
+package features.profile
+
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.reveal.entities.user.model.UserProfile
+import entities.user.UserProfile
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val userProfileRepository: UserProfileRepository) : ViewModel() {

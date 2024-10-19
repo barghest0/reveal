@@ -1,12 +1,11 @@
-package com.reveal.features.login.presentation
+package features.login
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.reveal.features.login.domain.LoginUseCase
-import com.reveal.shared.session.PreferencesManager
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import shared.session.PreferencesManager
 
 class LoginViewModel(
         private val useCase: LoginUseCase,

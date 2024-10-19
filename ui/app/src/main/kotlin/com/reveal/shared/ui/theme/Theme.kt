@@ -1,4 +1,4 @@
-package com.reveal.shared.ui.theme
+package shared.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -47,5 +47,5 @@ fun RevealTheme(
             else -> LightColorScheme
           }
 
-  MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
+  MaterialTheme(colorScheme = colorScheme, content = content)
 }
