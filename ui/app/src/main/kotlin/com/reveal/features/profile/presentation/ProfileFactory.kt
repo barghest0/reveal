@@ -1,5 +1,8 @@
+package features.profile 
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import features.profile.ProfileViewModel
 
 class ProfileViewModelFactory(private val userProfileRepository: UserProfileRepository) :
         ViewModelProvider.Factory {

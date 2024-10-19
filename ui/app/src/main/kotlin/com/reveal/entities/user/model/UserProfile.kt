@@ -1,4 +1,4 @@
-package com.reveal.entities.user.model
+package entities.user
 
 import kotlinx.serialization.Serializable
 

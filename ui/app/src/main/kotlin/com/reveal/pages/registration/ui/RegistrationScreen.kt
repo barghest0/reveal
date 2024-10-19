@@ -1,4 +1,4 @@
-package com.reveal.pages.registration.ui
+package pages.registration
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,10 +18,10 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.navigation.NavHostController
-import com.reveal.entities.user.model.repository.UserRepository
-import com.reveal.features.registration.domain.RegistrationUseCase
-import com.reveal.features.registration.presentation.RegistrationViewModel
-import com.reveal.features.registration.ui.RegistrationForm
+import entities.user.UserRepository
+import features.registration.RegistrationForm
+import features.registration.RegistrationUseCase
+import features.registration.RegistrationViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -29,56 +29,60 @@ import io.ktor.serialization.kotlinx.json.json
 
 @Composable
 fun RegistrationScreen(
-    navController: NavHostController,
-    viewModel: RegistrationViewModel = remember {
-      RegistrationViewModel(
-          RegistrationUseCase(
-              UserRepository(HttpClient(CIO) { install(ContentNegotiation) { json() } })))
-    }
+        navController: NavHostController,
+        viewModel: RegistrationViewModel = remember {
+          RegistrationViewModel(
+                  RegistrationUseCase(
+                          UserRepository(HttpClient(CIO) { install(ContentNegotiation) { json() } })
+                  )
+          )
+        }
 ) {
   val state by viewModel.uiState
 
   Box(modifier = Modifier.fillMaxSize()) {
     Column(
-        modifier = Modifier.align(Alignment.Center),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-          RegistrationForm(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      RegistrationForm(
               name = state.name,
               email = state.email,
               password = state.password,
               updateField = { field, value -> viewModel.updateField(field, value) },
               onClickRegister = { name, email, password ->
                 viewModel.register(name, email, password)
-              })
+              }
+      )
 
-          val annotatedText = buildAnnotatedString {
-            withStyle(style = SpanStyle(color = Color.White)) { append("Уже есть аккаунт? ") }
-            pushStringAnnotation(tag = "login", annotation = "login")
-            withStyle(
-                style = SpanStyle(color = Color.White, textDecoration = TextDecoration.Underline)) {
-                  append("Войти")
-                }
-            pop()
-          }
+      val annotatedText = buildAnnotatedString {
+        withStyle(style = SpanStyle(color = Color.White)) { append("Уже есть аккаунт? ") }
+        pushStringAnnotation(tag = "login", annotation = "login")
+        withStyle(
+                style = SpanStyle(color = Color.White, textDecoration = TextDecoration.Underline)
+        ) { append("Войти") }
+        pop()
+      }
 
-          ClickableText(
+      ClickableText(
               text = annotatedText,
               onClick = { offset ->
                 annotatedText
-                    .getStringAnnotations(tag = "login", start = offset, end = offset)
-                    .firstOrNull()
-                    ?.let {
-                      navController.navigate("login") // Переход на экран логина
-                    }
-              })
+                        .getStringAnnotations(tag = "login", start = offset, end = offset)
+                        .firstOrNull()
+                        ?.let {
+                          navController.navigate("login") // Переход на экран логина
+                        }
+              }
+      )
 
-          if (state.success) {
-            LaunchedEffect(Unit) {
-              navController.navigate("login") { popUpTo("registration") { inclusive = true } }
-            }
-          }
-
-          state.error?.let { Text(text = it, color = MaterialTheme.colorScheme.error) }
+      if (state.success) {
+        LaunchedEffect(Unit) {
+          navController.navigate("login") { popUpTo("registration") { inclusive = true } }
         }
+      }
+
+      state.error?.let { Text(text = it, color = MaterialTheme.colorScheme.error) }
+    }
   }
 }

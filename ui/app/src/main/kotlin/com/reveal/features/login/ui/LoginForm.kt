@@ -1,4 +1,4 @@
-package com.reveal.features.login.ui
+package features.login
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
@@ -8,20 +8,21 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun LoginForm(
-    name: String,
-    password: String,
-    updateField: (String, String) -> Unit,
-    onClickLogin: (String, String) -> Unit
+        name: String,
+        password: String,
+        updateField: (String, String) -> Unit,
+        onClickLogin: (String, String) -> Unit
 ) {
   Column() {
     OutlinedTextField(
-        value = name,
-        onValueChange = { name -> updateField("name", name) },
-        label = { Text("Name") })
+            value = name,
+            onValueChange = { name -> updateField("name", name) },
+            label = { Text("Name") }
+    )
     OutlinedTextField(
-        value = password,
-        onValueChange = { password -> updateField("password", password) },
-        label = { Text("Password") },
+            value = password,
+            onValueChange = { password -> updateField("password", password) },
+            label = { Text("Password") },
     )
     Button(onClick = { onClickLogin(name, password) }) { Text("Login") }
   }

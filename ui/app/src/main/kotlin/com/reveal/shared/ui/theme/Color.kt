@@ -1,4 +1,4 @@
-package com.reveal.shared.ui.theme
+package shared.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

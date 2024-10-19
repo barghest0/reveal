@@ -7,8 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.navigation.compose.rememberNavController
-import com.reveal.app.navigation.ui.AppNavigation
-import com.reveal.shared.ui.theme.RevealTheme
+import app.AppNavigation
+import shared.ui.theme.RevealTheme
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {

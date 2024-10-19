@@ -1,7 +1,7 @@
-package com.reveal.features.registration.domain
+package features.registration
 
-import com.reveal.entities.user.model.User
-import com.reveal.entities.user.model.repository.UserRepository
+import entities.user.User
+import entities.user.UserRepository
 
 class RegistrationUseCase(private val userRepository: UserRepository) {
   suspend fun execute(name: String, email: String, password: String): Boolean {

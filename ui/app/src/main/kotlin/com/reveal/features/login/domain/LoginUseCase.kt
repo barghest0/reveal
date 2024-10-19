@@ -1,6 +1,6 @@
-package com.reveal.features.login.domain
+package features.login
 
-import com.reveal.entities.user.model.repository.UserRepository
+import entities.user.UserRepository
 
 class LoginUseCase(private val userRepository: UserRepository) {
   suspend fun login(name: String, password: String): String? {
