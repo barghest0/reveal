@@ -47,7 +47,7 @@ func GetUserByUsername(db *gorm.DB, name string) (User, error) {
 }
 
 // Создание нового пользователя
-func CreateUser(db *gorm.DB, user User) error {
+func CreateUser(db *gorm.DB, user *User) error {
 	return db.Create(user).Error
 }
 

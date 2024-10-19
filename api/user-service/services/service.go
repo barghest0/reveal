@@ -36,7 +36,7 @@ func (service *userService) GetUserByID(id int) (model.User, error) {
 
 // Создание нового пользователя
 func (service *userService) CreateUser(user model.User) error {
-	return model.CreateUser(service.db, user)
+	return model.CreateUser(service.db, &user)
 }
 
 // Обновление данных пользователя
