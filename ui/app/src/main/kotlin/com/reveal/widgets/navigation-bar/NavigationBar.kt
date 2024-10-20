@@ -11,17 +11,12 @@ fun NavigationBar(navController: NavHostController) {
   NavigationBar {
     NavigationBarItem(
             icon = { /* Ваша иконка */},
-            label = { Text("registration") },
+            label = { Text("Каталог") },
             selected =
                     false, // Здесь можно использовать состояние для выделения выбранного элемента
-            onClick = { navController.navigate("registration") }
+            onClick = { navController.navigate("catalog") }
     )
-    NavigationBarItem(
-            icon = { /* Ваша иконка */},
-            label = { Text("login") },
-            selected = false,
-            onClick = { navController.navigate("login") }
-    )
+
     NavigationBarItem(
             icon = { /* Ваша иконка */},
             label = { Text("Profile") },
