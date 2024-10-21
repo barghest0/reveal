@@ -1,4 +1,4 @@
-package widgets
+package widgets.NavigationBar
 
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem

@@ -30,13 +30,9 @@ var client = HttpClient(CIO) { install(ContentNegotiation) { json() } }
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
-
   val context = LocalContext.current
   val viewModel: LoginViewModel = remember {
-    LoginViewModel(
-            LoginUseCase(UserRepository(client)),
-            PreferencesManager(context) // передаем контекст здесь
-    )
+    LoginViewModel(LoginUseCase(UserRepository(client)), PreferencesManager(context))
   }
 
   val state by viewModel.uiState
