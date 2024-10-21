@@ -3,15 +3,15 @@ package router
 import (
 	"cart-service/internal/handler"
 
-	"github.com/gin-gonic/gin"
-
-	"gorm.io/gorm"
+	"github.com/gorilla/mux"
 )
 
-func InitRoutes(router *gin.Engine, db *gorm.DB) {
-	cartHandler := &handler.CartHandler{DB: db}
+func CreateRouter(h *handler.CartHandler) *mux.Router {
+	r := mux.NewRouter()
 
-	router.GET("/cart/:userId/items", cartHandler.GetCartItems)
-	router.POST("/cart", cartHandler.CreateCart)
-	router.POST("/cart/items", cartHandler.AddItemToCart)
+	r.HandleFunc("/cart", h.CreateCart).Methods("POST")
+	r.HandleFunc("/cart/{userId}", h.GetCart).Methods("GET")
+	r.HandleFunc("/cart/{userId}/item", h.AddItemToCart).Methods("PUT")
+
+	return r
 }
