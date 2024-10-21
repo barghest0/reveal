@@ -12,9 +12,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import pages.catalog.CatalogScreen
+import pages.login.LoginScreen
 import pages.profile.ProfileScreen
 import pages.registration.RegistrationScreen
-import widgets.NavigationBar
+import widgets.NavigationBar.NavigationBar
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
@@ -27,6 +28,7 @@ fun AppNavigation(navController: NavHostController) {
         composable("catalog") { CatalogScreen(navController) }
         composable("registration") { RegistrationScreen(navController) }
         composable("profile") { ProfileScreen(navController) }
+        composable("login") { LoginScreen(navController) }
       }
     }
   }
