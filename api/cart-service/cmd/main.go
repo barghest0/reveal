@@ -1,6 +1,13 @@
 package main
 
 import (
+	"cart-service/internal/config"
+	"cart-service/internal/db"
+	"cart-service/internal/handler"
+	"cart-service/internal/repository"
+	"cart-service/internal/router"
+	"cart-service/internal/service"
+	"log"
 	"net/http"
 
 	_ "github.com/lib/pq"
@@ -23,13 +30,22 @@ func corsMiddleware(next http.Handler) http.Handler {
 }
 
 func main() {
-	// app_config := config.LoadConfig()
-	// db_config := config.LoadDBConfig()
+	app_config := config.LoadConfig()
+	db_config := config.LoadDBConfig()
 
-	// database, error := db.ConnectDB(db_config)
+	database, error := db.ConnectDB(db_config)
 
-	// if error != nil {
-	// 	log.Fatalf("Failed to conect to the databalse: %v", error)
-	// }
+	if error != nil {
+		log.Fatalf("falied to connect to the database: %v", error)
+	}
+
+	repo := repository.CreateCartRepository(database)
+	src := service.CreateCartService(repo)
+	h := handler.CreateCartHandler(src)
+
+	router := router.CreateRouter(h)
+
+	log.Printf("Server starting on port %s", app_config.ServerHost+":"+app_config.Port)
+	http.ListenAndServe(":"+app_config.Port, corsMiddleware(router))
 
 }
