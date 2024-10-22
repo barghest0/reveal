@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"api/auth"
-	"api/models"
+	"api/model"
 	"api/services"
 	"encoding/json"
 	"net/http"
@@ -17,7 +17,7 @@ func CreateRegisterUserHandler(userService services.UserService) *RegisterUserHa
 }
 
 func (handler *RegisterUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	var user models.User
+	var user model.User
 
 	err := json.NewDecoder(r.Body).Decode(&user)
 	println(err)

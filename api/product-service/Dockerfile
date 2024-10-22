@@ -14,8 +14,7 @@ COPY . .
 # Собираем приложение
 RUN go build -o product-service ./cmd/main.go
 
-# Этап 2: Создаем легковесный образ для выполнения
-FROM alpine:latest
+FROM alpine:3.18
 
 WORKDIR /root/
 
@@ -25,6 +24,13 @@ COPY --from=builder /app/product-service .
 # Указываем порт, на котором будет работать приложение
 EXPOSE 8080
 
-# Запускаем приложение
-CMD ["./product-service"]
+CMD [ "./product-service" ]
+
+
+# RUN apk update && apk add --no-cache postgresql-client
+# COPY ../db/init-db.sh /usr/local/bin/
+# RUN chmod +x /usr/local/bin/
+
+# Команда запуска контейнера
+# ENTRYPOINT ["sh", "/usr/local/bin/init-db.sh"]
 

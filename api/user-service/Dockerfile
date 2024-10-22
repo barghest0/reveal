@@ -1,5 +1,5 @@
 # Указываем базовый образ для сборки
-FROM golang:1.23-alpine AS builder
+FROM golang:1.23.1-alpine AS builder
 
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
@@ -12,20 +12,23 @@ RUN go mod download
 COPY . .
 
 # Сборка бинарного файла
-RUN go build -o main ./cmd/main.go
+RUN go build -o user-service ./cmd/main.go
 
-# Минимальный образ для финального контейнера
 FROM alpine:3.18
 
-# Создаем рабочую директорию в минимальном образе
-WORKDIR /app
 
 # Копируем бинарник из этапа сборки
-COPY --from=builder /app/main .
+COPY --from=builder /app/user-service .
 
 # Открываем порт
 EXPOSE 8080
 
-# Команда для запуска приложения
-CMD ["./main"]
+CMD [ "./user-service" ]
 
+# RUN apk update && apk add --no-cache postgresql-client
+
+# COPY ../db/init-db.sh /usr/local/bin/
+# RUN chmod +x /usr/local/bin/
+
+# Команда для запуска приложения
+# ENTRYPOINT ["sh", "/usr/local/bin/create-db.sh"]
