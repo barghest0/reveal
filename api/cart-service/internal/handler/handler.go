@@ -4,6 +4,7 @@ import (
 	"cart-service/internal/model"
 	"cart-service/internal/service"
 	"encoding/json"
+
 	"net/http"
 	"strconv"
 
@@ -53,22 +54,31 @@ func (h *CartHandler) AddItemToCart(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["cartId"])
 
 	if err != nil {
-		http.Error(w, "Invalid cart ID", http.StatusBadRequest)
+		http.Error(w, "Invalid cart Id", http.StatusBadRequest)
 		return
 	}
-	var item model.CartItem
-	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
+
+	var newItem model.CartItem
+	if err := json.NewDecoder(r.Body).Decode(&newItem); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	item.CartId = uint(id)
+	newItem.CartId = uint(id)
 
-	if err := h.Service.AddItem(uint(id), &item); err != nil {
+	cart, err := h.Service.GetCart(uint(id))
+	if err != nil {
+		http.Error(w, "Cart not found", http.StatusNotFound)
+		return
+	}
+
+	cart.Items = append(cart.Items, newItem)
+
+	if err := h.Service.UpdateCart(cart); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(item)
+	json.NewEncoder(w).Encode(newItem)
 }

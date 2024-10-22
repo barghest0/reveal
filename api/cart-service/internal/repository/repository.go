@@ -10,6 +10,7 @@ type CartRepository interface {
 	Create(cart *model.Cart) error
 	GetByID(userId uint) (*model.Cart, error)
 	AddItemToCart(cartId uint, item *model.CartItem) error
+	UpdateCart(cart *model.Cart) error
 }
 
 type cartRepository struct {
@@ -37,4 +38,8 @@ func (r *cartRepository) GetByID(userId uint) (*model.Cart, error) {
 func (r *cartRepository) AddItemToCart(cartId uint, item *model.CartItem) error {
 	item.CartId = cartId
 	return r.db.Save(item).Error
+}
+
+func (r *cartRepository) UpdateCart(cart *model.Cart) error {
+	return r.db.Save(cart).Error
 }
