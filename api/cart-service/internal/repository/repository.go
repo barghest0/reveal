@@ -26,11 +26,12 @@ func (r *cartRepository) Create(cart *model.Cart) error {
 
 func (r *cartRepository) GetByID(userId uint) (*model.Cart, error) {
 	var cart model.Cart
-
-	if err := r.db.First(&cart, userId).Error; err != nil {
+	// Используем Preload для загрузки связанных элементов
+	if err := r.db.Preload("Items").Where("user_id = ?", userId).First(&cart).Error; err != nil {
 		return nil, err
 	}
 	return &cart, nil
+
 }
 
 func (r *cartRepository) AddItemToCart(cartId uint, item *model.CartItem) error {
