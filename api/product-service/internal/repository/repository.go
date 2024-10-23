@@ -1,9 +1,12 @@
 package repository
 
 import (
-	"gorm.io/gorm"
+	"fmt"
 	"product-service/internal/model"
 	"time"
+
+	"github.com/barghest0/packages"
+	"gorm.io/gorm"
 )
 
 type ProductRepository interface {
@@ -16,39 +19,74 @@ type ProductRepository interface {
 }
 
 type productRepository struct {
-	db *gorm.DB
+	db    *gorm.DB
+	cache packages.CacheService
 }
 
-func CreateProductRepository(db *gorm.DB) ProductRepository {
-	return &productRepository{db}
+func CreateProductRepository(db *gorm.DB, cache packages.CacheService) ProductRepository {
+	return &productRepository{db, cache}
 }
 
 func (r *productRepository) Create(product *model.Product) error {
-	return r.db.Create(product).Error
+	if err := r.db.Create(product).Error; err != nil {
+		return err
+	}
+	cacheKey := fmt.Sprintf("product:%d", product.ID)
+	return r.cache.Set(cacheKey, product, time.Hour)
 }
 
 func (r *productRepository) GetAll() (*[]model.Product, error) {
+	cacheKey := "products:all"
+
 	var products []model.Product
+	if err := r.cache.Get(cacheKey, &products); err == nil {
+		return &products, nil
+	}
+
 	if err := r.db.Find(&products).Error; err != nil {
 		return nil, err
 	}
+
+	if err := r.cache.Set(cacheKey, &products, time.Hour); err != nil {
+		return nil, err
+	}
+
 	return &products, nil
 }
 
 func (r *productRepository) GetByID(id uint) (*model.Product, error) {
+	cacheKey := fmt.Sprintf("product:%d", id)
+
 	var product model.Product
+	if err := r.cache.Get(cacheKey, &product); err == nil {
+		return &product, nil
+	}
+
 	if err := r.db.First(&product, id).Error; err != nil {
 		return nil, err
 	}
+
+	if err := r.cache.Set(cacheKey, &product, time.Hour); err != nil {
+		return nil, err
+	}
+
 	return &product, nil
 }
 
 func (r *productRepository) Update(product *model.Product) error {
-	return r.db.Save(product).Error
+	if err := r.db.Save(product).Error; err != nil {
+		return err
+	}
+	cacheKey := fmt.Sprintf("product:%d", product.ID)
+	return r.cache.Set(cacheKey, product, time.Hour)
 }
 
 func (r *productRepository) Delete(id uint) error {
-	return r.db.Delete(&model.Product{}, id).Error
+	if err := r.db.Delete(&model.Product{}, id).Error; err != nil {
+		return err
+	}
+	cacheKey := fmt.Sprintf("product:%d", id)
+	return r.cache.Delete(cacheKey)
 }
 
 func (r *productRepository) Purchase(id uint, buyerID uint) error {

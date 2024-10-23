@@ -27,10 +27,4 @@ EXPOSE 8080
 CMD [ "./product-service" ]
 
 
-# RUN apk update && apk add --no-cache postgresql-client
-# COPY ../db/init-db.sh /usr/local/bin/
-# RUN chmod +x /usr/local/bin/
-
-# Команда запуска контейнера
-# ENTRYPOINT ["sh", "/usr/local/bin/init-db.sh"]
 
