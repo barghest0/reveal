@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"product-service/internal/cache"
 	"product-service/internal/config"
 	"product-service/internal/db"
 	"product-service/internal/handler"
@@ -37,7 +38,9 @@ func main() {
 		log.Fatalf("failed to connect to the databalse: %v", error)
 	}
 
-	repo := repository.CreateProductRepository(database)
+	redis := cache.CreateRedisClient()
+	cache := cache.CreateCacheService(redis)
+	repo := repository.CreateProductRepository(database, cache)
 	src := service.CreateProductService(repo)
 	h := handler.CreateProductHandler(src)
 
