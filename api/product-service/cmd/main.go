@@ -37,7 +37,10 @@ func main() {
 		log.Fatalf("failed to connect to the databalse: %v", error)
 	}
 
-	repo := repository.CreateProductRepository(database)
+	redis := packages.CreateRedisClient()
+	cache_src := packages.CreateCacheService(redis)
+
+	repo := repository.CreateProductRepository(database, cache_src)
 	src := service.CreateProductService(repo)
 	h := handler.CreateProductHandler(src)
 
