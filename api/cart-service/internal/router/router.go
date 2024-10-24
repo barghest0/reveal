@@ -12,6 +12,7 @@ func CreateRouter(h *handler.CartHandler) *mux.Router {
 	r.HandleFunc("/cart", h.CreateCart).Methods("POST")
 	r.HandleFunc("/cart/{userId}", h.GetCart).Methods("GET")
 	r.HandleFunc("/cart/{cartId}/item", h.AddItemToCart).Methods("PUT")
+	r.HandleFunc("/cart/{cartId}/item/{itemId}", h.RemoveItemToCart).Methods("DELETE")
 
 	return r
 }

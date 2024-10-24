@@ -38,15 +38,15 @@ func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["userId"])
 
 	if err != nil {
-		http.Error(w, "Invalid cart ID", http.StatusBadRequest)
+		http.Error(w, "Invalid cart id", http.StatusBadRequest)
 		return
 	}
-	cart, err := h.Service.GetCart(uint(id))
+	cartId, err := h.Service.GetCart(uint(id))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	json.NewEncoder(w).Encode(cart)
+	json.NewEncoder(w).Encode(cartId)
 }
 
 func (h *CartHandler) AddItemToCart(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +54,7 @@ func (h *CartHandler) AddItemToCart(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["cartId"])
 
 	if err != nil {
-		http.Error(w, "Invalid cart Id", http.StatusBadRequest)
+		http.Error(w, "Invalid cart id", http.StatusBadRequest)
 		return
 	}
 
@@ -81,4 +81,32 @@ func (h *CartHandler) AddItemToCart(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newItem)
+}
+
+func (h *CartHandler) RemoveItemToCart(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	cartId, err := strconv.Atoi(vars["cartId"])
+	if err != nil {
+		http.Error(w, "Invalid cart id", http.StatusBadRequest)
+		return
+	}
+
+	itemId, err := strconv.Atoi(vars["itemId"])
+	if err != nil {
+		http.Error(w, "Invalid item id", http.StatusBadRequest)
+		return
+	}
+
+	err = h.Service.RemoveItemToCart(uint(cartId), uint(itemId))
+	if err != nil {
+		if err.Error() == "item not found" {
+			http.Error(w, "Item not found in cart", http.StatusNotFound)
+		} else {
+			http.Error(w, "Failed to remove item from cart", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"message": "Item removed successfully"})
 }

@@ -11,6 +11,7 @@ type CartRepository interface {
 	GetByID(userId uint) (*model.Cart, error)
 	AddItemToCart(cartId uint, item *model.CartItem) error
 	UpdateCart(cart *model.Cart) error
+	RemoveItemToCart(cartId uint, itemId uint) error
 }
 
 type cartRepository struct {
@@ -27,7 +28,6 @@ func (r *cartRepository) Create(cart *model.Cart) error {
 
 func (r *cartRepository) GetByID(userId uint) (*model.Cart, error) {
 	var cart model.Cart
-	// Используем Preload для загрузки связанных элементов
 	if err := r.db.Preload("Items").Where("user_id = ?", userId).First(&cart).Error; err != nil {
 		return nil, err
 	}
@@ -42,4 +42,11 @@ func (r *cartRepository) AddItemToCart(cartId uint, item *model.CartItem) error 
 
 func (r *cartRepository) UpdateCart(cart *model.Cart) error {
 	return r.db.Save(cart).Error
+}
+
+func (r *cartRepository) RemoveItemToCart(cartId uint, itemId uint) error {
+	if err := r.db.Where("id = ? AND cart_id = ?", itemId, cartId).Delete(&model.CartItem{}).Error; err != nil {
+		return err
+	}
+	return nil
 }

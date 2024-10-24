@@ -10,6 +10,7 @@ type CartService interface {
 	GetCart(userId uint) (*model.Cart, error)
 	AddItem(cartId uint, item *model.CartItem) error
 	UpdateCart(cart *model.Cart) error
+	RemoveItemToCart(cartId uint, itemId uint) error
 }
 
 type cartService struct {
@@ -34,4 +35,8 @@ func (s *cartService) AddItem(cartId uint, item *model.CartItem) error {
 
 func (s *cartService) UpdateCart(cart *model.Cart) error {
 	return s.repo.UpdateCart(cart)
+}
+
+func (s *cartService) RemoveItemToCart(cartId uint, itemId uint) error {
+	return s.repo.RemoveItemToCart(cartId, itemId)
 }
