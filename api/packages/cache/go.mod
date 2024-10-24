@@ -1,4 +1,4 @@
-module github.com/barghest0/packages/cache
+module github.com/barghest0/reveal/api/packages/cache
 
 go 1.23.1
 
