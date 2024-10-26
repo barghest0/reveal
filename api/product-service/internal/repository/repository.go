@@ -5,6 +5,7 @@ import (
 	"product-service/internal/model"
 	"time"
 
+	"github.com/barghest0/reveal/api/packages/cache"
 	"gorm.io/gorm"
 )
 
@@ -19,10 +20,10 @@ type ProductRepository interface {
 
 type productRepository struct {
 	db    *gorm.DB
-	cache packages.CacheService
+	cache cache.CacheService
 }
 
-func CreateProductRepository(db *gorm.DB, cache packages.CacheService) ProductRepository {
+func CreateProductRepository(db *gorm.DB, cache cache.CacheService) ProductRepository {
 	return &productRepository{db, cache}
 }
 
