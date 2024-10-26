@@ -23,7 +23,7 @@ type productRepository struct {
 	cache cache.CacheService
 }
 
-func CreateProductRepository(db *gorm.DB, cache cache.CacheService) ProductRepository {
+func CreateProductRepository(db *gorm.DB, cache packages.CacheService) ProductRepository {
 	return &productRepository{db, cache}
 }
 
