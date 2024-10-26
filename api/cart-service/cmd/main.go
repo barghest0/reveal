@@ -1,18 +1,16 @@
 package main
 
 import (
+	"cart-service/internal/config"
+	"cart-service/internal/db"
+	"cart-service/internal/handler"
+	"cart-service/internal/repository"
+	"cart-service/internal/router"
+	"cart-service/internal/service"
 	"log"
 	"net/http"
-	"product-service/internal/config"
-	"product-service/internal/db"
-	"product-service/internal/handler"
-	"product-service/internal/repository"
-	"product-service/internal/router"
-	"product-service/internal/service"
 
-
-	"github.com/barghest0/reveal/api/packages/cache"
-
+	_ "github.com/lib/pq"
 )
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -38,19 +36,16 @@ func main() {
 	database, error := db.ConnectDB(db_config)
 
 	if error != nil {
-		log.Fatalf("failed to connect to the databalse: %v", error)
+		log.Fatalf("falied to connect to the database: %v", error)
 	}
 
-	redis := cache.CreateRedisClient()
-	cache_src := cache.CreateCacheService(redis)
-
-
-	repo := repository.CreateProductRepository(database, cache_src)
-	src := service.CreateProductService(repo)
-	h := handler.CreateProductHandler(src)
+	repo := repository.CreateCartRepository(database)
+	src := service.CreateCartService(repo)
+	h := handler.CreateCartHandler(src)
 
 	router := router.CreateRouter(h)
 
 	log.Printf("Server starting on port %s", app_config.ServerHost+":"+app_config.Port)
 	http.ListenAndServe(":"+app_config.Port, corsMiddleware(router))
+
 }

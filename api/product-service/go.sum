@@ -1,9 +1,6 @@
-github.com/barghest0/packages v0.0.0-20241023175516-c4e3d752c9db h1:aXVdtEA+ogRpnfx06tAR2S4Nkt0/S5ANkvz5wfHTq0I=
-github.com/barghest0/packages v0.0.0-20241023175516-c4e3d752c9db/go.mod h1:cqISQzyvRodf9xZvl42IFD+L8M3nxz0J177bhEZZtiE=
-github.com/barghest0/reveal v0.0.0-20241022094440-7660b5f52808 h1:2j8AXnVRSEqWVC+f9B9Jx8TMY6k7zz6ykfaO4DAyMRk=
-github.com/barghest0/reveal v0.0.0-20241022094440-7660b5f52808/go.mod h1:KG7HZxGLmbgUyTCg4zMRir3V57YmfPDShyGH++ICx/g=
-github.com/barghest0/reveal-packages v0.0.0-20241023174632-9a7f0b5b795f h1:u5SYrXJcX/5tDe6NLLQs96jzJvXL6S34jNr0MXMyqj8=
-github.com/barghest0/reveal-packages v0.0.0-20241023174632-9a7f0b5b795f/go.mod h1:tCnTNRkw+TuLSQo/hqOV92kc+K6eDA5KcNVYVS7nEN4=
+
+github.com/barghest0/reveal/api/packages/cache v0.0.0-20241026151447-96105d709631 h1:OBshCBg7/RMoMCVRn/8U8xWNKagLgaOqq7pdJIjGAsY=
+github.com/barghest0/reveal/api/packages/cache v0.0.0-20241026151447-96105d709631/go.mod h1:XrG1dux1DT9mQY+49iPh1n8N3KcT4qDqY1npUIqM/Xs=
 github.com/cespare/xxhash/v2 v2.1.2 h1:YRXhKfTDauu4ajMg1TPgFO5jnlC2HCbmLXMcTG5cbYE=
 github.com/cespare/xxhash/v2 v2.1.2/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
