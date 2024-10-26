@@ -9,6 +9,8 @@ import (
 	"product-service/internal/repository"
 	"product-service/internal/router"
 	"product-service/internal/service"
+
+	"github.com/barghest0/reveal/api/packages/cache"
 )
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -37,7 +39,10 @@ func main() {
 		log.Fatalf("failed to connect to the databalse: %v", error)
 	}
 
-	repo := repository.CreateProductRepository(database)
+	redis := cache.CreateRedisClient()
+	cache_src := cache.CreateCacheService(redis)
+
+	repo := repository.CreateProductRepository(database, cache_src)
 	src := service.CreateProductService(repo)
 	h := handler.CreateProductHandler(src)
 
