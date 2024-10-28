@@ -36,21 +36,21 @@ func (r *productRepository) Create(product *model.Product) error {
 }
 
 func (r *productRepository) GetAll() (*[]model.Product, error) {
-	cacheKey := "products:all"
+	// cacheKey := "products:all"
 
 	var products []model.Product
-	if err := r.cache.Get(cacheKey, &products); err == nil {
-		return &products, nil
-	}
+	// if err := r.cache.Get(cacheKey, &products); err == nil {
+	// 	return &products, nil
+	// }
 
 	if err := r.db.Find(&products).Error; err != nil {
 		return nil, err
 	}
 
-	if err := r.cache.Set(cacheKey, &products, time.Hour); err != nil {
-		return nil, err
-	}
-
+	// if err := r.cache.Set(cacheKey, &products, time.Hour); err != nil {
+	// 	return nil, err
+	// }
+	//
 	return &products, nil
 }
 
