@@ -2,7 +2,13 @@
   "compilerOptions": {
     "target": "es5",
     "module": "ESNext",
-    "jsx": "react",
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "isolatedModules": true,
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
