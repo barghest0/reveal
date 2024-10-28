@@ -6,7 +6,9 @@
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["react/next", "react-dom/next"],
   },
+  
   "include": ["src/**/*"]
 }
