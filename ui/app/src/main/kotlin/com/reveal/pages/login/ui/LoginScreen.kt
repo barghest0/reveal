@@ -19,20 +19,14 @@ import entities.user.UserRepository
 import features.login.LoginForm
 import features.login.LoginUseCase
 import features.login.LoginViewModel
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.serialization.kotlinx.json.json
 import shared.session.PreferencesManager
 import shared.ui.layout.ScreenLayout
-
-var client = HttpClient(CIO) { install(ContentNegotiation) { json() } }
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
   val context = LocalContext.current
   val viewModel: LoginViewModel = remember {
-    LoginViewModel(LoginUseCase(UserRepository(client)), PreferencesManager(context))
+    LoginViewModel(LoginUseCase(UserRepository()), PreferencesManager(context))
   }
 
   val state by viewModel.uiState
