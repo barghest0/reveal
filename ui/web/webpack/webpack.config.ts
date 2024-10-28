@@ -1,8 +1,11 @@
-const path = require("path")
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { Configuration } from 'webpack';
+import 'webpack-dev-server'
 
-module.exports = {
-    entry: path.resolve(__dirname, "src", "index.tsx"),
+
+const config: Configuration = {
+    entry: "../src/index.tsx",
     output: {
         filename: "bundle.js",
         path: path.resolve(__dirname, "dist"),
@@ -10,14 +13,16 @@ module.exports = {
     },
     resolve: {
         extensions: [".ts", ".tsx", ".js"],
-        module: [path.resolve(__dirname, "src",), "node_modules"]
+        modules: [path.resolve(__dirname, "src"), "node_modules"]
     },
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
-                use: 'ts-loader',
+                test: /\.[jt]sx?$/,
                 exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader"
+                }
             }, 
             {
                 test: /\.css$/,
@@ -31,9 +36,13 @@ module.exports = {
         }),
     ],
     devServer: {
-        conentBase: path.join(__dirname, "dist"),
+        static: {
+            directory: path.join(__dirname, "dist")
+        },
         compress: true,
         port: 3000,
         hot: true,
     },
 }
+
+export default config;
