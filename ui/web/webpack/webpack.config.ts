@@ -5,24 +5,22 @@ import 'webpack-dev-server'
 
 
 const config: Configuration = {
-    entry: "../src/index.tsx",
+    entry: path.resolve(__dirname, "../src/index.tsx"),
     output: {
         filename: "bundle.js",
         path: path.resolve(__dirname, "dist"),
         clean: true,
     },
     resolve: {
-        extensions: [".ts", ".tsx", ".js"],
+        extensions: [".tsx", ".ts", ".jsx", ".js"],
         modules: [path.resolve(__dirname, "src"), "node_modules"]
     },
     module: {
         rules: [
             {
-                test: /\.[jt]sx?$/,
+                test: /\.(ts|js)x?$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader"
-                }
+                use: ["babel-loader"],
             }, 
             {
                 test: /\.css$/,
@@ -30,19 +28,17 @@ const config: Configuration = {
             },
         ],
     },
+    mode: 'development',
+    devtool: "cheap-module-source-map",
+    devServer: {
+        open: true
+    },
     plugins: [
         new HtmlWebpackPlugin({
             template: "public/index.html",
         }),
     ],
-    devServer: {
-        static: {
-            directory: path.join(__dirname, "dist")
-        },
-        compress: true,
-        port: 3000,
-        hot: true,
-    },
+    
 }
 
 export default config;
