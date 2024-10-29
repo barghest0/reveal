@@ -23,4 +23,20 @@ class ProductRepository() {
       null
     }
   }
+
+  @OptIn(InternalAPI::class)
+  suspend fun getProduct(id: String): Product? {
+    return try {
+      val response = HTTPClient.client.get("http://192.168.3.2/products/${id}")
+      val product = Json.decodeFromString<Product>(response.bodyAsText())
+
+      println(product)
+
+      product
+    } catch (exception: Exception) {
+
+      println(exception)
+      null
+    }
+  }
 }

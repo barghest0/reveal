@@ -19,5 +19,5 @@ fun CatalogScreen(
     viewModel.fetchProducts() // Получаем данные при первом запуске
   }
 
-  ScreenLayout { ProductsList(viewModel.products) }
+  ScreenLayout { ProductsList(navController, viewModel.products) }
 }
