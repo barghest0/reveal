@@ -35,7 +35,7 @@ func (h *CartHandler) CreateCart(w http.ResponseWriter, r *http.Request) {
 
 func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["userId"])
+	id, err := strconv.Atoi(vars["user_id"])
 
 	if err != nil {
 		http.Error(w, "Invalid cart id", http.StatusBadRequest)
@@ -51,20 +51,20 @@ func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 
 func (h *CartHandler) AddItemToCart(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["cartId"])
+	id, err := strconv.Atoi(vars["cart_id"])
 
 	if err != nil {
 		http.Error(w, "Invalid cart id", http.StatusBadRequest)
 		return
 	}
 
-	var newItem model.CartItem
-	if err := json.NewDecoder(r.Body).Decode(&newItem); err != nil {
+	var newProduct model.CartItem
+	if err := json.NewDecoder(r.Body).Decode(&newProduct); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	newItem.CartId = uint(id)
+	newProduct.CartId = uint(id)
 
 	cart, err := h.Service.GetCart(uint(id))
 	if err != nil {
@@ -72,7 +72,7 @@ func (h *CartHandler) AddItemToCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cart.Items = append(cart.Items, newItem)
+	cart.Products = append(cart.Products, newProduct)
 
 	if err := h.Service.UpdateCart(cart); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -80,24 +80,24 @@ func (h *CartHandler) AddItemToCart(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(newItem)
+	json.NewEncoder(w).Encode(newProduct)
 }
 
 func (h *CartHandler) RemoveItemToCart(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	cartId, err := strconv.Atoi(vars["cartId"])
+	cartId, err := strconv.Atoi(vars["cart_id"])
 	if err != nil {
 		http.Error(w, "Invalid cart id", http.StatusBadRequest)
 		return
 	}
 
-	itemId, err := strconv.Atoi(vars["itemId"])
+	productId, err := strconv.Atoi(vars["product_id"])
 	if err != nil {
 		http.Error(w, "Invalid item id", http.StatusBadRequest)
 		return
 	}
 
-	err = h.Service.RemoveItemToCart(uint(cartId), uint(itemId))
+	err = h.Service.RemoveItemToCart(uint(cartId), uint(productId))
 	if err != nil {
 		if err.Error() == "item not found" {
 			http.Error(w, "Item not found in cart", http.StatusNotFound)
