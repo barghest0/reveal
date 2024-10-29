@@ -9,7 +9,7 @@ type Cart struct {
 	UserId    uint       `json:"user_id"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
-	Items     []CartItem `gorm:"foreignKey:CartId;constraint:OnDelete:CASCADE;"`
+	Products  []CartItem `gorm:"foreignKey:CartId;constraint:OnDelete:CASCADE;"`
 }
 
 type CartItem struct {
