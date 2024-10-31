@@ -30,8 +30,8 @@ const createCart = async () => {
 
 const getCart = async (userId: number) => {
     try {
-        const response = await axios.get<Cart>(`${baseUrl}/`);
-        return response.data
+        const response = await axios.get<Cart>(`${baseUrl}/${userId}`);
+        return response.data;
     }
     catch (error) {
         console.log("Ошибка получение корзины: ", error);
@@ -41,6 +41,22 @@ const getCart = async (userId: number) => {
 
 const addProductToCart = async (cartId: number, productId: number) => {
     try {
+        const response = await axios.put(`${baseUrl}/products`, productId);
+        return response.data
+    }
+    catch (error) {
+        console.log("Ошибка добавление товара в корзину: ", error);
+        throw error;
+    }
+}
 
+const removeProductToCart = async (cartId: number, productId: number) => {
+    try {
+        const response = await axios.delete<CartItem>(`${baseUrl}/products/${productId}`);
+        return response.data;
+    }
+    catch (error) {
+        console.log('Ошибка при удаление товара из корзины: ', error);
+        throw error;
     }
 }
