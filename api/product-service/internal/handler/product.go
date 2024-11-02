@@ -11,11 +11,11 @@ import (
 )
 
 type ProductHandler struct {
-	Service service.ProductService
+	service service.ProductService
 }
 
 func CreateProductHandler(service service.ProductService) *ProductHandler {
-	return &ProductHandler{Service: service}
+	return &ProductHandler{service}
 }
 
 func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +24,7 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	if err := h.Service.CreateProduct(&product); err != nil {
+	if err := h.service.CreateProduct(&product); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -33,7 +33,7 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
-	products, err := h.Service.GetProducts()
+	products, err := h.service.GetProducts()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -49,7 +49,7 @@ func (h *ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid product ID", http.StatusBadRequest)
 		return
 	}
-	product, err := h.Service.GetProduct(uint(id))
+	product, err := h.service.GetProduct(uint(id))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
@@ -70,7 +70,7 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	product.ID = uint(id)
-	if err := h.Service.UpdateProduct(&product); err != nil {
+	if err := h.service.UpdateProduct(&product); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -84,7 +84,7 @@ func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid product ID", http.StatusBadRequest)
 		return
 	}
-	if err := h.Service.DeleteProduct(uint(id)); err != nil {
+	if err := h.service.DeleteProduct(uint(id)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -105,7 +105,7 @@ func (h *ProductHandler) PurchaseProduct(w http.ResponseWriter, r *http.Request)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	if err := h.Service.PurchaseProduct(uint(id), payload.BuyerID); err != nil {
+	if err := h.service.PurchaseProduct(uint(id), payload.BuyerID); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

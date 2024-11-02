@@ -1,12 +1,14 @@
 package main
 
 import (
-	"api/internal/config"
-	"api/internal/db"
-	"api/routes"
-	"api/services"
 	"log"
 	"net/http"
+	"user-service/handler"
+	"user-service/internal/config"
+	"user-service/internal/db"
+	"user-service/repository"
+	"user-service/routes"
+	"user-service/service"
 )
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -35,8 +37,11 @@ func main() {
 		log.Fatalf("failed to connect to the databalse: %v", error)
 	}
 
-	userService := services.CreateUserService(database)
-	router := routes.InitRoutes(userService)
+	repo := repository.CreateUserRepository(database)
+	src := service.CreateUserService(repo)
+	h := handler.CreateUserHandler(src)
+
+	router := routes.InitRoutes(h)
 
 	log.Printf("Server starting on port %s", app_config.ServerHost+":"+app_config.Port)
 	http.ListenAndServe(":"+app_config.Port, corsMiddleware(router))

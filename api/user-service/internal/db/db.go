@@ -1,8 +1,8 @@
 package db
 
 import (
-	"api/internal/config"
-	"api/model"
+	"user-service/internal/config"
+	"user-service/model"
 	"fmt"
 	"log"
 
