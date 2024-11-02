@@ -77,24 +77,29 @@ services:
       POSTGRES_DB: products
     ports: [8082:8082]
     networks: [marketplace-network]
-
   cart-service:
     build: ./cart-service
     container_name: cart-service
-    depends_on: 
+    depends_on:
       postgres:
         condition: service_healthy
     environment:
       PORT: 8083
-      SERVER_HOST: localhost 
+      SERVER_HOST: localhost
       DB_HOST: postgres
       DB_PORT: 5432
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: barghest
       POSTGRES_DB: cart
     ports: [8083:8083]
-    networks: [marketplace-network]   
-
+    networks: [marketplace-network]
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports: [5672:5672, 15672:15672]
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks: [marketplace-network]
 networks:
   marketplace-network:
     driver: bridge

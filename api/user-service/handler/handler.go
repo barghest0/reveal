@@ -2,11 +2,13 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
 	"user-service/auth"
 	"user-service/model"
+	"user-service/rabbitmq"
 	"user-service/service"
 
 	"github.com/golang-jwt/jwt"
@@ -15,6 +17,7 @@ import (
 
 type UserHandler struct {
 	service service.UserService
+	rmq     rabbitmq.RabbitMQ
 }
 
 type Credentials struct {
@@ -27,8 +30,8 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-func CreateUserHandler(service service.UserService) *UserHandler {
-	return &UserHandler{service}
+func CreateUserHandler(service service.UserService, rmq *rabbitmq.RabbitMQ) *UserHandler {
+	return &UserHandler{service, *rmq}
 }
 
 func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -188,6 +191,13 @@ func (handler *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
+	}
+
+	// Отправляем сообщение о создании пользователя в RabbitMQ
+	message, _ := json.Marshal(user)
+	err = handler.rmq.Publish("user_created", message)
+	if err != nil {
+		log.Printf("Failed to publish message to RabbitMQ: %v", err)
 	}
 
 	w.WriteHeader(http.StatusCreated)
