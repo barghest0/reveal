@@ -32,7 +32,9 @@ fun AppNavigation(navController: NavHostController) {
         composable("login") { LoginScreen(navController) }
         composable("product/{productId}") { backStackEntry ->
           val productId = backStackEntry.arguments?.getString("productId")
-          ProductScreen(navController, productId)
+          if (productId != null) {
+            ProductScreen(navController, productId)
+          }
         }
       }
     }
