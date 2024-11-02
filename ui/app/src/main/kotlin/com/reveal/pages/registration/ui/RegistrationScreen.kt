@@ -18,21 +18,13 @@ import entities.user.UserRepository
 import features.registration.RegistrationForm
 import features.registration.RegistrationUseCase
 import features.registration.RegistrationViewModel
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.serialization.kotlinx.json.json
 import shared.ui.layout.ScreenLayout
 
 @Composable
 fun RegistrationScreen(
         navController: NavHostController,
         viewModel: RegistrationViewModel = remember {
-          RegistrationViewModel(
-                  RegistrationUseCase(
-                          UserRepository(HttpClient(CIO) { install(ContentNegotiation) { json() } })
-                  )
-          )
+          RegistrationViewModel(RegistrationUseCase(UserRepository()))
         }
 ) {
   val state by viewModel.uiState
