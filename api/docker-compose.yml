@@ -7,14 +7,14 @@ services:
     depends_on: [user-service, product-service]
     ports: [80:80]
     volumes: [./gateway/nginx/nginx.conf:/etc/nginx/nginx.conf]
-    networks: [marketplace-network]
+    networks: [reveal]
   redis:
     image: redis:alpine
     container_name: redis
     ports: [6379:6379]
     volumes: [redis-data:/data]
     restart: always
-    networks: [marketplace-network]
+    networks: [reveal]
   postgres:
     image: postgres:16
     container_name: postgres
@@ -31,7 +31,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init-db.sql
-    networks: [marketplace-network]
+    networks: [reveal]
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -40,7 +40,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: barghest391@gmail.com
       PGADMIN_DEFAULT_PASSWORD: barghest
     ports: [5050:80]
-    networks: [marketplace-network]
+    networks: [reveal]
     depends_on:
       postgres:
         condition: service_healthy
@@ -49,6 +49,8 @@ services:
     build: ./user-service
     container_name: user-service
     depends_on:
+      rabbitmq:
+        condition: service_started
       postgres:
         condition: service_healthy
     environment:
@@ -60,7 +62,7 @@ services:
       POSTGRES_PASSWORD: barghest
       POSTGRES_DB: users
     ports: [8081:8081]
-    networks: [marketplace-network]
+    networks: [reveal]
   product-service:
     build: ./product-service
     container_name: product-service
@@ -76,7 +78,7 @@ services:
       POSTGRES_PASSWORD: barghest
       POSTGRES_DB: products
     ports: [8082:8082]
-    networks: [marketplace-network]
+    networks: [reveal]
   cart-service:
     build: ./cart-service
     container_name: cart-service
@@ -92,16 +94,17 @@ services:
       POSTGRES_PASSWORD: barghest
       POSTGRES_DB: cart
     ports: [8083:8083]
-    networks: [marketplace-network]
+    networks: [reveal]
   rabbitmq:
+    container_name: rmq
     image: rabbitmq:3-management
     ports: [5672:5672, 15672:15672]
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
-    networks: [marketplace-network]
+    networks: [reveal]
 networks:
-  marketplace-network:
+  reveal:
     driver: bridge
 volumes:
   pgdata:
@@ -127,4 +130,4 @@ volumes:
   #     - "8000:8000"
   #     - "8001:8001"
   #     - "8002:8002"
-  #   networks: [marketplace-network]
+  #   networks: [reveal]

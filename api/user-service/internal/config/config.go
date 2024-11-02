@@ -29,7 +29,7 @@ func LoadConfig() Config {
 
 	AppConfig.Port = getEnv("PORT", "8080")
 	AppConfig.ServerHost = getEnv("SERVER_HOST", "localhost")
-	AppConfig.RabbitMQURL = "amqp://guest:guest@localhost:5672/"
+	AppConfig.RabbitMQURL = "amqp://guest:guest@rabbitmq:5672/"
 
 	return AppConfig
 }
