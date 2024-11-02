@@ -2,6 +2,7 @@ package pages.catalog
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import entities.product.ProductRepository
 import entities.product.ProductViewModel
@@ -13,11 +14,9 @@ import widgets.ProductsList.ProductsList
 fun CatalogScreen(
         navController: NavController,
 ) {
-  val viewModel = ProductViewModel(ProductRepository())
+  val viewModel = remember { ProductViewModel(ProductRepository()) }
 
-  LaunchedEffect(Unit) {
-    viewModel.fetchProducts() // Получаем данные при первом запуске
-  }
+  LaunchedEffect(Unit) { viewModel.fetchProducts() }
 
   ScreenLayout { ProductsList(navController, viewModel.products) }
 }
