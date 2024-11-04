@@ -2,13 +2,11 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
 	"user-service/auth"
 	"user-service/model"
-	"user-service/rabbitmq"
 	"user-service/service"
 
 	"github.com/golang-jwt/jwt"
@@ -17,7 +15,6 @@ import (
 
 type UserHandler struct {
 	service service.UserService
-	rmq     rabbitmq.RabbitMQ
 }
 
 type Credentials struct {
@@ -30,8 +27,8 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-func CreateUserHandler(service service.UserService, rmq *rabbitmq.RabbitMQ) *UserHandler {
-	return &UserHandler{service, *rmq}
+func CreateUserHandler(service service.UserService) *UserHandler {
+	return &UserHandler{service}
 }
 
 func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -43,7 +40,7 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = handler.service.CreateUser(user)
+	err = handler.service.CreateUser(&user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -170,10 +167,10 @@ func (handler *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
+
 	var user model.User
 
 	err := json.NewDecoder(r.Body).Decode(&user)
-	println(err)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -187,17 +184,10 @@ func (handler *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 
 	user.Password = hashedPassword
 
-	err = handler.service.CreateUser(user)
+	err = handler.service.Register(user)
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
-	}
-
-	// Отправляем сообщение о создании пользователя в RabbitMQ
-	message, _ := json.Marshal(user)
-	err = handler.rmq.Publish("user_created", message)
-	if err != nil {
-		log.Printf("Failed to publish message to RabbitMQ: %v", err)
 	}
 
 	w.WriteHeader(http.StatusCreated)

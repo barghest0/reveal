@@ -6,7 +6,7 @@ import (
 	"user-service/handler"
 	"user-service/internal/config"
 	"user-service/internal/db"
-	"user-service/rabbitmq"
+	"user-service/messaging"
 	"user-service/repository"
 	"user-service/routes"
 	"user-service/service"
@@ -39,14 +39,14 @@ func main() {
 		log.Fatalf("failed to connect to the databalse: %v", error)
 	}
 
-	rmq, err := rabbitmq.CreateRabbitMQ(rabbitmqURL)
+	rmq, err := messaging.CreateRabbitMQ(rabbitmqURL)
 	if err != nil {
 		log.Fatalf("failed to connect to RabbitMQ: %v", err)
 	}
 
 	repo := repository.CreateUserRepository(database)
-	src := service.CreateUserService(repo)
-	h := handler.CreateUserHandler(src, rmq)
+	src := service.CreateUserService(repo, rmq)
+	h := handler.CreateUserHandler(src)
 
 	router := routes.InitRoutes(h)
 

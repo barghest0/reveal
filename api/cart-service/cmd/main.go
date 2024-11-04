@@ -4,6 +4,7 @@ import (
 	"cart-service/internal/config"
 	"cart-service/internal/db"
 	"cart-service/internal/handler"
+	"cart-service/internal/rabbitmq"
 	"cart-service/internal/repository"
 	"cart-service/internal/router"
 	"cart-service/internal/service"
@@ -35,13 +36,23 @@ func main() {
 
 	database, error := db.ConnectDB(db_config)
 
+	rmq, err := messaging.CreateRabbitMQ("amqp://guest:guest@rabbitmq:5672/")
+
+	if err != nil {
+		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
+	}
+
 	if error != nil {
 		log.Fatalf("falied to connect to the database: %v", error)
 	}
 
 	repo := repository.CreateCartRepository(database)
-	src := service.CreateCartService(repo)
+	src := service.CreateCartService(repo, rmq)
 	h := handler.CreateCartHandler(src)
+
+	go func() {
+		src.UserRegistrationListener()
+	}()
 
 	router := router.CreateRouter(h)
 
