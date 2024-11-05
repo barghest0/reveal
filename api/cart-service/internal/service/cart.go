@@ -46,7 +46,7 @@ func (s *cartService) UpdateCart(cart *model.Cart) error {
 }
 
 func (s *cartService) RemoveProductFromCart(cartId uint, product_id uint) error {
-	return s.repo.RemoveItemToCart(cartId, product_id)
+	return s.repo.RemoveItemFromCart(cartId, product_id)
 }
 
 type Data struct {
