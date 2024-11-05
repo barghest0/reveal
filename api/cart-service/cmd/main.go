@@ -51,7 +51,7 @@ func main() {
 	h := handler.CreateCartHandler(src)
 
 	go func() {
-		src.UserRegistrationListener()
+		src.CreateCartAfterRegistration()
 	}()
 
 	router := router.CreateRouter(h)

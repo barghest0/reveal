@@ -9,7 +9,7 @@ import (
 type CartRepository interface {
 	Create(cart *model.Cart) error
 	GetByID(userId uint) (*model.Cart, error)
-	AddItemToCart(cartId uint, product *model.CartItem) error
+	AddItemToCart(cartId uint, product *model.CartProduct) error
 	UpdateCart(cart *model.Cart) error
 	RemoveItemToCart(cartId uint, product_id uint) error
 }
@@ -35,7 +35,7 @@ func (r *cartRepository) GetByID(userId uint) (*model.Cart, error) {
 
 }
 
-func (r *cartRepository) AddItemToCart(cartId uint, product *model.CartItem) error {
+func (r *cartRepository) AddItemToCart(cartId uint, product *model.CartProduct) error {
 	product.CartId = cartId
 	return r.db.Save(product).Error
 }
@@ -45,7 +45,7 @@ func (r *cartRepository) UpdateCart(cart *model.Cart) error {
 }
 
 func (r *cartRepository) RemoveItemToCart(cartId uint, product_id uint) error {
-	if err := r.db.Where("id = ? AND cart_id = ?", product_id, cartId).Delete(&model.CartItem{}).Error; err != nil {
+	if err := r.db.Where("id = ? AND cart_id = ?", product_id, cartId).Delete(&model.CartProduct{}).Error; err != nil {
 		return err
 	}
 	return nil

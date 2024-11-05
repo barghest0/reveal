@@ -11,7 +11,6 @@ type RabbitMQ struct {
 	channel *amqp.Channel
 }
 
-// NewRabbitMQ создает новое подключение и канал RabbitMQ
 func CreateRabbitMQ(url string) (*RabbitMQ, error) {
 	conn, err := amqp.Dial(url)
 	if err != nil {
@@ -27,30 +26,27 @@ func CreateRabbitMQ(url string) (*RabbitMQ, error) {
 	return &RabbitMQ{conn, ch}, nil
 }
 
-// Consume подключается к указанной очереди и возвращает канал для чтения сообщений
 func (r *RabbitMQ) Consume(queueName string) (<-chan amqp.Delivery, error) {
-	// Декларируем очередь, если она еще не существует
 	q, err := r.channel.QueueDeclare(
-		queueName, // имя очереди
-		false,     // не сохраняем очередь при рестарте сервера
-		false,     // не удаляем очередь, если нет потребителей
-		false,     // очередь доступна только для текущего соединения
-		false,     // без ожидания
-		nil,       // дополнительные аргументы
+		queueName,
+		false,
+		false,
+		false,
+		false,
+		nil,
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	// Подключаемся к очереди для потребления сообщений
 	messages, err := r.channel.Consume(
-		q.Name, // имя очереди
-		"",     // потребитель
-		true,   // авто-подтверждение
-		false,  // эксклюзивное потребление
-		false,  // отсутствие локального режима
-		false,  // без ожидания
-		nil,    // дополнительные аргументы
+		q.Name,
+		"",
+		true,
+		false,
+		false,
+		false,
+		nil,
 	)
 	if err != nil {
 		return nil, err
@@ -59,7 +55,6 @@ func (r *RabbitMQ) Consume(queueName string) (<-chan amqp.Delivery, error) {
 	return messages, nil
 }
 
-// Close закрывает соединение и канал RabbitMQ
 func (r *RabbitMQ) Close() {
 	if err := r.channel.Close(); err != nil {
 		log.Printf("Error closing channel: %v", err)

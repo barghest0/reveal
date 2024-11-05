@@ -14,10 +14,10 @@ import (
 type CartService interface {
 	CreateCart(cart *model.Cart) error
 	GetCart(userId uint) (*model.Cart, error)
-	AddItem(cartId uint, product *model.CartItem) error
+	AddProductToCart(cartId uint, product *model.CartProduct) error
 	UpdateCart(cart *model.Cart) error
-	RemoveItemToCart(cartId uint, product_id uint) error
-	UserRegistrationListener()
+	RemoveProductFromCart(cartId uint, product_id uint) error
+	CreateCartAfterRegistration()
 }
 
 type cartService struct {
@@ -29,12 +29,31 @@ func CreateCartService(repo repository.CartRepository, rmq *messaging.RabbitMQ) 
 	return &cartService{repo, *rmq}
 }
 
+func (s *cartService) CreateCart(cart *model.Cart) error {
+	return s.repo.Create(cart)
+}
+
+func (s *cartService) GetCart(userId uint) (*model.Cart, error) {
+	return s.repo.GetByID(userId)
+}
+
+func (s *cartService) AddProductToCart(cartId uint, product *model.CartProduct) error {
+	return s.repo.AddItemToCart(cartId, product)
+}
+
+func (s *cartService) UpdateCart(cart *model.Cart) error {
+	return s.repo.UpdateCart(cart)
+}
+
+func (s *cartService) RemoveProductFromCart(cartId uint, product_id uint) error {
+	return s.repo.RemoveItemToCart(cartId, product_id)
+}
+
 type Data struct {
 	Id uint `json:"id"`
 }
 
-// Прослушивание очереди и создание корзины для зарегистрированных пользователей
-func (s *cartService) UserRegistrationListener() {
+func (s *cartService) CreateCartAfterRegistration() {
 	messages, err := s.rmq.Consume("user.registered")
 	if err != nil {
 		log.Fatalf("Failed to consume messages: %v", err)
@@ -45,24 +64,19 @@ func (s *cartService) UserRegistrationListener() {
 
 		receivedStr := string(msg.Body)
 
-		// Удаляем квадратные скобки
 		cleanedStr := strings.Trim(receivedStr, "[]")
 
-		// Разделяем строку на части
 		parts := strings.Split(cleanedStr, " ")
 
-		// Создаем массив байтов
 		byteArray := make([]byte, len(parts))
 
-		// Логируем полученное сообщение
-
 		for i, part := range parts {
-			num, err := strconv.Atoi(part) // Преобразование строки в целое число
+			num, err := strconv.Atoi(part)
 			if err != nil {
 				fmt.Println("Error converting:", err)
 				return
 			}
-			byteArray[i] = byte(num) // Преобразование числа в байт
+			byteArray[i] = byte(num)
 		}
 
 		log.Println(byteArray, &userData, json.Unmarshal(byteArray, &userData))
@@ -70,7 +84,7 @@ func (s *cartService) UserRegistrationListener() {
 
 		// Декодируем сообщение
 		if err := json.Unmarshal(byteArray, &userData); err != nil {
-			log.Println("Failed to unmarshal user_id: %v", err)
+			log.Printf("Failed to unmarshal user_id: %v", err)
 			continue
 		}
 
@@ -84,24 +98,4 @@ func (s *cartService) UserRegistrationListener() {
 			log.Printf("Created cart for user %v", userData.Id)
 		}
 	}
-}
-
-func (s *cartService) CreateCart(cart *model.Cart) error {
-	return s.repo.Create(cart)
-}
-
-func (s *cartService) GetCart(userId uint) (*model.Cart, error) {
-	return s.repo.GetByID(userId)
-}
-
-func (s *cartService) AddItem(cartId uint, product *model.CartItem) error {
-	return s.repo.AddItemToCart(cartId, product)
-}
-
-func (s *cartService) UpdateCart(cart *model.Cart) error {
-	return s.repo.UpdateCart(cart)
-}
-
-func (s *cartService) RemoveItemToCart(cartId uint, product_id uint) error {
-	return s.repo.RemoveItemToCart(cartId, product_id)
 }
