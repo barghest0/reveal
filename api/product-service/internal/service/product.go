@@ -18,12 +18,12 @@ type productService struct {
 	repo repository.ProductRepository
 }
 
-func (s *productService) GetProducts() (*[]model.Product, error) {
-	return s.repo.GetAll()
-}
-
 func CreateProductService(repo repository.ProductRepository) ProductService {
 	return &productService{repo}
+}
+
+func (s *productService) GetProducts() (*[]model.Product, error) {
+	return s.repo.GetAll()
 }
 
 func (s *productService) CreateProduct(product *model.Product) error {

@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import pages.catalog.CatalogScreen
 import pages.login.LoginScreen
+import pages.product.ProductScreen
 import pages.profile.ProfileScreen
 import pages.registration.RegistrationScreen
 import widgets.NavigationBar.NavigationBar
@@ -29,6 +30,12 @@ fun AppNavigation(navController: NavHostController) {
         composable("registration") { RegistrationScreen(navController) }
         composable("profile") { ProfileScreen(navController) }
         composable("login") { LoginScreen(navController) }
+        composable("product/{productId}") { backStackEntry ->
+          val productId = backStackEntry.arguments?.getString("productId")
+          if (productId != null) {
+            ProductScreen(navController, productId)
+          }
+        }
       }
     }
   }
