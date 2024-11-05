@@ -40,7 +40,7 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = handler.service.CreateUser(user)
+	err = handler.service.CreateUser(&user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -167,10 +167,10 @@ func (handler *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
+
 	var user model.User
 
 	err := json.NewDecoder(r.Body).Decode(&user)
-	println(err)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -184,7 +184,7 @@ func (handler *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 
 	user.Password = hashedPassword
 
-	err = handler.service.CreateUser(user)
+	err = handler.service.Register(user)
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return

@@ -3,8 +3,9 @@ package config
 import "os"
 
 type Config struct {
-	Port       string
-	ServerHost string
+	Port        string
+	ServerHost  string
+	RabbitMQURL string
 }
 
 type DBConfig struct {
@@ -28,6 +29,7 @@ func LoadConfig() Config {
 
 	AppConfig.Port = getEnv("PORT", "8080")
 	AppConfig.ServerHost = getEnv("SERVER_HOST", "localhost")
+	AppConfig.RabbitMQURL = "amqp://guest:guest@rabbitmq:5672/"
 
 	return AppConfig
 }

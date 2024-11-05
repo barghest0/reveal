@@ -6,6 +6,7 @@ import (
 	"user-service/handler"
 	"user-service/internal/config"
 	"user-service/internal/db"
+	"user-service/messaging"
 	"user-service/repository"
 	"user-service/routes"
 	"user-service/service"
@@ -30,6 +31,7 @@ func corsMiddleware(next http.Handler) http.Handler {
 func main() {
 	app_config := config.LoadConfig()
 	db_config := config.LoadDBConfig()
+	rabbitmqURL := app_config.RabbitMQURL
 
 	database, error := db.ConnectDB(db_config)
 
@@ -37,8 +39,13 @@ func main() {
 		log.Fatalf("failed to connect to the databalse: %v", error)
 	}
 
+	rmq, err := messaging.CreateRabbitMQ(rabbitmqURL)
+	if err != nil {
+		log.Fatalf("failed to connect to RabbitMQ: %v", err)
+	}
+
 	repo := repository.CreateUserRepository(database)
-	src := service.CreateUserService(repo)
+	src := service.CreateUserService(repo, rmq)
 	h := handler.CreateUserHandler(src)
 
 	router := routes.InitRoutes(h)

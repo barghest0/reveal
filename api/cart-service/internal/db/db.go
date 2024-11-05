@@ -21,7 +21,7 @@ func ConnectDB(db_config config.DBConfig) (*gorm.DB, error) {
 		log.Fatalln(err)
 	}
 
-	if err := db.AutoMigrate(&model.Cart{}, &model.CartItem{}); err != nil {
+	if err := db.AutoMigrate(&model.Cart{}, &model.CartProduct{}); err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)
 	}
 
