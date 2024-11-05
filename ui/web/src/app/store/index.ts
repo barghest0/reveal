@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import  cartSlice  from 'features/btn-cart/model'
+import  { cartReducer }  from 'features/button-add-cart/model'
 
 export const store = configureStore({
   reducer: {
-    cart: cartSlice
+    cart: cartReducer
   },
 })
 
