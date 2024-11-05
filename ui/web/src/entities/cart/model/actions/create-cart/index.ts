@@ -1,10 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createCartApi } from "features/button-add-cart/api";
+import { CreateCartApi } from "entities/cart/api";
 
-export const createCart = createAsyncThunk(
+
+export const CreateCart = createAsyncThunk(
     'cart/createCart',
     async () => {
-        const response = await createCartApi();
+        const response = await CreateCartApi();
         return response
     }
 ) 

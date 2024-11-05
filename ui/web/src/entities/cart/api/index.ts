@@ -1,23 +1,12 @@
 import axios from "axios"
+import { Cart, CartItem } from "entities/cart";
 
 
 const baseUrl = "http://localhost:8083/cart"
 
-export interface Cart {
-    id: number,
-    userId: number,
-    products: CartItem[]
-}
 
-export interface CartItem {
-    id: number,
-    cartId: number,
-    productId: number,
-    quantity: number,
-    price: number
-}
 
-export const createCartApi = async () => {
+export const CreateCartApi = async () => {
     try {
         const response = await axios.post<Cart>(baseUrl);
         return response.data;
@@ -28,7 +17,7 @@ export const createCartApi = async () => {
     }
 }
 
-export const getCartApi = async (userId: number) => {
+export const GetCartApi = async (userId: number) => {
     try {
         const response = await axios.get<Cart>(`${baseUrl}/${userId}`);
         return response.data;
@@ -39,7 +28,7 @@ export const getCartApi = async (userId: number) => {
     }
 }
 
-export const addProductToCartApi = async (cartId: number, product: CartItem) => {
+export const AddProductToCartApi = async (cartId: number, product: CartItem) => {
     try {
         const response = await axios.put(`${baseUrl}/products`, product);
         return response.data
@@ -50,7 +39,7 @@ export const addProductToCartApi = async (cartId: number, product: CartItem) => 
     }
 }
 
- export const removeProductToCartApi = async (cartId: number, productId: number) => {
+export const RemoveProductToCartApi = async (cartId: number, productId: number) => {
     try {
         const response = await axios.delete<CartItem>(`${baseUrl}/products/${productId}`);
         return response.data;

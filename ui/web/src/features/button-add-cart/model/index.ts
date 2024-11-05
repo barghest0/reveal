@@ -1,17 +1,12 @@
 
-import { Cart } from "../api";
+
 import { StatusFlag } from "shared/types/status/status-flag";
 import { createSlice } from "@reduxjs/toolkit";
-import { createCart } from "entities/cart";
+import { CartProduct, CreateCart } from "entities/cart";
 
 
-export interface cartProduct {
-    data: Cart | undefined,
-    status: null | StatusFlag,
-    loading: boolean
-}
 
-const initialState: cartProduct = {
+const initialState: CartProduct = {
     status: null,
     data: undefined,
     loading: false,
@@ -23,16 +18,16 @@ export const cartSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-        .addCase(createCart.pending, (state) => {
+        .addCase(CreateCart.pending, (state) => {
             state.status = StatusFlag.Pending;
             state.loading = true;
         })
-        .addCase(createCart.fulfilled, (state, action) => {
+        .addCase(CreateCart.fulfilled, (state, action) => {
             state.status = StatusFlag.Fulfilled;
             state.data = action.payload;
             state.loading = false;
         })
-        .addCase(createCart.rejected, (state) => {
+        .addCase(CreateCart.rejected, (state) => {
             state.status = StatusFlag.Rejected;
             state.loading = false;
         })
