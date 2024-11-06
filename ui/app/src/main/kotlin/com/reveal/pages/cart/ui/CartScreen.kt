@@ -4,7 +4,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import entities.cart.CartRepository
@@ -18,9 +17,9 @@ fun CartScreen(
 ) {
   val viewModel = remember { CartViewModel(CartRepository()) }
 
-  LaunchedEffect(Unit) { viewModel.getCart() }
-
   ScreenLayout {
-    LazyColumn { items(viewModel.products.toList()) { cart_item -> Text("$cart_item") } }
+    LazyColumn {
+      items(viewModel.products.toList()) { cart_item -> Text("${cart_item.product_id}") }
+    }
   }
 }

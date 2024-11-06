@@ -9,17 +9,32 @@ import kotlinx.coroutines.launch
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
   val products = mutableStateListOf<CartItem>()
 
+  init {
+    // Загружаем корзину при инициализации
+    getCart()
+  }
+
   fun addToCart(product: Product) {
     val cartItem = CartItem(product_id = product.id, quantity = 1, price = product.price)
-    viewModelScope.launch { cartRepository.addToCart(cartItem) }
+    viewModelScope.launch {
+      val is_success = cartRepository.addToCart(cartItem)
+      if (is_success) {
+        products.add(cartItem)
+      }
+    }
   }
 
   fun getCart() {
     viewModelScope.launch {
       var cart = cartRepository.getCart()
       if (cart != null) {
+        products.clear()
         products.addAll(cart.Products)
       }
     }
+  }
+
+  fun isProductExist(product_id: Int): Boolean {
+    return products.any { it.product_id == product_id }
   }
 }
