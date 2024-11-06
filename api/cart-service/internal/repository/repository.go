@@ -45,8 +45,9 @@ func (r *cartRepository) UpdateCart(cart *model.Cart) error {
 }
 
 func (r *cartRepository) RemoveItemFromCart(cartId uint, product_id uint) error {
-	if err := r.db.Where("id = ? AND cart_id = ?", product_id, cartId).Delete(&model.CartProduct{}).Error; err != nil {
+	if err := r.db.Where("cart_id = ? AND product_id = ?", cartId, product_id).Delete(&model.CartProduct{}).Error; err != nil {
 		return err
 	}
+
 	return nil
 }
