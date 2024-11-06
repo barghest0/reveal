@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
-import  { cartReducer }  from 'features/button-add-cart/model'
+import { cartReducer } from 'entities/cart/model/slice'
+
 
 export const store = configureStore({
   reducer: {

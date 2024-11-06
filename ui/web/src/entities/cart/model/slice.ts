@@ -1,6 +1,8 @@
-import { StatusFlag } from "shared/types/status/status-flag";
+
 import { createSlice } from "@reduxjs/toolkit";
 import { CartProduct,} from "entities/cart";
+import { getProductsCart } from "./actions/get-product-cart";
+import { StatusFlag } from "shared/index";
 // import { addProductToCart } from "entities/cart/model/actions/add-to-cart";
 
 
@@ -16,6 +18,20 @@ export const cartSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
+        builder
+        .addCase(getProductsCart.pending, (state) => {
+            state.status = StatusFlag.Pending;
+            state.loading = true;
+        })
+        .addCase(getProductsCart.fulfilled, (state, action) => {
+            state.status = StatusFlag.Fulfilled;
+            state.loading = false;
+            state.data = action.payload; 
+        })
+        .addCase(getProductsCart.rejected, (state) => {
+            state.status = StatusFlag.Rejected;
+            state.loading = false;
+        })
         // .addCase(addProductToCart.pending, (state) => {
         //     state.status = StatusFlag.Pending;
         //     state.loading = true;
