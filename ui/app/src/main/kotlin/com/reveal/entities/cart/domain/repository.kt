@@ -16,11 +16,30 @@ class CartRepository() {
   @OptIn(InternalAPI::class)
   suspend fun addToCart(cartItem: CartItem): Boolean {
     val response: HttpResponse =
-            HTTPClient.client.post("http://192.168.3.2/cart") {
+            HTTPClient.client.post("http://192.168.3.2/cart/365/products") {
               contentType(io.ktor.http.ContentType.Application.Json)
               body = json.encodeToString(CartItem.serializer(), cartItem)
             }
+
     return response.status.isSuccess()
+  }
+
+  @OptIn(InternalAPI::class)
+  suspend fun getCart(): Cart? {
+    return try {
+
+      val response: HttpResponse =
+              HTTPClient.client.get("http://192.168.3.2/cart/365") {
+                contentType(io.ktor.http.ContentType.Application.Json)
+              }
+      val cart = Json { ignoreUnknownKeys = true }.decodeFromString<Cart>(response.bodyAsText())
+      println(cart)
+
+      cart
+    } catch (exception: Exception) {
+      println(exception)
+      null
+    }
   }
 
   // suspend fun getCartItems(): List<CartItem> {

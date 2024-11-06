@@ -2,11 +2,6 @@ package entities.cart
 
 import kotlinx.serialization.Serializable
 
-@Serializable
-data class CartItem(
-        val id: Int,
-        val cart_id: Int,
-        val product_id: Int,
-        val quantity: Int,
-        val price: Double
-)
+@Serializable data class Cart(val id: Int, val user_id: Int, val Products: List<CartItem>)
+
+@Serializable data class CartItem(val product_id: Int, val quantity: Int, val price: Double)
