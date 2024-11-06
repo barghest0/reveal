@@ -1,6 +1,5 @@
 package entities.user
 
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -10,13 +9,33 @@ import io.ktor.util.InternalAPI
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import shared.api.HTTPClient
 
-class UserRepository(private val client: HttpClient) {
+class UserRepository() {
+  // @OptIn(InternalAPI::class)
+  // suspend fun getProfile(): UserProfile? {
+  //   return try {
+  //     val tokenManager = PreferencesManager(LocalContext.current)
+  //     val token = tokenManager.getToken()
+  //     val response =
+  //             HTTPClient.client.get("http://192.168.3.2/users/profile") {
+  //               header(HttpHeaders.Authorization, "Bearer $token")
+  //             }
+  //     val string = response.body<String>()
+  //     println("string $string")
+  //     val body = response.body<UserProfile>()
+  //     println("response body $body")
+  //     body
+  //   } catch (exception: Exception) {
+  //     println("exception $exception")
+  //     null
+  //   }
+  // }
   @OptIn(InternalAPI::class)
   suspend fun register(user: User): Boolean {
     return try {
       val response =
-              client.post("http://192.168.3.2/users/register") {
+              HTTPClient.client.post("http://192.168.3.2/users/register") {
                 contentType(ContentType.Application.Json)
                 body = Json.encodeToString(user)
               }
@@ -37,7 +56,7 @@ class UserRepository(private val client: HttpClient) {
     return try {
 
       val response =
-              client.post("http://192.168.3.2/users/login") {
+              HTTPClient.client.post("http://192.168.3.2/users/login") {
                 contentType(ContentType.Application.Json)
                 body = Json.encodeToString(Credentials(name, password))
               }

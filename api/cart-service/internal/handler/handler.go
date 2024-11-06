@@ -19,20 +19,6 @@ func CreateCartHandler(service service.CartService) *CartHandler {
 	return &CartHandler{Service: service}
 }
 
-func (h *CartHandler) CreateCart(w http.ResponseWriter, r *http.Request) {
-	var cart model.Cart
-	if err := json.NewDecoder(r.Body).Decode(&cart); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	if err := h.Service.CreateCart(&cart); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(cart)
-}
-
 func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["user_id"])
@@ -49,41 +35,97 @@ func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(cartId)
 }
 
-func (h *CartHandler) AddItemToCart(w http.ResponseWriter, r *http.Request) {
+func (h *CartHandler) AddProductToCart(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["cart_id"])
+	user_id, err := strconv.Atoi(vars["user_id"])
 
 	if err != nil {
 		http.Error(w, "Invalid cart id", http.StatusBadRequest)
 		return
 	}
 
-	var newProduct model.CartItem
-	if err := json.NewDecoder(r.Body).Decode(&newProduct); err != nil {
+	var product model.CartProduct
+	if err := json.NewDecoder(r.Body).Decode(&product); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	newProduct.CartId = uint(id)
-
-	cart, err := h.Service.GetCart(uint(id))
+	cart, err := h.Service.GetCart(uint(user_id))
 	if err != nil {
 		http.Error(w, "Cart not found", http.StatusNotFound)
 		return
 	}
 
-	cart.Products = append(cart.Products, newProduct)
+	product.CartId = uint(cart.ID)
 
+	cart.Products = append(cart.Products, product)
+
+	// Сохраняем обновленную корзину
 	if err := h.Service.UpdateCart(cart); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Failed to update cart", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(newProduct)
+	json.NewEncoder(w).Encode(product)
 }
 
-func (h *CartHandler) RemoveItemToCart(w http.ResponseWriter, r *http.Request) {
+func (h *CartHandler) UpdateProductQuantity(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userID, err := strconv.Atoi(vars["user_id"])
+	if err != nil {
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+	productID, err := strconv.Atoi(vars["product_id"])
+	if err != nil {
+		http.Error(w, "Invalid product ID", http.StatusBadRequest)
+		return
+	}
+
+	var quantityData struct {
+		Quantity uint `json:"quantity"`
+	}
+
+	// Декодируем новое количество из тела запроса
+	if err := json.NewDecoder(r.Body).Decode(&quantityData); err != nil {
+		http.Error(w, "Invalid quantity data", http.StatusBadRequest)
+		return
+	}
+
+	// Получаем корзину пользователя
+	cart, err := h.Service.GetCart(uint(userID))
+	if err != nil {
+		http.Error(w, "Cart not found", http.StatusNotFound)
+		return
+	}
+
+	productFound := false
+	for i, product := range cart.Products {
+		if product.ProductID == uint(productID) {
+			cart.Products[i].Quantity = quantityData.Quantity
+			productFound = true
+			break
+		}
+	}
+
+	if !productFound {
+		http.Error(w, "Product not found in cart", http.StatusNotFound)
+		return
+	}
+
+	// Сохраняем обновленную корзину
+	if err := h.Service.UpdateCart(cart); err != nil {
+		http.Error(w, "Failed to update cart", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(cart.Products)
+}
+
+func (h *CartHandler) RemoveProductFromCart(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	cartId, err := strconv.Atoi(vars["cart_id"])
 	if err != nil {
@@ -97,7 +139,7 @@ func (h *CartHandler) RemoveItemToCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.Service.RemoveItemToCart(uint(cartId), uint(productId))
+	err = h.Service.RemoveProductFromCart(uint(cartId), uint(productId))
 	if err != nil {
 		if err.Error() == "item not found" {
 			http.Error(w, "Item not found in cart", http.StatusNotFound)

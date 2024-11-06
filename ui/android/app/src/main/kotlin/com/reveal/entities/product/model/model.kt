@@ -9,6 +9,7 @@ data class Product(
         val description: String,
         val price: Double,
         val seller_id: Int,
+        val buyer_id: Int,
         val created_at: String,
         val updated_at: String
 )
