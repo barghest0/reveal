@@ -4,6 +4,7 @@ import (
 	"cart-service/internal/model"
 	"cart-service/internal/service"
 	"encoding/json"
+	"log"
 
 	"net/http"
 	"strconv"
@@ -74,7 +75,7 @@ func (h *CartHandler) UpdateProductQuantity(w http.ResponseWriter, r *http.Reque
 	vars := mux.Vars(r)
 	userID, err := strconv.Atoi(vars["user_id"])
 	if err != nil {
-		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		http.Error(w, "Invalid cart ID", http.StatusBadRequest)
 		return
 	}
 
@@ -127,20 +128,27 @@ func (h *CartHandler) UpdateProductQuantity(w http.ResponseWriter, r *http.Reque
 
 func (h *CartHandler) RemoveProductFromCart(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	cartId, err := strconv.Atoi(vars["cart_id"])
+	user_id, err := strconv.Atoi(vars["user_id"])
 	if err != nil {
-		http.Error(w, "Invalid cart id", http.StatusBadRequest)
+		http.Error(w, "Invalid user id", http.StatusBadRequest)
 		return
 	}
 
 	productId, err := strconv.Atoi(vars["product_id"])
 	if err != nil {
-		http.Error(w, "Invalid item id", http.StatusBadRequest)
+		http.Error(w, "Invalid product id", http.StatusBadRequest)
 		return
 	}
 
-	err = h.Service.RemoveProductFromCart(uint(cartId), uint(productId))
+	cart, err := h.Service.GetCart(uint(user_id))
 	if err != nil {
+		http.Error(w, "Cart not found", http.StatusNotFound)
+		return
+	}
+
+	err = h.Service.RemoveProductFromCart(uint(cart.UserId), uint(productId))
+	if err != nil {
+		log.Printf("Failed to remove item from cart: %v", err)
 		if err.Error() == "item not found" {
 			http.Error(w, "Item not found in cart", http.StatusNotFound)
 		} else {
