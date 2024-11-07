@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { CartProduct,} from "entities/cart";
 import { getProductsCart } from "./actions/get-product-cart";
 import { StatusFlag } from "shared/index";
-// import { addProductToCart } from "entities/cart/model/actions/add-to-cart";
+import { addProductToCart } from "entities/cart/model/actions/add-to-cart";
 
 
 
@@ -40,7 +40,7 @@ export const cartSlice = createSlice({
         //     state.status = StatusFlag.Fulfilled;
         //     state.loading = false;
         //     if (state.data) {
-        //         state.data.products.push(action.payload);
+        //         state.data.Products.push(action.payload);
         //     }
         // })
         // .addCase(addProductToCart.rejected, (state) => {
