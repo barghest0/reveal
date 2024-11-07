@@ -1,22 +1,25 @@
 import { Button } from "@mui/material";
 import { ProductItem } from "entities/card-product/model/types";
+import { addProductToCart } from "entities/cart/model/actions/add-to-cart";
 import React from "react";
 import { useAppDispatch } from "shared/types/hooks/hook";
 
 interface Props {
-    card: ProductItem | undefined
+    cartId: number;
+    product: ProductItem | undefined;
 }
 
-export const AddProductToCart: React.FC<Props> = ({card}) => {
+export const AddProductToCart: React.FC<Props> = ({cartId, product}) => {
     const dispatch = useAppDispatch();
 
-    const handleAddProduct = (card:ProductItem) => {
-        
+    const handleAddProduct = (cartId:number, product:ProductItem) => {
+        dispatch(addProductToCart({cartId, product}))
+        console.log("BUTTON ADD PRODUCT", product.id)
     }
 
     return (
         <>
-            <Button variant="contained">Add to cart</Button>
+            {product && <Button variant="contained" onClick={() => handleAddProduct(cartId, product)}>Add to cart</Button>}
         </>
     )
 }

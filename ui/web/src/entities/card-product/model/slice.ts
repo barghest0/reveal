@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ProductsCard } from "./types";
-import { getProductsCard } from "./actions";
+import { getProductsCard } from "./actions/get-products";
 import { StatusFlag } from "shared/index";
 
 

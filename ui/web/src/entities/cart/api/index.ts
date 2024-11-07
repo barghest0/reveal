@@ -1,4 +1,5 @@
 import axios from "axios"
+import { ProductItem } from "entities/card-product";
 import { Cart, CartItem } from "entities/cart";
 
 
@@ -17,10 +18,16 @@ export namespace CartApi {
         }
     }
 
-    export const addProductToCartApi = async (cartId: number, product: CartItem) => {
+    export const addProductToCartApi = async (cartId: number, product: ProductItem) => {
+        const productData = {
+            product_id: product.id,
+            price: product.price,
+            name: product.name
+        }
+
         try {
-            const response = await axios.put(`${baseUrl}/products`, product);
-            return response.data
+            const response = await axios.post(`${baseUrl}/${cartId}/products`, productData);
+            return response.data;
         }
         catch (error) {
             console.log("Ошибка добавление товара в корзину: ", error);

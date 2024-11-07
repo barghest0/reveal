@@ -1,3 +1,4 @@
+import { ProductItem } from "entities/card-product"
 import { StatusFlag } from "shared/types/status/status-flag"
 
 export interface Cart {
@@ -6,12 +7,11 @@ export interface Cart {
     Products: CartItem[]
 }
 
-export interface CartItem {
+export interface CartItem extends ProductItem{
     id: number,
-    cartId: number,
+    cart_id: number,
     product_id: number,
     quantity: number,
-    price: number
 }
 
 

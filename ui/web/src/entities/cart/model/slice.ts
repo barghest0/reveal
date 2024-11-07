@@ -32,21 +32,21 @@ export const cartSlice = createSlice({
             state.status = StatusFlag.Rejected;
             state.loading = false;
         })
-        // .addCase(addProductToCart.pending, (state) => {
-        //     state.status = StatusFlag.Pending;
-        //     state.loading = true;
-        // })
-        // .addCase(addProductToCart.fulfilled, (state, action) => {
-        //     state.status = StatusFlag.Fulfilled;
-        //     state.loading = false;
-        //     if (state.data) {
-        //         state.data.Products.push(action.payload);
-        //     }
-        // })
-        // .addCase(addProductToCart.rejected, (state) => {
-        //     state.status = StatusFlag.Rejected;
-        //     state.loading = false
-        // })
+        .addCase(addProductToCart.pending, (state) => {
+            state.status = StatusFlag.Pending;
+            state.loading = true;
+        })
+        .addCase(addProductToCart.fulfilled, (state, action) => {
+            state.status = StatusFlag.Fulfilled;
+            state.loading = false;
+            if (state.data) {
+                state.data.Products.push(action.payload);
+            }
+        })
+        .addCase(addProductToCart.rejected, (state) => {
+            state.status = StatusFlag.Rejected;
+            state.loading = false
+        })
     }
 })
 

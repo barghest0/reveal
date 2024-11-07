@@ -16,7 +16,7 @@ export const ProductsCart: React.FC <Props> = () => {
     }, [])
     
     
-    
+    console.log(data?.Products)    
 
     return (
         <div>  

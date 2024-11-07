@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
-import { getProductsCard } from "../model/actions";
+import { getProductsCard } from "../model/actions/get-products";
 import { Card } from "@mui/material";
 import { createUseStyles } from "react-jss";
 import { AddProductToCart } from "features/button-add-cart";
@@ -19,13 +19,14 @@ export const ProductsCard: React.FC<Props> = () => {
 
     const styles = useStyles();
 
+    // console.log(data?.map((item) => item))
     
     return (
         <div className={styles.cardWrapper}>
             {data?.map((product) => (
                 <Card variant="outlined">
                     <h1>Product id: {product.id}</h1>
-                    {/* <AddProductToCart card={product} cartId={1}/> */}
+                    <AddProductToCart cartId={1} product={product}/>
                 </Card>
             ))}
             
