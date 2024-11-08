@@ -5,8 +5,7 @@ import { CartProduct } from "shared/api/cart/types";
 import { getProductsCart } from "./actions/get-products-cart";
 import { addProductToCart } from "./actions/add-to-cart";
 import { ProductsCard } from "shared/api/products";
-import { getProductsCard } from "entities/card-product";
-
+import { getProductsCard } from "./actions/get-products-card";
 
 type ProductsCartState = {
     cart: CartProduct;

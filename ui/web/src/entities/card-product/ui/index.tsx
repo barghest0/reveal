@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
 import { Card } from "@mui/material";
 import { createUseStyles } from "react-jss";
 import { AddProductToCart } from "features/button-add-cart";
-import { getProductsCard } from "../model/actions";
+import { getProductsCard } from "entities/cart";
+
 
 
 interface Props {
