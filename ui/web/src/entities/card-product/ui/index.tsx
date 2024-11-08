@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
 import { Card } from "@mui/material";
 import { createUseStyles } from "react-jss";
 import { AddProductToCart } from "features/button-add-cart";
-import { getProductsCard } from "shared/api/cart";
+import { getProductsCard } from "../model/actions";
+
 
 interface Props {
 
@@ -11,7 +12,7 @@ interface Props {
 
 export const ProductsCard: React.FC<Props> = () => {
     const dispatch = useAppDispatch();
-    const {data, loading, status} = useAppSelector(state => state.products);
+    const {data, loading, status} = useAppSelector(state => state.productsCart.products);
 
     useEffect(() => {
         dispatch(getProductsCard())        

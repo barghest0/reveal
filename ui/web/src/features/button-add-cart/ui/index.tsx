@@ -1,7 +1,8 @@
 import { Button } from "@mui/material";
+import { addProductToCart } from "entities/cart/model/actions/add-to-cart";
 import React from "react";
-import { addProductToCart } from "shared/api/cart";
-import { ProductItem } from "shared/api/cart/types";
+import { ProductItem } from "shared/api/products";
+
 import { useAppDispatch } from "shared/types/hooks/hook";
 
 interface Props {

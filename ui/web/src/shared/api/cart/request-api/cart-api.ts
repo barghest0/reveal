@@ -1,7 +1,6 @@
 import axios from "axios"
-import { ProductItem } from "entities/card-product";
-import { Cart, CartItem } from "entities/cart";
-
+import { Cart, CartItem } from "../types";
+import { ProductItem } from "shared/api/products";
 
 const baseUrl = "http://localhost:8083/cart"
 
