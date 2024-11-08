@@ -1,7 +1,5 @@
 import { ProductsCard } from "entities/card-product";
-import { ProductsCart } from "entities/cart/ui";
-import { AddProductToCart } from "features/button-add-cart";
-import React from "react";
+import { ProductsCart } from "entities/cart";
 import { createUseStyles } from "react-jss";
 
 export const App = () => {
@@ -20,7 +18,8 @@ export const App = () => {
 const useStyles = createUseStyles({
     container: {
         padding: 20,
-        rowGap: 20
+        rowGap: 20,
+        backgroundColor: 'green'
     },
     cards: {
         marginBottom: 20

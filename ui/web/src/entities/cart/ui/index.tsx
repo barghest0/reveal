@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
+import { getProductsCart } from "shared/api/cart";
 import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
-import { getProductsCart } from "../model/actions/get-product-cart";
-
 
 interface Props {
 
@@ -15,8 +14,6 @@ export const ProductsCart: React.FC <Props> = () => {
         dispatch(getProductsCart(1))
     }, [])
     
-    
-    console.log(data?.Products)    
 
     return (
         <div>  

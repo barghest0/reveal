@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
-import { getProductsCard } from "../model/actions/get-products";
 import { Card } from "@mui/material";
 import { createUseStyles } from "react-jss";
 import { AddProductToCart } from "features/button-add-cart";
+import { getProductsCard } from "shared/api/cart";
 
 interface Props {
 

@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { Cart, CartApi } from "entities/cart";
-
+import { CartApi } from "../../request-api/cart-api";
 
 
 

@@ -1,13 +1,12 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 import { CartProduct,} from "entities/cart";
-import { getProductsCart } from "./actions/get-product-cart";
 import { StatusFlag } from "shared/index";
-import { addProductToCart } from "entities/cart/model/actions/add-to-cart";
+import { addProductToCart, GetCartType, getProductsCart } from "shared/api/cart";
+import { CartTypes } from "shared/api/cart/types";
 
 
-
-const initialState: CartProduct = {
+const initialState: GetCartType<CartTypes.CART_PRODUCT> = {
     status: null,
     data: undefined,
     loading: false,
