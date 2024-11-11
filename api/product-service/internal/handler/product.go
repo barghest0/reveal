@@ -37,16 +37,19 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 func (h *ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	idsParam := r.URL.Query().Get("ids")
 
-	// Преобразуем строку в срез целых чисел
-	ids := strings.Split(idsParam, ",")
+	// Если параметр ids пустой, передаем пустой срез
 	var idsInt []int
-	for _, idStr := range ids {
-		id, err := strconv.Atoi(idStr)
-		if err != nil {
-			http.Error(w, "Invalid id format", http.StatusBadRequest)
-			return
+	if idsParam != "" {
+		// Преобразуем строку в срез целых чисел
+		ids := strings.Split(idsParam, ",")
+		for _, idStr := range ids {
+			id, err := strconv.Atoi(idStr)
+			if err != nil {
+				http.Error(w, "Invalid id format", http.StatusBadRequest)
+				return
+			}
+			idsInt = append(idsInt, id)
 		}
-		idsInt = append(idsInt, int(id))
 	}
 
 	products, err := h.service.GetProducts(idsInt)
