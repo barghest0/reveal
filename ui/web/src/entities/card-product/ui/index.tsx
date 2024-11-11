@@ -1,46 +1,46 @@
-import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
-import { Card } from "@mui/material";
-import { createUseStyles } from "react-jss";
-import { AddProductToCart } from "features/button-add-cart";
-import { getProductsCard } from "entities/cart";
+import React from "react";
+import { styled } from '@mui/material/styles';
+import { Box, CardMedia } from "@mui/material";
 
 
 
-interface Props {
-
+type CardProps = {
+    id: number;
+    name: string;
+    price: number;
 }
 
-export const ProductsCard: React.FC<Props> = () => {
-    const dispatch = useAppDispatch();
-    const {data, loading, status} = useAppSelector(state => state.productsCart.products);
 
-    useEffect(() => {
-        dispatch(getProductsCard())        
-    }, [])
 
-    const styles = useStyles();
-
-    // console.log(data?.map((item) => item))
-    
+export const ProductCard: React.FC<CardProps> = ({id, name, price}) => { 
     return (
-        <div className={styles.cardWrapper}>
-            {data?.map((product) => (
-                <Card variant="outlined">
-                    <h1>Product id: {product.id}</h1>
-                    <AddProductToCart cartId={1} product={product}/>
-                </Card>
-            ))}
-            
-        </div>
+        <ProductContainer>
+            <ImageWrapper src="https://avatars.mds.yandex.net/i?id=ecad8571eba37fec382dd2490e8f24b5_l-5524081-images-thumbs&n=13"/>
+            <InfoWrapper>
+                <h1>{id}</h1>
+                <p>{name}</p>
+                <p>{price}</p>
+            </InfoWrapper>
+        </ProductContainer>
     )
 }
 
-const useStyles = createUseStyles({
-    cardWrapper: {
-        display: 'grid',
-        width: '100%',
-        gridTemplateColumns: "1fr 1fr 1fr",
-        gap: 20
-    },
+const ProductContainer = styled("div")({
+    display: "grid",
+    borderRadius: 8,
+    boxShadow: "0px 0px 21px -3px #966a57",
+    overflow: "hidden",
+    cursor: "pointer"
 })
+
+const ImageWrapper = styled("img")({
+    width: "100%",
+    height: "100%",
+    borderRadius: 8
+})
+
+const InfoWrapper = styled("div")({
+    padding: 8,
+    border: 1
+})
+

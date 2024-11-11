@@ -6,6 +6,7 @@ import { getProductsCart } from "./actions/get-products-cart";
 import { addProductToCart } from "./actions/add-to-cart";
 import { ProductsCard } from "shared/api/products";
 import { getProductsCard } from "./actions/get-products-card";
+import { deleteProductFromCart } from "./actions/delete-from-cart";
 
 type ProductsCartState = {
     cart: CartProduct;
@@ -74,6 +75,22 @@ export const productsCartSlice = createSlice({
         .addCase(getProductsCard.rejected, (state) => {
             state.products.status = StatusFlag.Rejected;
             state.products.loading = false;
+        })
+
+        builder
+        .addCase(deleteProductFromCart.pending, (state) => {
+            state.cart.status = StatusFlag.Pending;
+        })
+        .addCase(deleteProductFromCart.fulfilled, (state, action) => {
+            state.cart.status = StatusFlag.Fulfilled;
+            const existingProduct = state.cart.data?.Products.findIndex(product => product.product_id === action.payload.product_id);
+            console.log("REDUCE", existingProduct)
+            if (existingProduct)
+            state.cart.data?.Products.splice(existingProduct, 1);
+        })
+        .addCase(deleteProductFromCart.rejected, (state) => {
+            state.cart.status = StatusFlag.Rejected;
+
         })
         
     }

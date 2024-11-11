@@ -845,7 +845,7 @@
     "@babel/plugin-transform-modules-commonjs" "^7.25.9"
     "@babel/plugin-transform-typescript" "^7.25.9"
 
-"@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3", "@babel/runtime@^7.25.7", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3", "@babel/runtime@^7.25.7", "@babel/runtime@^7.26.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
   version "7.26.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.26.0.tgz#8600c2f595f277c60815256418b85356a65173c1"
   integrity sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==
@@ -1096,6 +1096,13 @@
   resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-6.1.5.tgz#96fe5068d55fba27d90421b8265b965c203d09e2"
   integrity sha512-3J96098GrC95XsLw/TpGNMxhUOnoG9NZ/17Pfk1CrJj+4rcuolsF2RdF3XAFTu/3a/A+5ouxlSIykzYz6Ee87g==
 
+"@mui/icons-material@^6.1.6":
+  version "6.1.6"
+  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-6.1.6.tgz#bfaf32874a9f9ec88c07d1ca132d1a0671e9ed7c"
+  integrity sha512-5r9urIL2lxXb/sPN3LFfFYEibsXJUb986HhhIeu1gOcte460pwdSiEhBSxkAuyT8Dj7jvu9MjqSBmSumQELo8A==
+  dependencies:
+    "@babel/runtime" "^7.26.0"
+
 "@mui/material@^6.1.5":
   version "6.1.5"
   resolved "https://registry.yarnpkg.com/@mui/material/-/material-6.1.5.tgz#1ba8deda18564b277f37d957d523a9d2624b4b9a"
@@ -1180,6 +1187,11 @@
     redux "^5.0.1"
     redux-thunk "^3.1.0"
     reselect "^5.1.0"
+
+"@remix-run/router@1.21.0":
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.21.0.tgz#c65ae4262bdcfe415dbd4f64ec87676e4a56e2b5"
+  integrity sha512-xfSkCAchbdG5PnbrKqFWwia4Bi61nH+wm8wLEqfHDyp7Y3dZzgqS2itV8i4gAq9pC2HsTpwyBC6Ds8VHZ96JlA==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.11"
@@ -4138,6 +4150,21 @@ react-redux@^9.1.2:
   dependencies:
     "@types/use-sync-external-store" "^0.0.3"
     use-sync-external-store "^1.0.0"
+
+react-router-dom@^6.28.0:
+  version "6.28.0"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.28.0.tgz#f73ebb3490e59ac9f299377062ad1d10a9f579e6"
+  integrity sha512-kQ7Unsl5YdyOltsPGl31zOjLrDv+m2VcIEcIHqYYD3Lp0UppLjrzcfJqDJwXxFw3TH/yvapbnUvPlAj7Kx5nbg==
+  dependencies:
+    "@remix-run/router" "1.21.0"
+    react-router "6.28.0"
+
+react-router@6.28.0, react-router@^6.28.0:
+  version "6.28.0"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.28.0.tgz#29247c86d7ba901d7e5a13aa79a96723c3e59d0d"
+  integrity sha512-HrYdIFqdrnhDw0PqG/AKjAqEqM7AvxCz0DQ4h2W8k6nqmc5uRBYDag0SBxx9iYz5G8gnuNVLzUe13wl9eAsXXg==
+  dependencies:
+    "@remix-run/router" "1.21.0"
 
 react-transition-group@^4.4.5:
   version "4.4.5"

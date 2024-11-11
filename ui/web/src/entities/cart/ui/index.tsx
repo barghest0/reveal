@@ -1,26 +1,54 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
 import { getProductsCart } from "../model/actions/get-products-cart";
+import { styled } from "@mui/material";
+import { ButtonDeleteFromCart } from "features/delete-from-cart";
 
-interface Props {
-
+type ProductCartProps = {
+    id: number;
+    cartId: number;
+    name: string;
+    price: number
 }
 
-export const ProductsCart: React.FC <Props> = () => {
-    const dispatch = useAppDispatch();
-    const {data, status, loading} = useAppSelector((state) => state.productsCart.cart);
-
-    useEffect(() => {
-        dispatch(getProductsCart(1))
-    }, [])
+export const ProductCart: React.FC <ProductCartProps> = ({id, cartId, name, price}) => {
+    
     
 
     return (
-        <div>  
-            <h1>Cart:</h1>
-            {data?.Products.map((product) => (
-                <p>Product ID: {product.product_id}</p>
-            ))}
-        </div>
+        <ProductContainer>  
+            <ImageWrapper src="https://avatars.mds.yandex.net/i?id=ecad8571eba37fec382dd2490e8f24b5_l-5524081-images-thumbs&n=13"/>
+            <InfoWrapper>
+                <NameTitle>{name} Заглушка</NameTitle>
+                <h1>{id}</h1>
+                <p>{name}</p>
+                <p>{price}</p>
+                <ButtonDeleteFromCart cartId={cartId} id={id}/>
+            </InfoWrapper>
+        </ProductContainer>
     )
 }
+
+const ProductContainer = styled("div")({
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    borderRadius: 22,
+    boxShadow: "0px 0px 21px -3px #966a57",
+    overflow: 'hidden',
+    cursor: 'pointer'
+
+})
+
+const ImageWrapper = styled("img")({
+    width:'100%',
+    height: '100%',
+    borderRadius: 8
+})
+
+const InfoWrapper = styled("div")({
+    padding: 8
+})
+
+const NameTitle = styled("span")({
+    color: "#966a57" 
+})
