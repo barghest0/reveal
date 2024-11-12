@@ -4,7 +4,6 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.contentType
-import io.ktor.http.isSuccess
 import io.ktor.util.InternalAPI
 import kotlinx.serialization.json.Json
 import shared.api.HTTPClient
@@ -13,14 +12,16 @@ class CartRepository() {
   private val json = Json { ignoreUnknownKeys = true }
 
   @OptIn(InternalAPI::class)
-  suspend fun addToCart(dto: CartItemDTO): Boolean {
+  suspend fun addToCart(dto: CartItemDTO): CartItem {
     val response: HttpResponse =
             HTTPClient.client.post("http://192.168.3.2/cart/1/products") {
               contentType(io.ktor.http.ContentType.Application.Json)
               body = json.encodeToString(CartItemDTO.serializer(), dto)
             }
 
-    return response.status.isSuccess()
+    val cart_item = Json.decodeFromString<CartItem>(response.bodyAsText())
+
+    return cart_item
   }
 
   @OptIn(InternalAPI::class)

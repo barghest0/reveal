@@ -8,19 +8,17 @@ import kotlinx.coroutines.launch
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
   val products = mutableStateListOf<CartItem>()
+  val existed_products = mutableStateListOf<Int>()
 
   init {
-    // Загружаем корзину при инициализации
     getCart()
   }
 
   fun addToCart(product: Product) {
     val cartItem = CartItemDTO(product_id = product.id, quantity = 1)
     viewModelScope.launch {
-      val is_success = cartRepository.addToCart(cartItem)
-      // if (is_success) {
-      //   products.add(cartItem)
-      // }
+      val cart_item = cartRepository.addToCart(cartItem)
+      products.add(cart_item)
     }
   }
 
@@ -30,6 +28,8 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
       if (cart != null) {
         products.clear()
         products.addAll(cart.products)
+        existed_products.clear()
+        existed_products.addAll(cart.products.map { it.product_id })
       }
     }
   }
