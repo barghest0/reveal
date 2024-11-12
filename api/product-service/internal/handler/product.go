@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 
-	"github.com/gorilla/mux"
 	"product-service/internal/model"
 	"product-service/internal/service"
+
+	"github.com/gorilla/mux"
 )
 
 type ProductHandler struct {
@@ -33,7 +35,25 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
-	products, err := h.service.GetProducts()
+	idsParam := r.URL.Query().Get("ids")
+
+	// Если параметр ids пустой, передаем пустой срез
+	var idsInt []int
+	if idsParam != "" {
+		// Преобразуем строку в срез целых чисел
+		ids := strings.Split(idsParam, ",")
+		for _, idStr := range ids {
+			id, err := strconv.Atoi(idStr)
+			if err != nil {
+				http.Error(w, "Invalid id format", http.StatusBadRequest)
+				return
+			}
+			idsInt = append(idsInt, id)
+		}
+	}
+
+	products, err := h.service.GetProducts(idsInt)
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

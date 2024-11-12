@@ -4,10 +4,12 @@ import (
 	"cart-service/internal/model"
 	"cart-service/internal/service"
 	"encoding/json"
-	"log"
 
+	"fmt"
+	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -20,6 +22,38 @@ func CreateCartHandler(service service.CartService) *CartHandler {
 	return &CartHandler{Service: service}
 }
 
+func fetchProductsByIDs(productIDs []uint) (map[uint]model.Product, error) {
+	stringIds := make([]string, len(productIDs))
+	for i, id := range productIDs {
+		stringIds[i] = fmt.Sprintf("%d", id)
+	}
+
+	idsParam := fmt.Sprintf("?ids=%v", strings.Join(stringIds, ","))
+	url := "http://product-service:8082/products" + idsParam
+	resp, err := http.Get(url)
+	fmt.Println(err, url, "url")
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch products: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to fetch products, status code: %d", resp.StatusCode)
+	}
+
+	var products []model.Product
+	if err := json.NewDecoder(resp.Body).Decode(&products); err != nil {
+		return nil, fmt.Errorf("failed to decode products data: %w", err)
+	}
+
+	// Создаем карту для быстрого доступа по ID
+	productMap := make(map[uint]model.Product)
+	for _, product := range products {
+		productMap[product.ID] = product
+	}
+
+	return productMap, nil
+}
+
 func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["user_id"])
@@ -28,12 +62,37 @@ func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid cart id", http.StatusBadRequest)
 		return
 	}
-	cartId, err := h.Service.GetCart(uint(id))
+
+	cart, err := h.Service.GetCart(uint(id))
+
+	var productIDs []uint
+	for _, cartProduct := range cart.Products {
+		productIDs = append(productIDs, cartProduct.ProductID)
+	}
+
+	productMap, err := fetchProductsByIDs(productIDs)
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	json.NewEncoder(w).Encode(cartId)
+
+	fmt.Println(productIDs, productMap)
+
+	for i := range cart.Products {
+		product, found := productMap[cart.Products[i].ProductID]
+		if !found {
+			http.Error(w, "NOT FOUND PRODUCT IN MAP", http.StatusNotFound)
+			return
+		}
+		cart.Products[i].Product = product
+	}
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	json.NewEncoder(w).Encode(cart)
 }
 
 func (h *CartHandler) AddProductToCart(w http.ResponseWriter, r *http.Request) {
