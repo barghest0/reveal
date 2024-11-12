@@ -4,7 +4,7 @@ import (
 	"cart-service/internal/config"
 	"cart-service/internal/db"
 	"cart-service/internal/handler"
-	"cart-service/internal/rabbitmq"
+	messaging "cart-service/internal/rabbitmq"
 	"cart-service/internal/repository"
 	"cart-service/internal/router"
 	"cart-service/internal/service"
