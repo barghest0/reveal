@@ -13,14 +13,13 @@ export const ButtonDeleteFromCart:React.FC<DeleteFromCartProps> = ({cartId, id})
     
     const handleDeleteProduct = (cartId: number, id: number) => {
         dispatch(deleteProductFromCart({cartId, productId:id}))
-
     }
 
     return (
         <IconButton 
             aria-label="delete" 
             sx={{width: 50, height: 50}} 
-            onClick={() => handleDeleteProduct(cartId,id)}>
+            onClick={() => handleDeleteProduct(cartId, id)}>
 
             <DeleteIcon fontSize="inherit" sx={{width: "100%", height: "100%"}}/>
         </IconButton>

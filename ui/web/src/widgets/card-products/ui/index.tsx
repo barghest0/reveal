@@ -12,7 +12,7 @@ export const CardProductsList = () => {
     useEffect(() => {
         dispatch(getProductsCard())        
     }, [])     
-
+    console.log(data)
     return (
         <ProductsContainer>
             {data?.map(product => (

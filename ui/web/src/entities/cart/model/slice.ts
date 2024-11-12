@@ -54,7 +54,7 @@ export const productsCartSlice = createSlice({
             state.cart.status = StatusFlag.Fulfilled;
             state.cart.loading = false;
             if (state.cart.data) {
-                state.cart.data.Products.push(action.payload);
+                state.cart.data.products.push(action.payload);
             }
         })
         .addCase(addProductToCart.rejected, (state) => {
@@ -83,10 +83,10 @@ export const productsCartSlice = createSlice({
         })
         .addCase(deleteProductFromCart.fulfilled, (state, action) => {
             state.cart.status = StatusFlag.Fulfilled;
-            const existingProduct = state.cart.data?.Products.findIndex(product => product.product_id === action.payload.product_id);
+            const existingProduct = state.cart.data?.products.findIndex(product => product.product_id === action.payload.product_id);
             console.log("REDUCE", existingProduct)
             if (existingProduct)
-            state.cart.data?.Products.splice(existingProduct, 1);
+            state.cart.data?.products.splice(existingProduct, 1);
         })
         .addCase(deleteProductFromCart.rejected, (state) => {
             state.cart.status = StatusFlag.Rejected;

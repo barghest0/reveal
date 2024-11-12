@@ -35,10 +35,9 @@ export namespace CartApi {
     }
 
     export const removeProductToCartApi = async (cartId: number, productId: number) => {
+        console.log(cartId, productId, "REMOVEPRODUCTAPi")
         try {
-            console.log("API DELETE", productId)
             const response = await axios.delete<CartItem>(`${baseUrl}/${cartId}/products/${productId}`);
-            console.log(response)
             return response.data;
         }
         catch (error) {

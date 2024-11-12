@@ -13,11 +13,9 @@ export const ProductsCartList= () => {
     useEffect(() => {
         dispatch(getProductsCart(1))
     }, [])
-
-    
     return (
         <CartContainer>
-            {data?.Products.map(product => (
+            {data?.products.map(product => (
                 
                 <ProductCart
                     id={product.product_id}
