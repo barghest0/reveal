@@ -15,12 +15,12 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
   }
 
   fun addToCart(product: Product) {
-    val cartItem = CartItem(product_id = product.id, quantity = 1, price = product.price)
+    val cartItem = CartItemDTO(product_id = product.id, quantity = 1)
     viewModelScope.launch {
       val is_success = cartRepository.addToCart(cartItem)
-      if (is_success) {
-        products.add(cartItem)
-      }
+      // if (is_success) {
+      //   products.add(cartItem)
+      // }
     }
   }
 
@@ -29,7 +29,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
       var cart = cartRepository.getCart()
       if (cart != null) {
         products.clear()
-        products.addAll(cart.Products)
+        products.addAll(cart.products)
       }
     }
   }

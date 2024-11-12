@@ -19,7 +19,7 @@ fun CartScreen(
 
   ScreenLayout {
     LazyColumn {
-      items(viewModel.products.toList()) { cart_item -> Text("${cart_item.product_id}") }
+      items(viewModel.products.toList()) { cart_item -> Text("${cart_item.product.name}") }
     }
   }
 }
