@@ -27,5 +27,12 @@ fun NavigationBar(navController: NavHostController) {
             selected = false,
             onClick = { navController.navigate("profile") }
     )
+
+    NavigationBarItem(
+            icon = { /* Ваша иконка */},
+            label = { Text("Cart") },
+            selected = false,
+            onClick = { navController.navigate("cart") }
+    )
   }
 }
