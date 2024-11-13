@@ -4,8 +4,10 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import io.ktor.util.InternalAPI
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import shared.api.HTTPClient
 
 class CartRepository() {
@@ -41,14 +43,16 @@ class CartRepository() {
     }
   }
 
+  suspend fun removeFromCart(product_id: Int): Boolean {
+    val response: HttpResponse =
+            HTTPClient.client.delete("http://192.168.3.2/cart/1/products/${product_id}")
+
+    return response.status.isSuccess()
+  }
+
   // suspend fun getCartItems(): List<CartItem> {
   //     val response: HttpResponse = client.get("https://yourapi.com/cart")
   //     return json.decodeFromString(response.bodyAsText())
-  // }
-
-  // suspend fun removeFromCart(cartItemId: Int): Boolean {
-  //     val response: HttpResponse = client.delete("https://yourapi.com/cart/$cartItemId")
-  //     return response.status.isSuccess()
   // }
 
   // suspend fun updateQuantity(cartItemId: Int, quantity: Int): Boolean {
