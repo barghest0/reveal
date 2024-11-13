@@ -1,14 +1,14 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { CartApi } from "shared/api/cart";
+import { Cart, CartApi } from "shared/api/cart";
 import { ProductItem } from "shared/api/products";
-
-
 
 export const addProductToCart = createAsyncThunk(
     "cart/addProductToCart",
-    async ({cartId, product}: {cartId:number; product: ProductItem}) => { 
-        const response = await CartApi.addProductToCartApi(cartId, product)
+    async ({user_id, product}: {user_id:number, product: ProductItem}) => {
+        const response = await CartApi.addProductToCartApi(user_id, product);
         return response
-    }
+    }    
+
 )
+
 

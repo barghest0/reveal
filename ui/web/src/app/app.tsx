@@ -1,4 +1,5 @@
 
+import { AddProductToCart } from "features/button-add-cart";
 import { createUseStyles } from "react-jss";
 import { Link } from "react-router-dom";
 import { CardProductsList } from "widgets/card-products";
@@ -15,7 +16,7 @@ export const App = () => {
             <Link to="/mainPage">
                 <p>Go to main</p>
             </Link>
-            <ProductsCartList/>
+            <CardProductsList/> 
         </div>
     )
 }

@@ -7,6 +7,7 @@ const baseUrl = "http://localhost:8083/cart"
 
 export namespace CartApi {
     export const getCartApi = async (userId: number) => {
+        console.log(userId, "GetCartApi")
         try {
             const response = await axios.get<Cart>(`${baseUrl}/${userId}`);
             return response.data;
@@ -17,15 +18,9 @@ export namespace CartApi {
         }
     }
 
-    export const addProductToCartApi = async (cartId: number, product: ProductItem) => {
-        const productData = {
-            product_id: product.id,
-            price: product.price,
-            name: product.name
-        }
-
+    export const addProductToCartApi = async (userId: number, product: ProductItem) => {
         try {
-            const response = await axios.post(`${baseUrl}/${cartId}/products`, productData);
+            const response = await axios.post(`${baseUrl}/${userId}/products`, product);
             return response.data;
         }
         catch (error) {

@@ -13,6 +13,7 @@ export const ProductsCartList= () => {
     useEffect(() => {
         dispatch(getProductsCart(1))
     }, [])
+    console.log(data, "BASKET")
     return (
         <CartContainer>
             {data?.products.map(product => (

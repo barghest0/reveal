@@ -1,6 +1,7 @@
 import React from "react";
 import { styled } from '@mui/material/styles';
 import { Box, CardMedia } from "@mui/material";
+import { AddProductToCart } from "features/button-add-cart";
 
 
 
@@ -8,11 +9,12 @@ type CardProps = {
     id: number;
     name: string;
     price: number;
+    ButtonAdd: React.ReactNode;
 }
 
 
 
-export const ProductCard: React.FC<CardProps> = ({id, name, price}) => { 
+export const ProductCard: React.FC<CardProps> = ({id, name, price, ButtonAdd}) => { 
     return (
         <ProductContainer>
             <ImageWrapper src="https://avatars.mds.yandex.net/i?id=ecad8571eba37fec382dd2490e8f24b5_l-5524081-images-thumbs&n=13"/>
@@ -21,6 +23,8 @@ export const ProductCard: React.FC<CardProps> = ({id, name, price}) => {
                 <p>{name}</p>
                 <p>{price}</p>
             </InfoWrapper>
+            
+            <>{ButtonAdd}</>
         </ProductContainer>
     )
 }
