@@ -15,7 +15,13 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
   }
 
   fun addToCart(product: Product) {
-    val cartItem = CartItemDTO(product_id = product.id, quantity = 1)
+    val quantity = 1
+    val cartItem =
+            CartItemDTO(
+                    product_id = product.id,
+                    quantity = quantity,
+                    price = product.price * quantity
+            )
     viewModelScope.launch {
       val cart_item = cartRepository.addToCart(cartItem)
       products.add(cart_item)
