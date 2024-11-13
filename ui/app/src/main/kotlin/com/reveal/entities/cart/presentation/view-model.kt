@@ -7,8 +7,9 @@ import entities.product.Product
 import kotlinx.coroutines.launch
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
-  val products = mutableStateListOf<CartItem>()
-  val existed_products = mutableStateListOf<Int>()
+  private val _products = mutableStateListOf<CartItem>()
+  val products: List<CartItem>
+    get() = _products
 
   init {
     getCart()
@@ -24,23 +25,30 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
             )
     viewModelScope.launch {
       val cart_item = cartRepository.addToCart(cartItem)
-      products.add(cart_item)
+      _products.add(cart_item)
+    }
+  }
+
+  fun removeFromCart(product_id: Int) {
+    viewModelScope.launch {
+      val is_success = cartRepository.removeFromCart(product_id)
+      if (is_success) {
+        _products.removeIf { it.product_id == product_id }
+      }
     }
   }
 
   fun getCart() {
     viewModelScope.launch {
-      var cart = cartRepository.getCart()
+      val cart = cartRepository.getCart()
       if (cart != null) {
-        products.clear()
-        products.addAll(cart.products)
-        existed_products.clear()
-        existed_products.addAll(cart.products.map { it.product_id })
+        _products.clear()
+        _products.addAll(cart.products)
       }
     }
   }
 
   fun isProductExist(product_id: Int): Boolean {
-    return products.any { it.product_id == product_id }
+    return _products.any { it.product_id == product_id }
   }
 }
