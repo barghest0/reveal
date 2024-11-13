@@ -21,4 +21,5 @@ data class CartItem(
 data class CartItemDTO(
         val product_id: Int,
         val quantity: Int,
+        val price: Int,
 )

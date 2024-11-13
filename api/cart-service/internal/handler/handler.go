@@ -205,7 +205,7 @@ func (h *CartHandler) RemoveProductFromCart(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	err = h.Service.RemoveProductFromCart(uint(cart.UserId), uint(productId))
+	err = h.Service.RemoveProductFromCart(uint(cart.ID), uint(productId))
 	if err != nil {
 		log.Printf("Failed to remove item from cart: %v", err)
 		if err.Error() == "item not found" {
