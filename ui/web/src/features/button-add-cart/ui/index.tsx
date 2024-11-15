@@ -12,20 +12,19 @@ interface Props {
 
 export const AddProductToCart: React.FC<Props> = ({product}) => {
     const dispatch = useAppDispatch();
-    const user_id = useAppSelector(state => state.productsCart)
+    const userId = useAppSelector(state => state.productsCart.cart.data?.user_id)
     useEffect(() => {
         dispatch(getProductsCart(1))
     }, [])
-    console.log(user_id, 'button')
-    const handleAddProduct = (user_id: number, product: ProductItem) => {
-        console.log(user_id, product)
-        if (user_id)
-        dispatch(addProductToCart({user_id, product}))
+   
+    const handleAddProduct = (userId: number, product: ProductItem) => {
+        if (userId)
+        dispatch(addProductToCart({userId, product}))
     }
 
     return (
         <>
-            {/* {user_id && product && <Button variant="contained" onClick={() => handleAddProduct(user_id, product)}>Add to cart</Button>} */}
+            {userId && product && <Button variant="contained" onClick={() => handleAddProduct(userId, product)}>Add to cart</Button>}
         </>
     )
 }

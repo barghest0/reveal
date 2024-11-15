@@ -4,8 +4,8 @@ import { ProductItem } from "shared/api/products";
 
 export const addProductToCart = createAsyncThunk(
     "cart/addProductToCart",
-    async ({user_id, product}: {user_id:number, product: ProductItem}) => {
-        const response = await CartApi.addProductToCartApi(user_id, product);
+    async ({userId, product}: {userId:number, product: ProductItem}) => {
+        const response = await CartApi.addProductToCartApi(userId, product);
         return response
     }    
 

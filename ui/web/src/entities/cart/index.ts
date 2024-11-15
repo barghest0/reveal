@@ -1,2 +1,2 @@
-export { ProductCart } from './ui/index'
+export { CartProduct } from './ui/index'
 export { getProductsCard } from './model/actions/get-products-card'

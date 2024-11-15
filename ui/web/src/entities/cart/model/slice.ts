@@ -1,7 +1,6 @@
-
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StatusFlag } from "shared/index";
-import { CartProduct } from "shared/api/cart/types";
+import { Cart, CartProduct } from "shared/api/cart/types";
 import { getProductsCart } from "./actions/get-products-cart";
 import { addProductToCart } from "./actions/add-to-cart";
 import { ProductsCard } from "shared/api/products";
@@ -83,10 +82,9 @@ export const productsCartSlice = createSlice({
         })
         .addCase(deleteProductFromCart.fulfilled, (state, action) => {
             state.cart.status = StatusFlag.Fulfilled;
-            const existingProduct = state.cart.data?.products.findIndex(product => product.product_id === action.payload.product_id);
-            console.log("REDUCE", existingProduct)
-            if (existingProduct)
-            state.cart.data?.products.splice(existingProduct, 1);
+            if (state.cart.data?.products) {
+                state.cart.data.products = state.cart.data.products.filter(product => product.product_id !== action.payload.product_id)
+            }
         })
         .addCase(deleteProductFromCart.rejected, (state) => {
             state.cart.status = StatusFlag.Rejected;

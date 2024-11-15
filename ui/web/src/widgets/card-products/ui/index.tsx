@@ -1,5 +1,5 @@
 import { Card, styled } from "@mui/material";
-import { ProductCard } from "entities/card-product";
+import { CardProduct } from "entities/card-product";
 import { getProductsCard } from "entities/cart";
 import { AddProductToCart } from "features/button-add-cart";
 import React, { useEffect } from "react";
@@ -13,11 +13,11 @@ export const CardProductsList = () => {
     useEffect(() => {
         dispatch(getProductsCard())        
     }, [])     
-    console.log(data)
+   
     return (
         <ProductsContainer>
             {data?.map(product => (
-                <ProductCard 
+                <CardProduct key={product.id}
                     id={product.id}
                     name={product.name}
                     price={product.price}

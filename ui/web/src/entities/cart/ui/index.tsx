@@ -6,14 +6,13 @@ import { ButtonDeleteFromCart } from "features/delete-from-cart";
 
 type ProductCartProps = {
     id: number;
-    cartId: number;
+    userId: number;
     name: string;
-    price: number
+    price: number;
+    deleteButton: React.ReactNode;
 }
 
-export const ProductCart: React.FC <ProductCartProps> = ({id, cartId, name, price}) => {
-    
-    
+export const CartProduct: React.FC <ProductCartProps> = ({id, userId, name, price, deleteButton}) => {
 
     return (
         <ProductContainer>  
@@ -23,7 +22,7 @@ export const ProductCart: React.FC <ProductCartProps> = ({id, cartId, name, pric
                 <h1>{id}</h1>
                 <p>{name}</p>
                 <p>{price}</p>
-                <ButtonDeleteFromCart cartId={cartId} id={id}/>
+                <DeleteBlock>{deleteButton}</DeleteBlock>
             </InfoWrapper>
         </ProductContainer>
     )
@@ -51,4 +50,8 @@ const InfoWrapper = styled("div")({
 
 const NameTitle = styled("span")({
     color: "#966a57" 
+})
+
+const DeleteBlock = styled("div")({
+
 })

@@ -3,7 +3,7 @@ import { StatusFlag } from "shared/types/status/status-flag"
 
 export type Cart = {
     id: number,
-    userId: number,
+    user_id: number,
     products: CartItem[]
 }
 

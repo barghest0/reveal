@@ -1,6 +1,7 @@
 import { styled } from "@mui/material";
-import { ProductCart } from "entities/cart";
+import { CartProduct } from "entities/cart";
 import { getProductsCart } from "entities/cart/model/actions/get-products-cart";
+import { ButtonDeleteFromCart } from "features/delete-from-cart";
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
 
@@ -10,20 +11,23 @@ export const ProductsCartList= () => {
     const dispatch = useAppDispatch();
     const {data, status, loading} = useAppSelector((state) => state.productsCart.cart);
 
+    
     useEffect(() => {
         dispatch(getProductsCart(1))
-    }, [])
-    console.log(data, "BASKET")
+    }, [data?.products])
+    
     return (
         <CartContainer>
             {data?.products.map(product => (
-                
-                <ProductCart
+                <CartProduct key={product.product_id}
                     id={product.product_id}
                     name={product.name}
                     price={product.price}
-                    cartId={product.cart_id}
+                    userId={product.cart_id}
+                    deleteButton={<ButtonDeleteFromCart userId={product.cart_id} id={product.product_id}/>}
                 />
+                
+                
             ))}
         </CartContainer>
     )

@@ -1,3 +1,3 @@
-export { ProductCard } from './ui/index'
+export { CardProduct } from './ui/index'
 
 

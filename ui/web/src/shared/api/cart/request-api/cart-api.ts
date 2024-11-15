@@ -6,10 +6,9 @@ const baseUrl = "http://localhost:8083/cart"
 
 
 export namespace CartApi {
-    export const getCartApi = async (userId: number) => {
-        console.log(userId, "GetCartApi")
+    export const getCartApi = async (cartId: number) => {
         try {
-            const response = await axios.get<Cart>(`${baseUrl}/${userId}`);
+            const response = await axios.get<Cart>(`${baseUrl}/${cartId}`);
             return response.data;
         }
         catch (error) {
@@ -19,8 +18,14 @@ export namespace CartApi {
     }
 
     export const addProductToCartApi = async (userId: number, product: ProductItem) => {
+        const productItem = {
+            product_id: product.id,
+            name: product.name,
+            price: product.price,
+            description: product.description
+        }
         try {
-            const response = await axios.post(`${baseUrl}/${userId}/products`, product);
+            const response = await axios.post(`${baseUrl}/${userId}/products`, productItem);
             return response.data;
         }
         catch (error) {
@@ -30,7 +35,7 @@ export namespace CartApi {
     }
 
     export const removeProductToCartApi = async (cartId: number, productId: number) => {
-        console.log(cartId, productId, "REMOVEPRODUCTAPi")
+        console.log(productId, "API")
         try {
             const response = await axios.delete<CartItem>(`${baseUrl}/${cartId}/products/${productId}`);
             return response.data;

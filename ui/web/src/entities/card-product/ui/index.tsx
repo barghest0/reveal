@@ -14,7 +14,7 @@ type CardProps = {
 
 
 
-export const ProductCard: React.FC<CardProps> = ({id, name, price, ButtonAdd}) => { 
+export const CardProduct: React.FC<CardProps> = ({id, name, price, ButtonAdd}) => { 
     return (
         <ProductContainer>
             <ImageWrapper src="https://avatars.mds.yandex.net/i?id=ecad8571eba37fec382dd2490e8f24b5_l-5524081-images-thumbs&n=13"/>

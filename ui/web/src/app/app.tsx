@@ -16,7 +16,6 @@ export const App = () => {
             <Link to="/mainPage">
                 <p>Go to main</p>
             </Link>
-            <CardProductsList/> 
         </div>
     )
 }
