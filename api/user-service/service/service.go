@@ -64,7 +64,7 @@ func (service *userService) Login(name string, password string) (model.User, err
 		return model.User{}, err
 	}
 
-	if auth.CheckPasswordHash(password, user.Password) {
+	if !auth.CheckPasswordHash(password, user.Password) {
 		return model.User{}, sql.ErrNoRows
 	}
 

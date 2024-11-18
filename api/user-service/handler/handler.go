@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -107,6 +108,7 @@ func (handler *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user, err := handler.service.Login(creds.Name, creds.Password)
+	fmt.Println(err, "LOGIN")
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
