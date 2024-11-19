@@ -17,7 +17,6 @@ import shared.session.PreferencesManager
 fun NavigationBar(navController: NavHostController) {
   val context = LocalContext.current
   val authToken = remember { PreferencesManager(context).getToken() }
-  println("authToken ${authToken}")
 
   NavigationBar(modifier = Modifier.height(80.dp)) {
     NavigationBarItem(
@@ -30,7 +29,13 @@ fun NavigationBar(navController: NavHostController) {
 
     NavigationBarItem(
             icon = { /* Ваша иконка */},
-            label = { Text("Profile") },
+            label = {
+              if (authToken != null) {
+                Text("Profile")
+              } else {
+                Text("Login")
+              }
+            },
             selected = false,
             onClick = {
               if (authToken != null) {

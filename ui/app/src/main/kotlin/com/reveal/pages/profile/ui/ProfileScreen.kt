@@ -1,6 +1,7 @@
 package pages.profile
 
 import android.content.Context
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,14 +19,9 @@ import shared.ui.layout.ScreenLayout
 fun ProfileScreen(
         navController: NavController,
         context: Context = LocalContext.current,
+        tokenManager: PreferencesManager = PreferencesManager(context),
         viewModel: ProfileViewModel =
-                viewModel(
-                        factory =
-                                ProfileViewModelFactory(
-                                        UserRepository(),
-                                        PreferencesManager(context)
-                                )
-                )
+                viewModel(factory = ProfileViewModelFactory(UserRepository(), tokenManager))
 ) {
 
   val profile by viewModel.profileState
@@ -34,5 +30,11 @@ fun ProfileScreen(
     if (profile != null) {
       Text(text = "Имя: ${profile?.name}")
     }
+    Button(
+            onClick = {
+              tokenManager.clearToken()
+              navController.navigate("login")
+            }
+    ) { Text("Logout") }
   }
 }

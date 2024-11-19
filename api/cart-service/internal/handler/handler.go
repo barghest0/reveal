@@ -74,6 +74,8 @@ func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 
 	cart, err := h.Service.GetCart(uint(claims.UserId))
 
+	fmt.Println(cart, claims.UserId, "USER CART")
+
 	var productIDs []uint
 	for _, cartProduct := range cart.Products {
 		productIDs = append(productIDs, cartProduct.ProductID)
@@ -85,8 +87,6 @@ func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-
-	fmt.Println(productIDs, productMap)
 
 	for i := range cart.Products {
 		product, found := productMap[cart.Products[i].ProductID]
