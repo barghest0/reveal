@@ -25,7 +25,9 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
             )
     viewModelScope.launch {
       val cart_item = cartRepository.addToCart(cartItem)
-      _products.add(cart_item)
+      if (cart_item != null) {
+        _products.add(cart_item)
+      }
     }
   }
 
