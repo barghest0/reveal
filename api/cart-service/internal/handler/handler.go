@@ -11,11 +11,20 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/gorilla/mux"
 )
 
+var JwtKey = []byte("key")
+
 type CartHandler struct {
 	Service service.CartService
+}
+
+type Claims struct {
+	Name   string `json:"name"`
+	UserId int    `json:"user_id"`
+	jwt.StandardClaims
 }
 
 func CreateCartHandler(service service.CartService) *CartHandler {
@@ -55,15 +64,28 @@ func fetchProductsByIDs(productIDs []uint) (map[uint]model.Product, error) {
 }
 
 func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["user_id"])
+	// vars := mux.Vars(r)
+	// id, err := strconv.Atoi(vars["user_id"])
+
+	tokenString := r.Header.Get("Authorization")
+
+	tokenStr := tokenString[len("Bearer "):]
+	claims := &Claims{}
+	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return JwtKey, nil
+	})
 
 	if err != nil {
 		http.Error(w, "Invalid cart id", http.StatusBadRequest)
 		return
 	}
 
-	cart, err := h.Service.GetCart(uint(id))
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	cart, err := h.Service.GetCart(uint(claims.UserId))
 
 	var productIDs []uint
 	for _, cartProduct := range cart.Products {
