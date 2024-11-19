@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"cart-service/internal/auth"
 	"cart-service/internal/model"
 	"cart-service/internal/service"
 	"encoding/json"
@@ -11,7 +12,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/golang-jwt/jwt"
 	"github.com/gorilla/mux"
 )
 
@@ -19,12 +19,6 @@ var JwtKey = []byte("key")
 
 type CartHandler struct {
 	Service service.CartService
-}
-
-type Claims struct {
-	Name   string `json:"name"`
-	UserId int    `json:"user_id"`
-	jwt.StandardClaims
 }
 
 func CreateCartHandler(service service.CartService) *CartHandler {
@@ -64,16 +58,9 @@ func fetchProductsByIDs(productIDs []uint) (map[uint]model.Product, error) {
 }
 
 func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
-	// vars := mux.Vars(r)
-	// id, err := strconv.Atoi(vars["user_id"])
-
 	tokenString := r.Header.Get("Authorization")
 
-	tokenStr := tokenString[len("Bearer "):]
-	claims := &Claims{}
-	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-		return JwtKey, nil
-	})
+	token, claims, err := auth.GetAuthTokenClaims(tokenString)
 
 	if err != nil {
 		http.Error(w, "Invalid cart id", http.StatusBadRequest)
@@ -118,8 +105,15 @@ func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *CartHandler) AddProductToCart(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	user_id, err := strconv.Atoi(vars["user_id"])
+
+	tokenString := r.Header.Get("Authorization")
+
+	token, claims, err := auth.GetAuthTokenClaims(tokenString)
+
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	if err != nil {
 		http.Error(w, "Invalid cart id", http.StatusBadRequest)
@@ -132,7 +126,7 @@ func (h *CartHandler) AddProductToCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cart, err := h.Service.GetCart(uint(user_id))
+	cart, err := h.Service.GetCart(uint(claims.UserId))
 	if err != nil {
 		http.Error(w, "Cart not found", http.StatusNotFound)
 		return
@@ -154,9 +148,13 @@ func (h *CartHandler) AddProductToCart(w http.ResponseWriter, r *http.Request) {
 
 func (h *CartHandler) UpdateProductQuantity(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	userID, err := strconv.Atoi(vars["user_id"])
-	if err != nil {
-		http.Error(w, "Invalid cart ID", http.StatusBadRequest)
+
+	tokenString := r.Header.Get("Authorization")
+
+	token, claims, err := auth.GetAuthTokenClaims(tokenString)
+
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -177,7 +175,7 @@ func (h *CartHandler) UpdateProductQuantity(w http.ResponseWriter, r *http.Reque
 	}
 
 	// Получаем корзину пользователя
-	cart, err := h.Service.GetCart(uint(userID))
+	cart, err := h.Service.GetCart(uint(claims.UserId))
 	if err != nil {
 		http.Error(w, "Cart not found", http.StatusNotFound)
 		return
@@ -209,9 +207,13 @@ func (h *CartHandler) UpdateProductQuantity(w http.ResponseWriter, r *http.Reque
 
 func (h *CartHandler) RemoveProductFromCart(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	user_id, err := strconv.Atoi(vars["user_id"])
-	if err != nil {
-		http.Error(w, "Invalid user id", http.StatusBadRequest)
+
+	tokenString := r.Header.Get("Authorization")
+
+	token, claims, err := auth.GetAuthTokenClaims(tokenString)
+
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -221,7 +223,7 @@ func (h *CartHandler) RemoveProductFromCart(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	cart, err := h.Service.GetCart(uint(user_id))
+	cart, err := h.Service.GetCart(uint(claims.UserId))
 	if err != nil {
 		http.Error(w, "Cart not found", http.StatusNotFound)
 		return
