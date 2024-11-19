@@ -1,9 +1,6 @@
 
-import { AddProductToCart } from "features/button-add-cart";
 import { createUseStyles } from "react-jss";
 import { Link } from "react-router-dom";
-import { CardProductsList } from "widgets/card-products";
-import { ProductsCartList } from "widgets/cart-products";
 
 export const App = () => {
 

@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
-import { addProductToCart } from "entities/cart/model/actions/add-to-cart";
-import { getProductsCart } from "entities/cart/model/actions/get-products-cart";
+import { addProductToCart } from "entities/product/model/actions/add-to-cart";
+import { getProductsCart } from "entities/product/model/actions/get-products-cart";
 import React, { useEffect } from "react";
 import { ProductItem } from "shared/api/products";
 

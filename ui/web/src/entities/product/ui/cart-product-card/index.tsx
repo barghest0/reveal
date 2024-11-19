@@ -1,8 +1,5 @@
-import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
-import { getProductsCart } from "../model/actions/get-products-cart";
+import React from "react";
 import { styled } from "@mui/material";
-import { ButtonDeleteFromCart } from "features/delete-from-cart";
 
 type ProductCartProps = {
     id: number;

@@ -1,7 +1,7 @@
 import { IconButton } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAppDispatch } from "shared/types/hooks/hook";
-import { deleteProductFromCart } from "entities/cart/model/actions/delete-from-cart";
+import { deleteProductFromCart } from "entities/product/model/actions/delete-from-cart";
 
 type DeleteFromCartProps = {
     userId: number;
