@@ -1,7 +1,7 @@
 import { Card, styled } from "@mui/material";
 import { CardProduct, getProductsCard } from "entities/product";
-import { AddProductToCart } from "features/button-add-cart";
-import React, { useEffect } from "react";
+import { AddProductToCart } from "features/cart";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
 
 

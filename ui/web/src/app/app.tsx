@@ -1,4 +1,5 @@
 
+import { ButtonQuantityToCart } from "features/cart";
 import { createUseStyles } from "react-jss";
 import { Link } from "react-router-dom";
 
@@ -13,6 +14,10 @@ export const App = () => {
             <Link to="/mainPage">
                 <p>Go to main</p>
             </Link>
+            <div style={{}}>
+                <ButtonQuantityToCart/>
+            </div>
+            
         </div>
     )
 }

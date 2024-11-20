@@ -1,9 +1,5 @@
 import React from "react";
 import { styled } from '@mui/material/styles';
-import { Box, CardMedia } from "@mui/material";
-import { AddProductToCart } from "features/button-add-cart";
-
-
 
 type CardProps = {
     id: number;

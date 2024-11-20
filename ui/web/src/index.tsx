@@ -6,6 +6,7 @@ import { store } from "app/store";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { MainPage } from "pages/main";
 import { CartPage } from "pages/cart";
+import './index.css'
 
 const container = document.getElementById('root');
 

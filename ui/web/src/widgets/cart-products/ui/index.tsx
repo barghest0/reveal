@@ -1,6 +1,7 @@
 import { styled } from "@mui/material";
 import { CartProduct, getProductsCart } from "entities/product";
-import { ButtonDeleteFromCart } from "features/delete-from-cart";
+import { ButtonDeleteFromCart } from "features/cart";
+
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
 

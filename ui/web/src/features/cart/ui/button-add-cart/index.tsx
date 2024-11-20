@@ -6,7 +6,7 @@ import { ProductItem } from "shared/api/products";
 
 import { useAppDispatch, useAppSelector } from "shared/types/hooks/hook";
 
-interface Props {
+type Props = {
     product?: ProductItem | undefined;
 }
 
