@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"cart-service/internal/auth"
 	"cart-service/internal/model"
 	"cart-service/internal/service"
 	"encoding/json"
@@ -13,6 +14,8 @@ import (
 
 	"github.com/gorilla/mux"
 )
+
+var JwtKey = []byte("key")
 
 type CartHandler struct {
 	Service service.CartService
@@ -55,15 +58,23 @@ func fetchProductsByIDs(productIDs []uint) (map[uint]model.Product, error) {
 }
 
 func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["user_id"])
+	tokenString := r.Header.Get("Authorization")
+
+	token, claims, err := auth.GetAuthTokenClaims(tokenString)
 
 	if err != nil {
 		http.Error(w, "Invalid cart id", http.StatusBadRequest)
 		return
 	}
 
-	cart, err := h.Service.GetCart(uint(id))
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	cart, err := h.Service.GetCart(uint(claims.UserId))
+
+	fmt.Println(cart, claims.UserId, "USER CART")
 
 	var productIDs []uint
 	for _, cartProduct := range cart.Products {
@@ -76,8 +87,6 @@ func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-
-	fmt.Println(productIDs, productMap)
 
 	for i := range cart.Products {
 		product, found := productMap[cart.Products[i].ProductID]
@@ -96,8 +105,15 @@ func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *CartHandler) AddProductToCart(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	user_id, err := strconv.Atoi(vars["user_id"])
+
+	tokenString := r.Header.Get("Authorization")
+
+	token, claims, err := auth.GetAuthTokenClaims(tokenString)
+
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	if err != nil {
 		http.Error(w, "Invalid cart id", http.StatusBadRequest)
@@ -110,7 +126,7 @@ func (h *CartHandler) AddProductToCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cart, err := h.Service.GetCart(uint(user_id))
+	cart, err := h.Service.GetCart(uint(claims.UserId))
 	if err != nil {
 		http.Error(w, "Cart not found", http.StatusNotFound)
 		return
@@ -132,9 +148,13 @@ func (h *CartHandler) AddProductToCart(w http.ResponseWriter, r *http.Request) {
 
 func (h *CartHandler) UpdateProductQuantity(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	userID, err := strconv.Atoi(vars["user_id"])
-	if err != nil {
-		http.Error(w, "Invalid cart ID", http.StatusBadRequest)
+
+	tokenString := r.Header.Get("Authorization")
+
+	token, claims, err := auth.GetAuthTokenClaims(tokenString)
+
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -155,7 +175,7 @@ func (h *CartHandler) UpdateProductQuantity(w http.ResponseWriter, r *http.Reque
 	}
 
 	// Получаем корзину пользователя
-	cart, err := h.Service.GetCart(uint(userID))
+	cart, err := h.Service.GetCart(uint(claims.UserId))
 	if err != nil {
 		http.Error(w, "Cart not found", http.StatusNotFound)
 		return
@@ -187,9 +207,13 @@ func (h *CartHandler) UpdateProductQuantity(w http.ResponseWriter, r *http.Reque
 
 func (h *CartHandler) RemoveProductFromCart(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	user_id, err := strconv.Atoi(vars["user_id"])
-	if err != nil {
-		http.Error(w, "Invalid user id", http.StatusBadRequest)
+
+	tokenString := r.Header.Get("Authorization")
+
+	token, claims, err := auth.GetAuthTokenClaims(tokenString)
+
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -199,13 +223,13 @@ func (h *CartHandler) RemoveProductFromCart(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	cart, err := h.Service.GetCart(uint(user_id))
+	cart, err := h.Service.GetCart(uint(claims.UserId))
 	if err != nil {
 		http.Error(w, "Cart not found", http.StatusNotFound)
 		return
 	}
 
-	err = h.Service.RemoveProductFromCart(uint(cart.UserId), uint(productId))
+	err = h.Service.RemoveProductFromCart(uint(cart.ID), uint(productId))
 	if err != nil {
 		log.Printf("Failed to remove item from cart: %v", err)
 		if err.Error() == "item not found" {

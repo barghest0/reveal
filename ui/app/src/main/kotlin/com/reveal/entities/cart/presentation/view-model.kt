@@ -7,23 +7,50 @@ import entities.product.Product
 import kotlinx.coroutines.launch
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
-  // Список товаров в корзине
-  val cartItems = mutableStateListOf<CartItem>()
+  private val _products = mutableStateListOf<CartItem>()
+  val products: List<CartItem>
+    get() = _products
 
-  // Функция для добавления товара в корзину
+  init {
+    getCart()
+  }
+
   fun addToCart(product: Product) {
+    val quantity = 1
     val cartItem =
-            CartItem(
-                    id = 0,
-                    cart_id = 0,
+            CartItemDTO(
                     product_id = product.id,
-                    quantity = 1,
-                    price = product.price
+                    quantity = quantity,
+                    price = product.price * quantity
             )
     viewModelScope.launch {
-      if (cartRepository.addToCart(cartItem)) {
-        cartItems.add(cartItem) // Обновляем состояние корзины
+      val cart_item = cartRepository.addToCart(cartItem)
+      if (cart_item != null) {
+        _products.add(cart_item)
       }
     }
+  }
+
+  fun removeFromCart(product_id: Int) {
+    viewModelScope.launch {
+      val is_success = cartRepository.removeFromCart(product_id)
+      if (is_success) {
+        _products.removeIf { it.product_id == product_id }
+      }
+    }
+  }
+
+  fun getCart() {
+    viewModelScope.launch {
+      val cart = cartRepository.getCart()
+      if (cart != null) {
+        _products.clear()
+        _products.addAll(cart.products)
+      }
+    }
+  }
+
+  fun isProductExist(product_id: Int): Boolean {
+    return _products.any { it.product_id == product_id }
   }
 }

@@ -24,6 +24,7 @@ import shared.ui.layout.ScreenLayout
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
+
   val context = LocalContext.current
   val viewModel: LoginViewModel = remember {
     LoginViewModel(LoginUseCase(UserRepository()), PreferencesManager(context))
