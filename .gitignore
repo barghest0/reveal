@@ -1,6 +1,9 @@
 #idea
 .idea
 
+
+.gradle/
+
 # Logs
 logs
 *.log
@@ -77,9 +80,9 @@ web_modules/
 
 # dotenv environment variable files
 .env
-.env.development.local
+.env.development
 .env.test.local
-.env.production.local
+.env.production
 .env.local
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -131,4 +134,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-ui/.gradle/

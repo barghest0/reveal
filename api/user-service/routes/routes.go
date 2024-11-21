@@ -1,24 +1,24 @@
 package routes
 
 import (
-	"api/handlers"
-	"api/services"
+	"user-service/handler"
+
 	"github.com/gorilla/mux"
 )
 
 // Инициализация маршрутов
-func InitRoutes(userService services.UserService) *mux.Router {
+func InitRoutes(h *handler.UserHandler) *mux.Router {
 	router := mux.NewRouter()
 
-	router.Handle("/users", handlers.CreateGetUsersHandler(userService)).Methods("GET")
-	router.Handle("/users/{id}", handlers.CreateGetUserHandler(userService)).Methods("GET")
-	router.Handle("/users", handlers.CreateCreateUserHandler(userService)).Methods("POST")
-	router.Handle("/users/{id}", handlers.CreateUpdateUserHandler(userService)).Methods("PUT")
-	router.Handle("/users/{id}", handlers.CreateDeleteUserHandler(userService)).Methods("DELETE")
+	router.HandleFunc("/users/register", h.Register).Methods("POST")
+	router.HandleFunc("/users/login", h.Login).Methods("POST")
+	router.HandleFunc("/users/profile", h.GetProfile).Methods("GET")
 
-	router.Handle("/users/register", handlers.CreateRegisterUserHandler(userService)).Methods("POST")
-	router.Handle("/users/login", handlers.CreateLoginUserHandler(userService)).Methods("POST")
-	router.Handle("/users/profile", handlers.CreateProfileUserHandler(userService)).Methods("GET")
+	router.HandleFunc("/users", h.GetAllUsers).Methods("GET")
+	router.HandleFunc("/users/{id}", h.GetUserByID).Methods("GET")
+	router.HandleFunc("/users", h.CreateUser).Methods("POST")
+	router.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT")
+	router.HandleFunc("/users/{id}", h.DeleteUser).Methods("DELETE")
 
 	return router
 }

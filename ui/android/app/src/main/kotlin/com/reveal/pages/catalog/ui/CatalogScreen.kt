@@ -2,6 +2,7 @@ package pages.catalog
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+<<<<<<< HEAD
 import androidx.navigation.NavController
 import entities.product.ProductRepository
 import entities.product.ProductViewModel
@@ -17,10 +18,21 @@ import widgets.ProductsList.ProductsList
 var client =
         HttpClient(CIO) { install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) } }
 
+=======
+import androidx.compose.runtime.remember
+import androidx.navigation.NavController
+import entities.product.ProductRepository
+import entities.product.ProductViewModel
+import kotlinx.coroutines.*
+import shared.ui.layout.ScreenLayout
+import widgets.ProductsList.ProductsList
+
+>>>>>>> cart-ui
 @Composable
 fun CatalogScreen(
         navController: NavController,
 ) {
+<<<<<<< HEAD
   val viewModel = ProductViewModel(ProductRepository(client))
 
   LaunchedEffect(Unit) {
@@ -28,4 +40,11 @@ fun CatalogScreen(
   }
 
   ScreenLayout { ProductsList(viewModel.products) }
+=======
+  val viewModel = remember { ProductViewModel(ProductRepository()) }
+
+  LaunchedEffect(Unit) { viewModel.fetchProducts() }
+
+  ScreenLayout { ProductsList(navController, viewModel.products) }
+>>>>>>> cart-ui
 }

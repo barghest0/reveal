@@ -1,0 +1,38 @@
+@font-face {
+    font-family: "GtBold";
+    src: local("GtBold"),
+        url("../src/assets/fonts/gteestiprodisplay_bold.otf");
+    /* font-weight: bold; */
+}
+@font-face {
+    font-family: "GtLight";
+    src: local("GtLight"),
+        url("../src/assets/fonts/gteestiprodisplay_light.otf");
+    /* font-weight: 300; */
+}
+@font-face {
+    font-family: "GtMedium";
+    src: local("GtMedium"),
+        url("../src/assets/fonts/gteestiprodisplay_medium.otf");
+    /* font-weight: 300; */
+}
+@font-face {
+    font-family: "GtRegular";
+    src: local("GtRegular"),
+        url("../src/assets/fonts/gteestiprodisplay_regular.otf");
+    /* font-weight: bold; */
+}
+
+@font-face {
+    font-family: "GtThin";
+    src: local("GtThin"),
+        url("../src/assets/fonts/gteestiprodisplay_thin.otf");
+    /* font-weight: bold; */
+}
+
+@font-face {
+    font-family: "GtUltaBold";
+    src: local("GtUltraBold"),
+        url("../src/assets/fonts/gteestiprodisplay_ultrabold.otf");
+    font-weight: bold;
+}

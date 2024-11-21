@@ -1,5 +1,6 @@
 package pages.profile
 
+<<<<<<< HEAD
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,10 +20,24 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+=======
+import android.content.Context
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import entities.user.UserRepository
+import features.profile.ProfileViewModel
+import features.profile.ProfileViewModelFactory
+>>>>>>> cart-ui
 import kotlinx.coroutines.*
 import shared.session.PreferencesManager
 import shared.ui.layout.ScreenLayout
 
+<<<<<<< HEAD
 var client = HttpClient(CIO) { install(ContentNegotiation) { json() } }
 
 @Composable
@@ -38,6 +53,15 @@ fun ProfileScreen(
                                         ),
                                 )
                 )
+=======
+@Composable
+fun ProfileScreen(
+        navController: NavController,
+        context: Context = LocalContext.current,
+        tokenManager: PreferencesManager = PreferencesManager(context),
+        viewModel: ProfileViewModel =
+                viewModel(factory = ProfileViewModelFactory(UserRepository(), tokenManager))
+>>>>>>> cart-ui
 ) {
 
   val profile by viewModel.profileState
@@ -45,6 +69,7 @@ fun ProfileScreen(
   ScreenLayout {
     if (profile != null) {
       Text(text = "Имя: ${profile?.name}")
+<<<<<<< HEAD
       // Отобразите другую информацию профиля
     } else {
       val annotatedText = buildAnnotatedString {
@@ -68,5 +93,14 @@ fun ProfileScreen(
               }
       )
     }
+=======
+    }
+    Button(
+            onClick = {
+              tokenManager.clearToken()
+              navController.navigate("login")
+            }
+    ) { Text("Logout") }
+>>>>>>> cart-ui
   }
 }

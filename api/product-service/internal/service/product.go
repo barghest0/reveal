@@ -8,7 +8,7 @@ import (
 type ProductService interface {
 	CreateProduct(product *model.Product) error
 	GetProduct(id uint) (*model.Product, error)
-	GetProducts() (*[]model.Product, error)
+	GetProducts(ids []int) (*[]model.Product, error)
 	UpdateProduct(product *model.Product) error
 	DeleteProduct(id uint) error
 	PurchaseProduct(id uint, buyerID uint) error
@@ -18,12 +18,12 @@ type productService struct {
 	repo repository.ProductRepository
 }
 
-func (s *productService) GetProducts() (*[]model.Product, error) {
-	return s.repo.GetAll()
-}
-
 func CreateProductService(repo repository.ProductRepository) ProductService {
 	return &productService{repo}
+}
+
+func (s *productService) GetProducts(ids []int) (*[]model.Product, error) {
+	return s.repo.Get(ids)
 }
 
 func (s *productService) CreateProduct(product *model.Product) error {
