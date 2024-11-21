@@ -11,9 +11,10 @@ export const ProductsCartList= () => {
     const dispatch = useAppDispatch();
     const {data, status, loading} = useAppSelector((state) => state.productsCart.cart);
 
+    console.log(data, "DATA CART")
     
     useEffect(() => {
-        dispatch(getProductsCart(1))
+        dispatch(getProductsCart())
     }, [data?.products])
     
     return (
@@ -24,7 +25,7 @@ export const ProductsCartList= () => {
                     name={product.name}
                     price={product.price}
                     userId={product.cart_id}
-                    deleteButton={<ButtonDeleteFromCart userId={product.cart_id} id={product.product_id}/>}
+                    deleteButton={<ButtonDeleteFromCart id={product.product_id}/>}
                 />
                 
                 

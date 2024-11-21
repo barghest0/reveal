@@ -4,15 +4,14 @@ import { useAppDispatch } from "shared/types/hooks/hook";
 import { deleteProductFromCart } from "entities/product/model/actions/delete-from-cart";
 
 type DeleteFromCartProps = {
-    userId: number;
     id: number;
 }
 
-export const ButtonDeleteFromCart:React.FC<DeleteFromCartProps> = ({userId, id}) => {
+export const ButtonDeleteFromCart:React.FC<DeleteFromCartProps> = ({id}) => {
     const dispatch = useAppDispatch();
     
-    const handleDeleteProduct = (userId: number, id: number) => {
-        dispatch(deleteProductFromCart({userId, productId:id}))
+    const handleDeleteProduct = (id: number) => {
+        dispatch(deleteProductFromCart(id))
         
     }
 
@@ -20,7 +19,7 @@ export const ButtonDeleteFromCart:React.FC<DeleteFromCartProps> = ({userId, id})
         <IconButton 
             aria-label="delete" 
             sx={{width: 50, height: 50}} 
-            onClick={() => handleDeleteProduct(userId, id)}>
+            onClick={() => handleDeleteProduct(id)}>
 
             <DeleteIcon fontSize="inherit" sx={{width: "100%", height: "100%"}}/>
         </IconButton>

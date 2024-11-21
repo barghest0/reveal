@@ -3,12 +3,17 @@ import { Cart, CartItem } from "../types";
 import { ProductItem } from "shared/api/products";
 
 const baseUrl = "http://localhost:8083/cart"
-
+const config = {
+    headers: {
+        'Authorization': `Bearer ${process.env.TOKEN}`,
+    }
+}
 
 export namespace CartApi {
-    export const getCartApi = async (cartId: number) => {
+    export const getCartApi = async () => {
+        console.log(config)
         try {
-            const response = await axios.get<Cart>(`${baseUrl}/${cartId}`);
+            const response = await axios.get<Cart>(`${baseUrl}`, config);
             return response.data;
         }
         catch (error) {
@@ -17,7 +22,7 @@ export namespace CartApi {
         }
     }
 
-    export const addProductToCartApi = async (userId: number, product: ProductItem) => {
+    export const addProductToCartApi = async (product: ProductItem) => {
         const productItem = {
             product_id: product.id,
             name: product.name,
@@ -25,7 +30,7 @@ export namespace CartApi {
             description: product.description
         }
         try {
-            const response = await axios.post(`${baseUrl}/${userId}/products`, productItem);
+            const response = await axios.post(`${baseUrl}/products`, productItem, config);
             return response.data;
         }
         catch (error) {
@@ -34,10 +39,9 @@ export namespace CartApi {
         }
     }
 
-    export const removeProductToCartApi = async (cartId: number, productId: number) => {
-        console.log(productId, "API")
+    export const removeProductToCartApi = async (productId: number) => {
         try {
-            const response = await axios.delete<CartItem>(`${baseUrl}/${cartId}/products/${productId}`);
+            const response = await axios.delete<CartItem>(`${baseUrl}/products/${productId}`, config);
             return response.data;
         }
         catch (error) {

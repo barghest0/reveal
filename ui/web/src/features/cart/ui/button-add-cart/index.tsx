@@ -12,19 +12,14 @@ type Props = {
 
 export const AddProductToCart: React.FC<Props> = ({product}) => {
     const dispatch = useAppDispatch();
-    const userId = useAppSelector(state => state.productsCart.cart.data?.user_id)
-    useEffect(() => {
-        dispatch(getProductsCart(1))
-    }, [])
-   
-    const handleAddProduct = (userId: number, product: ProductItem) => {
-        if (userId)
-        dispatch(addProductToCart({userId, product}))
+
+    const handleAddProduct = (product: ProductItem) => {
+        dispatch(addProductToCart(product))
     }
 
     return (
         <>
-            {userId && product && <Button variant="contained" onClick={() => handleAddProduct(userId, product)}>Add to cart</Button>}
+            {product && <Button variant="contained" onClick={() => handleAddProduct(product)}>Add to cart</Button>}
         </>
     )
 }

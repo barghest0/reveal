@@ -5,8 +5,8 @@ import { CartApi } from "shared/api/cart";
 
 export const deleteProductFromCart = createAsyncThunk(
     "cart/deleteProductFromCart",
-    async({userId, productId}: {userId: number, productId: number}) => {
-        const response = await CartApi.removeProductToCartApi(userId, productId)
+    async(productId: number) => {
+        const response = await CartApi.removeProductToCartApi(productId)
         return response
     }
 )
