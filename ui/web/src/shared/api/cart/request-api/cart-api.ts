@@ -11,7 +11,6 @@ const config = {
 
 export namespace CartApi {
     export const getCartApi = async () => {
-        console.log(config)
         try {
             const response = await axios.get<Cart>(`${baseUrl}`, config);
             return response.data;

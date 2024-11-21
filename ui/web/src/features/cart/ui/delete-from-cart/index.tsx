@@ -12,7 +12,6 @@ export const ButtonDeleteFromCart:React.FC<DeleteFromCartProps> = ({id}) => {
     
     const handleDeleteProduct = (id: number) => {
         dispatch(deleteProductFromCart(id))
-        
     }
 
     return (
