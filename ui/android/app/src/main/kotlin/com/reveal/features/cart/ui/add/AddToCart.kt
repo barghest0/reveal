@@ -1,13 +1,13 @@
-package features.cart
+package features.AddToCart
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import entities.cart.CartRepository
-import entities.cart.CartViewModel
 import entities.product.Product
+import features.cart.CartRepository
+import features.cart.CartViewModel
 import shared.session.PreferencesManager
 
 @Composable

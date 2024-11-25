@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import entities.cart.CartProduct
 
 @Composable
 fun CartProductCard(product: CartProduct, onClick: () -> Unit, Button: @Composable () -> Unit) {
