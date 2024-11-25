@@ -1,11 +1,12 @@
 import axios from "axios"
 import { Cart, CartItem } from "../types";
 import { ProductItem } from "shared/api/products";
+import { getToken } from "shared/lib/session";
 
 const baseUrl = "http://localhost:8083/cart"
 const config = {
     headers: {
-        'Authorization': `Bearer ${process.env.TOKEN}`,
+        'Authorization': `Bearer ${getToken()}`,
     }
 }
 
@@ -22,6 +23,7 @@ export namespace CartApi {
     }
 
     export const addProductToCartApi = async (product: ProductItem) => {
+        console.log(config)
         const productItem = {
             product_id: product.id,
             name: product.name,

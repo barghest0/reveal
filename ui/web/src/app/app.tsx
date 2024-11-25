@@ -1,7 +1,9 @@
-
-import { ButtonQuantityToCart } from "features/cart";
+import { LoginField, PasswordField } from "features/user";
+import { useEffect } from "react";
 import { createUseStyles } from "react-jss";
 import { Link } from "react-router-dom";
+import { clearToken, getToken } from "shared/lib/session";
+import { AuthForm } from "widgets/auth-form";
 
 export const App = () => {
 
@@ -14,10 +16,7 @@ export const App = () => {
             <Link to="/mainPage">
                 <p>Go to main</p>
             </Link>
-            <div style={{}}>
-                <ButtonQuantityToCart/>
-            </div>
-            
+            <AuthForm/>
         </div>
     )
 }
@@ -26,6 +25,8 @@ const useStyles = createUseStyles({
     container: {
         padding: 20,
         rowGap: 20,
+        minHeight: "100vh",
+        // background: '#756148'
     },
     cards: {
         marginBottom: 20
