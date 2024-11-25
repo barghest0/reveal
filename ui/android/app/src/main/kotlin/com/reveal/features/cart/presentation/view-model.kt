@@ -1,4 +1,4 @@
-package entities.cart
+package features.cart
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel

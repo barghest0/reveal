@@ -1,4 +1,4 @@
-package entities.cart
+package features.cart
 
 import io.ktor.client.*
 import io.ktor.client.request.*
