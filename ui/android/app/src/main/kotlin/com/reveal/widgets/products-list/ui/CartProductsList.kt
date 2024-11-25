@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import entities.cart.CartItem
 import entities.product.CartProductCard
-import features.RemoveFromCart.RemoveFromCartButton
+import features.cart.RemoveFromCartButton
 
 @Composable
 fun CartProductsList(navController: NavController, items: List<CartItem>) {

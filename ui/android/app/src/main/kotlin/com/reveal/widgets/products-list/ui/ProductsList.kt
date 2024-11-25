@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import entities.product.Product
 import entities.product.ProductCard
-import features.AddToCart.AddToCartButton
+import features.cart.AddToCartButton
 
 @Composable
 fun ProductsList(navController: NavController, products: List<Product>) {
