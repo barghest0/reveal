@@ -131,8 +131,10 @@ func (handler *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Authorization", "Bearer "+tokenString)
-
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"token": "Bearer " + tokenString,
+	})
 	w.WriteHeader(http.StatusOK)
 }
 
