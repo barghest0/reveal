@@ -3,10 +3,11 @@ import { UserApi } from "shared/api/user";
 
 
 
-export const loginUserAuth = createAsyncThunk(
-    "user/loginUserAuth",
+
+export const registrationUser = createAsyncThunk(
+    "user/registrationUser",
     async ({email, password}: {email: string, password: string}) => {
-        const response = await UserApi.login(email, password);
+        const response = await UserApi.registrationUser(email, password);
         return response
     }
-);
+)

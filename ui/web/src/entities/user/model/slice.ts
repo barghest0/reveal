@@ -3,6 +3,7 @@ import { UserAuth } from "shared/api/user";
 import { loginUserAuth } from "./actions/login-user";
 import { StatusFlag } from "shared/index";
 import { getProfile } from "./actions/profile-user";
+import { registrationUser } from "./actions/registration-user";
 
 
 
@@ -44,6 +45,21 @@ export const userSlice = createSlice({
             state.data = action.payload;
         })
         .addCase(getProfile.rejected, (state) => {
+            state.status = StatusFlag.Rejected;
+            state.loading = false;
+        })
+
+        builder
+        .addCase(registrationUser.pending, (state) => {
+            state.status = StatusFlag.Pending;
+            state.loading = true;
+        })
+        .addCase(registrationUser.fulfilled, (state, action) => {
+            state.status = StatusFlag.Fulfilled;
+            state.loading = false;
+            state.data = action.payload;
+        })
+        .addCase(registrationUser.rejected, (state) => {
             state.status = StatusFlag.Rejected;
             state.loading = false;
         })

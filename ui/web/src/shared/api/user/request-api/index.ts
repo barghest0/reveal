@@ -39,5 +39,15 @@ export namespace UserApi {
             console.log("Ошибка получения пользователя: ", error);
             throw error;
         }
+    };
+    export const registrationUser = async (email: string, password: string) => {
+        try {
+            const response = await axios.post<User>(`${baseUrl}/register`, {email, password});
+            return response.data;
+        }   
+        catch (error) {
+            console.log("Ошибка регистрации: ", error);
+            throw error;
+        }
     }
 }
