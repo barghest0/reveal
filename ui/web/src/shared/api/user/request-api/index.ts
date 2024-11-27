@@ -17,8 +17,7 @@ export namespace UserApi {
     export const login = async (email: string, password: string) => {
         try {
             const response = await axios.post<User>(`${baseUrl}/login`, {email, password});
-            let token = response.config.headers.Authorization;
-            console.log("API", token)
+            let token = response.data.token;
             if (typeof token === 'string') { 
                 token = token.replace('Bearer ', '');
                 saveToken(token)

@@ -15,11 +15,7 @@ export const AuthForm = () => {
     
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-       
-        // let email = "kakafonia@inbox.ru"
-        // let password = "kakafon"
         dispatch(loginUserAuth({email, password}))
-        console.log(getToken())
     }
 
     
