@@ -5,7 +5,7 @@ import { UserApi } from "shared/api/user";
 
 
 export const getProfile = createAsyncThunk(
-    "user/loginUserAuth",
+    "user/getProfile",
     async () => {
         const response = await UserApi.getUserProfile();
         return response

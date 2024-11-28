@@ -1,15 +1,19 @@
-import { LoginField, PasswordField } from "features/user";
-import { useEffect } from "react";
+
+import { GlobalStyles } from "@mui/material";
 import { createUseStyles } from "react-jss";
 import { Link } from "react-router-dom";
-import { clearToken, getToken } from "shared/lib/session";
 import { AuthForm } from "widgets/auth-form";
+
+
+
+
 
 export const App = () => {
 
     const styles = useStyles();
     return (
         <div className={styles.container}>
+            {globalStyles}
             <Link to="/cartPage">
                 <p>Go to cart</p>
             </Link>
@@ -26,9 +30,24 @@ const useStyles = createUseStyles({
         padding: 20,
         rowGap: 20,
         minHeight: "100vh",
-        // background: '#756148'
     },
     cards: {
         marginBottom: 20
     }
 })
+const globalStyles = (
+  <GlobalStyles
+    styles={(theme) => ({
+      html: {
+        height: "100%",
+      },
+      body: {
+        margin: 0,
+        padding: theme.spacing(2),
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.primary,
+        fontFamily: "GtRegular"
+      }
+    })}
+  />
+)
