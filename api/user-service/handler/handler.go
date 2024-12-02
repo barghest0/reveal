@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -23,7 +24,8 @@ type Credentials struct {
 }
 
 type Claims struct {
-	Name string `json:"name"`
+	Name   string `json:"name"`
+	UserId int    `json:"user_id"`
 	jwt.StandardClaims
 }
 
@@ -107,6 +109,7 @@ func (handler *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user, err := handler.service.Login(creds.Name, creds.Password)
+	fmt.Println(err, "LOGIN")
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -114,7 +117,8 @@ func (handler *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	expirationTime := time.Now().Add(60 * time.Minute)
 	claims := &Claims{
-		Name: user.Name,
+		Name:   user.Name,
+		UserId: user.ID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
@@ -127,8 +131,10 @@ func (handler *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Authorization", "Bearer "+tokenString)
-
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"token": "Bearer " + tokenString,
+	})
 	w.WriteHeader(http.StatusOK)
 }
 

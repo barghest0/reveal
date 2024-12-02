@@ -2,8 +2,9 @@ package model
 
 // User структура для представления пользователя
 type User struct {
-	ID       int    `gorm:"primaryKey"`
-	Name     string `gorm:"not null"`
-	Email    string `gorm:"unique;not null"`
-	Password string `gorm:"not null"`
+	ID       int    `json:"id" gorm:"primaryKey"`
+	Name     string `json:"name" gorm:"not null`
+	Email    string `json:"email" gorm:"unique;not null`
+	Password string `json:"password" gorm:"not null`
+	Role     string `json:"role" gorm:"default:user"`
 }
