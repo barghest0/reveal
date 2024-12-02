@@ -54,6 +54,20 @@ func fetchProductsByIDs(productIDs []uint) (map[uint]model.Product, error) {
 	return productMap, nil
 }
 
+func (h *CartHandler) GetAllCarts(w http.ResponseWriter, r *http.Request) {
+	carts, err := h.Service.GetCarts(nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(carts); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["user_id"])

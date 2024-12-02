@@ -13,6 +13,7 @@ import (
 
 type CartService interface {
 	CreateCart(cart *model.Cart) error
+	GetCarts(ids []int) ([]model.Cart, error)
 	GetCart(userId uint) (*model.Cart, error)
 	AddProductToCart(cartId uint, product *model.CartProduct) error
 	UpdateCart(cart *model.Cart) error
@@ -27,6 +28,10 @@ type cartService struct {
 
 func CreateCartService(repo repository.CartRepository, rmq *messaging.RabbitMQ) CartService {
 	return &cartService{repo, *rmq}
+}
+
+func (s *cartService) GetCarts(ids []int) ([]model.Cart, error) {
+	return s.repo.Get(ids)
 }
 
 func (s *cartService) CreateCart(cart *model.Cart) error {
