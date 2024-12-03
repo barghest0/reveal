@@ -1,10 +1,10 @@
 package db
 
 import (
-	"user-service/internal/config"
-	"user-service/model"
 	"fmt"
 	"log"
+	"user-service/internal/config"
+	"user-service/internal/model"
 
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
