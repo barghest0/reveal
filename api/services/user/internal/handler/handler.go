@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	"user-service/auth"
-	"user-service/model"
-	"user-service/service"
+	"user-service/internal/auth"
+	"user-service/internal/model"
+	"user-service/internal/service"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/gorilla/mux"

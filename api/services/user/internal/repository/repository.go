@@ -2,7 +2,7 @@ package repository
 
 import (
 	"errors"
-	"user-service/model"
+	"user-service/internal/model"
 
 	"gorm.io/gorm"
 )

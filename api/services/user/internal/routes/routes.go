@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"user-service/handler"
+	"user-service/internal/handler"
 
 	"github.com/gorilla/mux"
 )
