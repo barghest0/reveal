@@ -3,7 +3,6 @@ package service
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"user-service/internal/auth"
 	"user-service/internal/messaging"
@@ -23,12 +22,12 @@ type UserService interface {
 }
 
 type userService struct {
-	repository repository.UserRepository
-	rmq        messaging.RabbitMQ
+	repository       repository.UserRepository
+	publisherManager messaging.PublisherManager
 }
 
-func CreateUserService(repository repository.UserRepository, rmq *messaging.RabbitMQ) UserService {
-	return &userService{repository, *rmq}
+func CreateUserService(repository repository.UserRepository, publisherManager *messaging.PublisherManager) UserService {
+	return &userService{repository, *publisherManager}
 }
 
 func (service *userService) GetAllUsers() (*[]model.User, error) {
@@ -82,25 +81,20 @@ func (service *userService) Register(user model.User) error {
 		return err
 	}
 
-	message, err := json.Marshal(UserData{Id: uint(user.ID)})
-
-	log.Printf("PUBLISH MESSAGE: %s", []byte(fmt.Sprintf("%v", message)))
-	log.Printf("PUBLISH MESSAGE JSON: %s", message)
-
+	// Публикуем событие о создании пользователя
+	event := map[string]interface{}{
+		"user_id": user.ID,
+	}
+	eventBody, err := json.Marshal(event)
 	if err != nil {
-		log.Fatalf("Failed to marshal body: %v", err)
+		return err
 	}
 
-	var userData UserData
-	json.Unmarshal([]byte(message), &userData)
-
-	log.Printf("USER DATA: %v", userData)
-
-	err = service.rmq.Publish("user.registered", message)
-
+	err = service.publisherManager.Publish("user_events", "", eventBody)
 	if err != nil {
-		log.Fatalf("Failed to consume messages: %v", err)
+		return err
 	}
 
+	log.Println("User creation event published successfully.")
 	return nil
 }
