@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"user-service/auth"
-	"user-service/messaging"
-	"user-service/model"
-	"user-service/repository"
+	"user-service/internal/auth"
+	"user-service/internal/messaging"
+	"user-service/internal/model"
+	"user-service/internal/repository"
 )
 
 type UserService interface {

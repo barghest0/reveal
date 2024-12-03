@@ -46,7 +46,7 @@ services:
         condition: service_healthy
     volumes: [./db/servers.json:/pgadmin4/servers.json]
   user-service:
-    build: ./user-service
+    build: ./services/user
     container_name: user-service
     depends_on:
       rabbitmq:
@@ -64,7 +64,7 @@ services:
     ports: [8081:8081]
     networks: [reveal]
   product-service:
-    build: ./product-service
+    build: ./services/product
     container_name: product-service
     depends_on:
       postgres:
@@ -80,7 +80,7 @@ services:
     ports: [8082:8082]
     networks: [reveal]
   cart-service:
-    build: ./cart-service
+    build: ./services/cart
     container_name: cart-service
     depends_on:
       postgres:
@@ -92,8 +92,24 @@ services:
       DB_PORT: 5432
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: barghest
-      POSTGRES_DB: cart
+      POSTGRES_DB: carts
     ports: [8083:8083]
+    networks: [reveal]
+  order-service:
+    build: ./services/order
+    container_name: order-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 8084
+      SERVER_HOST: localhost
+      DB_HOST: postgres
+      DB_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: barghest
+      POSTGRES_DB: orders
+    ports: [8084:8084]
     networks: [reveal]
   rabbitmq:
     container_name: rmq

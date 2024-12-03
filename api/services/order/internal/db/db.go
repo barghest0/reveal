@@ -1,10 +1,10 @@
 package db
 
 import (
-	"user-service/internal/config"
-	"user-service/model"
 	"fmt"
 	"log"
+	"product-service/internal/config"
+	"product-service/internal/model"
 
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
@@ -27,7 +27,7 @@ func ConnectDB(db_config config.DBConfig) (*gorm.DB, error) {
 	}
 
 	// Миграции базы данных
-	if err := db.AutoMigrate(&model.User{}); err != nil {
+	if err := db.AutoMigrate(&model.Order{}, &model.OrderItem{}); err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
 	}
 
