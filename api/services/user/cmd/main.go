@@ -3,13 +3,13 @@ package main
 import (
 	"log"
 	"net/http"
-	"user-service/handler"
 	"user-service/internal/config"
 	"user-service/internal/db"
-	"user-service/messaging"
-	"user-service/repository"
-	"user-service/routes"
-	"user-service/service"
+	"user-service/internal/handler"
+	"user-service/internal/messaging"
+	"user-service/internal/repository"
+	"user-service/internal/routes"
+	"user-service/internal/service"
 )
 
 func corsMiddleware(next http.Handler) http.Handler {
