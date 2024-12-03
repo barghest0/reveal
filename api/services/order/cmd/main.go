@@ -3,13 +3,14 @@ package main
 import (
 	"log"
 	"net/http"
-	"user-service/handler"
-	"user-service/internal/config"
-	"user-service/internal/db"
-	"user-service/messaging"
-	"user-service/repository"
-	"user-service/routes"
-	"user-service/service"
+	"product-service/internal/config"
+	"product-service/internal/db"
+	"product-service/internal/handler"
+	"product-service/internal/repository"
+	"product-service/internal/router"
+	"product-service/internal/service"
+
+	"github.com/barghest0/reveal/api/packages/cache"
 )
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -31,7 +32,6 @@ func corsMiddleware(next http.Handler) http.Handler {
 func main() {
 	app_config := config.LoadConfig()
 	db_config := config.LoadDBConfig()
-	rabbitmqURL := app_config.RabbitMQURL
 
 	database, error := db.ConnectDB(db_config)
 
@@ -39,18 +39,15 @@ func main() {
 		log.Fatalf("failed to connect to the databalse: %v", error)
 	}
 
-	rmq, err := messaging.CreateRabbitMQ(rabbitmqURL)
-	if err != nil {
-		log.Fatalf("failed to connect to RabbitMQ: %v", err)
-	}
+	redis := cache.CreateRedisClient()
+	cache_src := cache.CreateCacheService(redis)
 
-	repo := repository.CreateUserRepository(database)
-	src := service.CreateUserService(repo, rmq)
-	h := handler.CreateUserHandler(src)
+	repo := repository.CreateOrderRepository(database, cache_src)
+	src := service.CreateProductService(repo)
+	h := handler.CreateProductHandler(src)
 
-	router := routes.InitRoutes(h)
+	router := router.CreateRouter(h)
 
 	log.Printf("Server starting on port %s", app_config.ServerHost+":"+app_config.Port)
 	http.ListenAndServe(":"+app_config.Port, corsMiddleware(router))
-
 }
