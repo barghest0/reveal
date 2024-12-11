@@ -10,9 +10,9 @@ import (
 var JwtKey = []byte("key")
 
 type Claims struct {
-	Name   string `json:"name"`
-	UserId int    `json:"user_id"`
-	Role   string `json:"role"`
+	Name   string   `json:"name"`
+	UserId int      `json:"user_id"`
+	Roles  []string `json:"roles"`
 	jwt.RegisteredClaims
 }
 
@@ -27,13 +27,13 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 // Generate JWT-Token
-func GenerateToken(userID int, name string, role string) (string, error) {
+func GenerateToken(userID int, name string, roles []string) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 
 	claims := &Claims{
 		Name:   name,
 		UserId: userID,
-		Role:   role,
+		Roles:  roles,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
