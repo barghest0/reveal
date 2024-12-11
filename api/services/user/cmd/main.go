@@ -39,6 +39,8 @@ func main() {
 		log.Fatalf("failed to connect to the databalse: %v", error)
 	}
 
+	db.SeedRoles(database)
+
 	rmq, err := messaging.CreatePublisherManager(rabbitmqURL)
 	if err != nil {
 		log.Fatalf("failed to connect to RabbitMQ: %v", err)
