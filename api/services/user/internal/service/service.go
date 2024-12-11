@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 	"user-service/internal/auth"
 	"user-service/internal/messaging"
 	"user-service/internal/model"
@@ -68,7 +67,7 @@ func (service *userService) Login(name string, password string) (model.User, str
 	if !auth.CheckPasswordHash(password, user.Password) {
 		return model.User{}, "", sql.ErrNoRows
 	}
-
+	fmt.Println("User with roles:", user)
 	// Получаем роли пользователя через ассоциацию
 	var roles []model.Role
 	if err := service.repository.GetRolesForUser(user, &roles); err != nil {
@@ -80,7 +79,7 @@ func (service *userService) Login(name string, password string) (model.User, str
 		roleNames = append(roleNames, role.Name)
 	}
 
-	token, err := auth.GenerateToken(user.ID, user.Name, strings.Join(roleNames, ","))
+	token, err := auth.GenerateToken(user.ID, user.Name, roleNames)
 	if err != nil {
 		return model.User{}, "", err
 	}

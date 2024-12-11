@@ -42,10 +42,15 @@ func SeedRoles(db *gorm.DB) {
 		{Name: "seller"},
 		{Name: "buyer"},
 	}
-
 	for _, role := range roles {
-		if err := db.Create(&role).Error; err != nil {
+		// Используем FirstOrCreate для поиска и создания роли
+		if err := db.Where("name = ?", role.Name).FirstOrCreate(&role).Error; err != nil {
 			log.Printf("Error adding role: %v", err)
 		}
 	}
+	// for _, role := range roles {
+	// 	if err := db.Create(&role).Error; err != nil {
+	// 		log.Printf("Error adding role: %v", err)
+	// 	}
+	// }
 }

@@ -76,20 +76,24 @@ func (r *userRepository) Delete(id int) error {
 
 func (r *userRepository) GetRoleByName(name string) (model.Role, error) {
 	var role model.Role
-	if err := r.db.Where("role_name = ?", name).First(&role).Error; err != nil {
+	if err := r.db.Where("name = ?", name).First(&role).Error; err != nil {
 		return role, err
 	}
 	return role, nil
 }
 
 func (r *userRepository) AssociateRoles(user *model.User, roles []model.Role) error {
-	return r.db.Model(&user).Association("Roles").Append(roles)
+	if err := r.db.Model(&user).Association("Roles").Append(roles); err != nil {
+		return fmt.Errorf("could not associate roles: %v", err)
+	}
+	return nil
 }
 
 func (r *userRepository) GetRolesForUser(user *model.User, roles *[]model.Role) error {
 	// Используем ассоциацию для получения ролей пользователя
-	if err := r.db.Model(user).Association("Roles").Find(roles); err != nil {
+	if err := r.db.Preload("Roles").First(user).Error; err != nil {
 		return fmt.Errorf("could not fetch roles: %v", err)
 	}
+	*roles = user.Roles
 	return nil
 }
