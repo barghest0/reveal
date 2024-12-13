@@ -1,17 +1,17 @@
 package messaging
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/streadway/amqp"
 )
 
-type RabbitMQ struct {
+type PublisherManager struct {
 	conn    *amqp.Connection
 	channel *amqp.Channel
 }
 
-func CreateRabbitMQ(url string) (*RabbitMQ, error) {
+func CreatePublisherManager(url string) (*PublisherManager, error) {
 	conn, err := amqp.Dial(url)
 	if err != nil {
 		return nil, err
@@ -23,22 +23,44 @@ func CreateRabbitMQ(url string) (*RabbitMQ, error) {
 		return nil, err
 	}
 
-	return &RabbitMQ{conn, ch}, nil
+	return &PublisherManager{
+		conn:    conn,
+		channel: ch,
+	}, nil
 }
 
-func (r *RabbitMQ) Publish(queue string, message interface{}) error {
-	q, err := r.channel.QueueDeclare(queue, false, false, false, false, nil)
+func (m *PublisherManager) DeclareExchange(name, exchangeType string) error {
+	return m.channel.ExchangeDeclare(
+		name,
+		exchangeType,
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+}
+
+func (m *PublisherManager) Publish(exchange, routingKey string, body []byte) error {
+	err := m.channel.Publish(
+		exchange,
+		routingKey,
+		false,
+		false,
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body:        body,
+		},
+	)
 	if err != nil {
+		log.Printf("Failed to publish message: %s", err)
 		return err
 	}
-
-	return r.channel.Publish("", q.Name, false, false, amqp.Publishing{
-		ContentType: "application/json",
-		Body:        []byte(fmt.Sprintf("%v", message)),
-	})
+	log.Printf("Message published to exchange '%s' with routing key '%s'", exchange, routingKey)
+	return nil
 }
 
-func (r *RabbitMQ) Close() {
-	r.channel.Close()
-	r.conn.Close()
+func (m *PublisherManager) Close() {
+	m.channel.Close()
+	m.conn.Close()
 }

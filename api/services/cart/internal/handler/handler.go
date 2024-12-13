@@ -13,6 +13,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/streadway/amqp"
 )
 
 var JwtKey = []byte("key")
@@ -256,4 +257,24 @@ func (h *CartHandler) RemoveProductFromCart(w http.ResponseWriter, r *http.Reque
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"message": "Item removed successfully"})
+}
+
+type UserCreatedEvent struct {
+	UserID uint `json:"user_id"`
+}
+
+func (h *CartHandler) HandleUserCreatedEvent(d amqp.Delivery) {
+	var event UserCreatedEvent
+	err := json.Unmarshal(d.Body, &event)
+	if err != nil {
+		log.Printf("Error decoding event: %s", err)
+		return
+	}
+
+	err = h.Service.CreateCart(event.UserID)
+	if err != nil {
+		log.Printf("Error creating cart: %s", err)
+	} else {
+		log.Printf("Cart created for user %d", event.UserID)
+	}
 }

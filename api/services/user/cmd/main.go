@@ -39,9 +39,15 @@ func main() {
 		log.Fatalf("failed to connect to the databalse: %v", error)
 	}
 
-	rmq, err := messaging.CreateRabbitMQ(rabbitmqURL)
+	db.SeedRoles(database)
+
+	rmq, err := messaging.CreatePublisherManager(rabbitmqURL)
 	if err != nil {
 		log.Fatalf("failed to connect to RabbitMQ: %v", err)
+	}
+	// Объявление обменника
+	if err := rmq.DeclareExchange("user_events", "fanout"); err != nil {
+		log.Fatalf("Failed to declare exchange: %s", err)
 	}
 
 	repo := repository.CreateUserRepository(database)

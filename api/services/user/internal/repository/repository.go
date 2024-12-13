@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 	"user-service/internal/model"
 
 	"gorm.io/gorm"
@@ -14,6 +15,10 @@ type UserRepository interface {
 	GetByUsername(name string) (*model.User, error)
 	Update(user *model.User) error
 	Delete(id int) error
+	GetRoleByName(roleName string) (model.Role, error)
+
+	AssociateRoles(user *model.User, roles []model.Role) error
+	GetRolesForUser(user *model.User, roles *[]model.Role) error
 }
 
 type userRepository struct {
@@ -67,4 +72,28 @@ func (r *userRepository) Update(user *model.User) error {
 
 func (r *userRepository) Delete(id int) error {
 	return r.db.Delete(&model.User{}, id).Error
+}
+
+func (r *userRepository) GetRoleByName(name string) (model.Role, error) {
+	var role model.Role
+	if err := r.db.Where("name = ?", name).First(&role).Error; err != nil {
+		return role, err
+	}
+	return role, nil
+}
+
+func (r *userRepository) AssociateRoles(user *model.User, roles []model.Role) error {
+	if err := r.db.Model(&user).Association("Roles").Append(roles); err != nil {
+		return fmt.Errorf("could not associate roles: %v", err)
+	}
+	return nil
+}
+
+func (r *userRepository) GetRolesForUser(user *model.User, roles *[]model.Role) error {
+	// Используем ассоциацию для получения ролей пользователя
+	if err := r.db.Preload("Roles").First(user).Error; err != nil {
+		return fmt.Errorf("could not fetch roles: %v", err)
+	}
+	*roles = user.Roles
+	return nil
 }
