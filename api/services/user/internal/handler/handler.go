@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 	"user-service/internal/auth"
 	"user-service/internal/model"
 	"user-service/internal/service"
@@ -108,34 +107,18 @@ func (handler *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := handler.service.Login(creds.Name, creds.Password)
+	user, token, err := handler.service.Login(creds.Name, creds.Password)
 	fmt.Println(err, "LOGIN")
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
-	expirationTime := time.Now().Add(60 * time.Minute)
-	claims := &Claims{
-		Name:   user.Name,
-		UserId: user.ID,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(auth.JwtKey)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
-		"token": "Bearer " + tokenString,
-	})
+	w.Header().Set("Authorization", "Bearer "+token)
 	w.WriteHeader(http.StatusOK)
+
+	json.NewEncoder(w).Encode(user)
 }
 
 func (handler *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
@@ -174,23 +157,39 @@ func (handler *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 
 func (handler *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 
-	var user model.User
+	var request struct {
+		Name     string   `json:"name"`
+		Email    string   `json:"email"`
+		Password string   `json:"password"`
+		Roles    []string `json:"roles"` // Добавляем роли
+	}
 
-	err := json.NewDecoder(r.Body).Decode(&user)
+	// var user model.User
+
+	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	hashedPassword, err := auth.HashPassword(user.Password)
+	hashedPassword, err := auth.HashPassword(request.Password)
 	if err != nil {
 		http.Error(w, "Server error", http.StatusInternalServerError)
 		return
 	}
 
-	user.Password = hashedPassword
+	// user.Password = hashedPassword
+	user := model.User{
+		Name:     request.Name,
+		Email:    request.Email,
+		Password: hashedPassword,
+	}
 
-	err = handler.service.Register(user)
+	if len(request.Roles) == 0 {
+		request.Roles = append(request.Roles, "buyer")
+	}
+
+	err = handler.service.Register(user, request.Roles)
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return

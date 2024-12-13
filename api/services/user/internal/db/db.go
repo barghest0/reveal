@@ -27,11 +27,30 @@ func ConnectDB(db_config config.DBConfig) (*gorm.DB, error) {
 	}
 
 	// Миграции базы данных
-	if err := db.AutoMigrate(&model.User{}); err != nil {
+	if err := db.AutoMigrate(&model.User{}, &model.Role{}, &model.UserRoles{}); err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
 	}
 
 	log.Println("Successfully connected to the database")
 
 	return db, nil
+}
+
+func SeedRoles(db *gorm.DB) {
+	roles := []model.Role{
+		{Name: "admin"},
+		{Name: "seller"},
+		{Name: "buyer"},
+	}
+	for _, role := range roles {
+		// Используем FirstOrCreate для поиска и создания роли
+		if err := db.Where("name = ?", role.Name).FirstOrCreate(&role).Error; err != nil {
+			log.Printf("Error adding role: %v", err)
+		}
+	}
+	// for _, role := range roles {
+	// 	if err := db.Create(&role).Error; err != nil {
+	// 		log.Printf("Error adding role: %v", err)
+	// 	}
+	// }
 }

@@ -3,6 +3,7 @@ package service
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"user-service/internal/auth"
 	"user-service/internal/messaging"
@@ -17,8 +18,8 @@ type UserService interface {
 	CreateUser(user *model.User) error
 	UpdateUser(user model.User) error
 	DeleteUser(id int) error
-	Login(name string, password string) (model.User, error)
-	Register(user model.User) error
+	Login(name string, password string) (model.User, string, error)
+	Register(user model.User, roleNames []string) error
 }
 
 type userService struct {
@@ -57,28 +58,58 @@ func (service *userService) GetUserByUsername(name string) (*model.User, error) 
 	return service.repository.GetByUsername(name)
 }
 
-func (service *userService) Login(name string, password string) (model.User, error) {
+func (service *userService) Login(name string, password string) (model.User, string, error) {
 	user, err := service.repository.GetByUsername(name)
 	if err != nil {
-		return model.User{}, err
+		return model.User{}, "", err
 	}
 
 	if !auth.CheckPasswordHash(password, user.Password) {
-		return model.User{}, sql.ErrNoRows
+		return model.User{}, "", sql.ErrNoRows
+	}
+	fmt.Println("User with roles:", user)
+	// Получаем роли пользователя через ассоциацию
+	var roles []model.Role
+	if err := service.repository.GetRolesForUser(user, &roles); err != nil {
+		return model.User{}, "", fmt.Errorf("could not fetch roles: %v", err)
 	}
 
-	return *user, nil
+	var roleNames []string
+	for _, role := range roles {
+		roleNames = append(roleNames, role.Name)
+	}
+
+	token, err := auth.GenerateToken(user.ID, user.Name, roleNames)
+	if err != nil {
+		return model.User{}, "", err
+	}
+
+	return *user, token, nil
+	// return *user, nil
+
 }
 
 type UserData struct {
 	Id uint `json:"id"`
 }
 
-func (service *userService) Register(user model.User) error {
+func (service *userService) Register(user model.User, roleNames []string) error {
+	var roles []model.Role
+	for _, roleName := range roleNames {
+		role, err := service.repository.GetRoleByName(roleName)
+		if err != nil {
+			return fmt.Errorf("role '%s' not found: %v", roleName, err)
+		}
+		roles = append(roles, role)
+	}
 
-	err := service.CreateUser(&user)
-	if err != nil {
+	if err := service.CreateUser(&user); err != nil {
 		return err
+	}
+
+	// Ассоциируем роли с пользователем
+	if err := service.repository.AssociateRoles(&user, roles); err != nil {
+		return fmt.Errorf("could not associate roles with user: %v", err)
 	}
 
 	// Публикуем событие о создании пользователя
