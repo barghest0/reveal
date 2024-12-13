@@ -185,6 +185,10 @@ func (handler *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		Password: hashedPassword,
 	}
 
+	if len(request.Roles) == 0 {
+		request.Roles = append(request.Roles, "buyer")
+	}
+
 	err = handler.service.Register(user, request.Roles)
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
