@@ -8,6 +8,7 @@ import (
 
 type CartService interface {
 	CreateCart(userId uint) error
+	GetCarts(ids []int) ([]model.Cart, error)
 	GetCart(userId uint) (*model.Cart, error)
 	AddProductToCart(cartId uint, product *model.CartProduct) error
 	UpdateCart(cart *model.Cart) error
@@ -34,6 +35,10 @@ func (s *cartService) CreateCart(userId uint) error {
 	}
 
 	return s.repo.Create(cart)
+}
+
+func (s *cartService) GetCarts(ids []int) ([]model.Cart, error) {
+	return s.repo.Get(ids)
 }
 
 func (s *cartService) GetCart(userId uint) (*model.Cart, error) {

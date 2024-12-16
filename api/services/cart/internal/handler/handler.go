@@ -58,6 +58,20 @@ func fetchProductsByIDs(productIDs []uint) (map[uint]model.Product, error) {
 	return productMap, nil
 }
 
+func (h *CartHandler) GetAllCarts(w http.ResponseWriter, r *http.Request) {
+	carts, err := h.Service.GetCarts(nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(carts); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 	tokenString := r.Header.Get("Authorization")
 
@@ -73,33 +87,10 @@ func (h *CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cart, err := h.Service.GetCart(uint(claims.UserId))
-
-	fmt.Println(cart, claims.UserId, "USER CART")
-
-	var productIDs []uint
-	for _, cartProduct := range cart.Products {
-		productIDs = append(productIDs, cartProduct.ProductID)
-	}
-
-	productMap, err := fetchProductsByIDs(productIDs)
-
+	userId := uint(claims.UserId)
+	cart, err := h.Service.GetCart(userId)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
-		return
-	}
-
-	for i := range cart.Products {
-		product, found := productMap[cart.Products[i].ProductID]
-		if !found {
-			http.Error(w, "NOT FOUND PRODUCT IN MAP", http.StatusNotFound)
-			return
-		}
-		cart.Products[i].Product = product
-	}
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		http.Error(w, "Cart not found", http.StatusNotFound)
 		return
 	}
 	json.NewEncoder(w).Encode(cart)

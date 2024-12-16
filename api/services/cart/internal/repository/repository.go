@@ -8,6 +8,7 @@ import (
 
 type CartRepository interface {
 	Create(cart *model.Cart) error
+	Get(ids []int) ([]model.Cart, error)
 	GetByID(userId uint) (*model.Cart, error)
 	AddItemToCart(cartId uint, product *model.CartProduct) error
 	UpdateCart(cart *model.Cart) error
@@ -24,6 +25,22 @@ func CreateCartRepository(db *gorm.DB) CartRepository {
 
 func (r *cartRepository) Create(cart *model.Cart) error {
 	return r.db.Create(cart).Error
+}
+
+func (r *cartRepository) Get(ids []int) ([]model.Cart, error) {
+	var carts []model.Cart
+
+	if len(ids) > 0 {
+		if err := r.db.Where("id IN ?", ids).Find(&carts).Error; err != nil {
+			return nil, err
+		}
+	} else {
+		if err := r.db.Find(&carts).Error; err != nil {
+			return nil, err
+		}
+	}
+
+	return carts, nil
 }
 
 func (r *cartRepository) GetByID(userId uint) (*model.Cart, error) {
