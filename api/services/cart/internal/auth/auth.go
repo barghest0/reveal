@@ -5,8 +5,9 @@ import "github.com/golang-jwt/jwt"
 var JwtKey = []byte("key")
 
 type Claims struct {
-	Name   string `json:"name"`
-	UserId int    `json:"user_id"`
+	Name   string   `json:"name"`
+	UserId int      `json:"user_id"`
+	Roles  []string `json:"roles"`
 	jwt.StandardClaims
 }
 
