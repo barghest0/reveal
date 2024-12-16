@@ -1,6 +1,9 @@
 package service
 
 import (
+	"encoding/json"
+	"log"
+	"product-service/internal/messaging"
 	"product-service/internal/model"
 	"product-service/internal/repository"
 )
@@ -15,18 +18,44 @@ type OrderService interface {
 
 type productService struct {
 	repo repository.ProductRepository
+	rmq  messaging.PublisherManager
 }
 
-func CreateProductService(repo repository.ProductRepository) OrderService {
-	return &productService{repo}
+func CreateProductService(repo repository.ProductRepository, rmq messaging.PublisherManager) OrderService {
+	return &productService{repo, rmq}
 }
 
 func (s *productService) GetOrders(ids []int) (*[]model.Order, error) {
 	return s.repo.Get(ids)
 }
 
-func (s *productService) CreateOrder(product *model.Order) error {
-	return s.repo.Create(product)
+func (s *productService) CreateOrder(order *model.Order) error {
+	// Создание заказа в репозитории
+	err := s.repo.Create(order)
+	if err != nil {
+		return err
+	}
+
+	// Создание события и его публикация в RabbitMQ
+	event := map[string]interface{}{
+		"message": "ORDER CREATED",
+	}
+
+	eventBody, err := json.Marshal(event)
+	if err != nil {
+		log.Printf("Failed to marshal event: %s", err)
+		return err
+	}
+
+	// Публикация события в RabbitMQ
+	err = s.rmq.Publish("notifications", "", eventBody)
+	if err != nil {
+		log.Printf("Failed to publish message: %s", err)
+		return err
+	}
+
+	log.Printf("Published message to RabbitMQ: %s", event["message"])
+	return nil
 }
 
 func (s *productService) GetOrder(id uint) (*model.Order, error) {

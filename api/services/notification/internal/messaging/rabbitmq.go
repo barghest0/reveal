@@ -1,9 +1,6 @@
 package messaging
 
 import (
-	"log"
-	"product-service/internal/service"
-
 	"github.com/streadway/amqp"
 )
 
@@ -42,8 +39,8 @@ func (m *ConsumerManager) DeclareExchange(name, exchangeType string) error {
 	)
 }
 
-func (m *ConsumerManager) DeclareAndBindQueue(queueName, routingKey, exchangeName string) error {
-	_, err := m.channel.QueueDeclare(
+func (m *ConsumerManager) DeclareQueue(queueName string) (amqp.Queue, error) {
+	return m.channel.QueueDeclare(
 		queueName,
 		true,
 		false,
@@ -51,10 +48,9 @@ func (m *ConsumerManager) DeclareAndBindQueue(queueName, routingKey, exchangeNam
 		false,
 		nil,
 	)
-	if err != nil {
-		return err
-	}
+}
 
+func (m *ConsumerManager) BindQueue(queueName, routingKey, exchangeName string) error {
 	return m.channel.QueueBind(
 		queueName,
 		routingKey,
@@ -79,17 +75,4 @@ func (m *ConsumerManager) Consume(queueName string) (<-chan amqp.Delivery, error
 func (m *ConsumerManager) Close() {
 	m.channel.Close()
 	m.conn.Close()
-}
-
-func StartConsumer(m *ConsumerManager, queueName string, service *service.NotificationService) {
-	msgs, err := m.Consume(
-		queueName,
-	)
-	if err != nil {
-		log.Fatalf("Failed to register consumer: %v", err)
-	}
-
-	for msg := range msgs {
-		service.HandleNotification(msg.Body)
-	}
 }

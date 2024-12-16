@@ -6,6 +6,7 @@ import (
 	"product-service/internal/config"
 	"product-service/internal/db"
 	"product-service/internal/handler"
+	"product-service/internal/messaging"
 	"product-service/internal/repository"
 	"product-service/internal/router"
 	"product-service/internal/service"
@@ -39,11 +40,21 @@ func main() {
 		log.Fatalf("failed to connect to the databalse: %v", error)
 	}
 
+	rmq, err := messaging.CreatePublisherManager(app_config.BrokerURL)
+	if err != nil {
+		log.Fatalf("failed to connect to RabbitMQ: %v", err)
+	}
+
+	// Объявление обменника
+	if err := rmq.DeclareExchange(app_config.NotificationExchange, "fanout"); err != nil {
+		log.Fatalf("Failed to declare exchange: %s", err)
+	}
+
 	redis := cache.CreateRedisClient()
 	cache_src := cache.CreateCacheService(redis)
 
 	repo := repository.CreateOrderRepository(database, cache_src)
-	src := service.CreateProductService(repo)
+	src := service.CreateProductService(repo, *rmq)
 	h := handler.CreateProductHandler(src)
 
 	router := router.CreateRouter(h)

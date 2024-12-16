@@ -5,6 +5,10 @@ import "os"
 type Config struct {
 	Port       string
 	ServerHost string
+
+	NotificationExchange string
+	Queue                string
+	BrokerURL            string
 }
 
 type DBConfig struct {
@@ -28,6 +32,9 @@ func LoadConfig() Config {
 
 	AppConfig.Port = getEnv("PORT", "8080")
 	AppConfig.ServerHost = getEnv("SERVER_HOST", "localhost")
+	AppConfig.NotificationExchange = "notifications"
+	AppConfig.Queue = "orders"
+	AppConfig.BrokerURL = "amqp://guest:guest@rabbitmq:5672/"
 
 	return AppConfig
 }

@@ -12,19 +12,19 @@ RUN go mod download
 COPY . .
 
 # Собираем приложение
-RUN go build -o order-service ./cmd/main.go
+RUN go build -o notification-service ./cmd/main.go
 
 FROM alpine:3.18
 
 WORKDIR /root/
 
 # Копируем бинарный файл из предыдущего этапа
-COPY --from=builder /app/order-service .
+COPY --from=builder /app/notification-service .
 
 # Указываем порт, на котором будет работать приложение
 EXPOSE 8080
 
-CMD [ "./order-service" ]
+CMD [ "./notification-service" ]
 
 
 

@@ -85,8 +85,6 @@ func (service *userService) Login(name string, password string) (model.User, str
 	}
 
 	return *user, token, nil
-	// return *user, nil
-
 }
 
 type UserData struct {
