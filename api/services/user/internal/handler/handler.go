@@ -123,11 +123,16 @@ func (handler *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	response := map[string]interface{}{
+		"user":  user,
+		"token": token,
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Authorization", "Bearer "+token)
 	w.WriteHeader(http.StatusOK)
 
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(response)
 }
 
 func (handler *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
