@@ -17,6 +17,10 @@ func InitRoutes(h *handler.UserHandler) *mux.Router {
 	router.HandleFunc("/users", h.GetAllUsers).Methods("GET")
 	router.HandleFunc("/users/{id}", h.GetUserByID).Methods("GET")
 	router.HandleFunc("/users", h.CreateUser).Methods("POST")
+
+	router.HandleFunc("/users/{id}/roles", h.AddRoleToUser).Methods("POST")
+	router.HandleFunc("/users/{id}/roles", h.RemoveRolesFromUser).Methods("DELETE")
+
 	router.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT")
 	router.HandleFunc("/users/{id}", h.DeleteUser).Methods("DELETE")
 

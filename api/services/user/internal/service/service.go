@@ -15,6 +15,10 @@ type UserService interface {
 	GetAllUsers() (*[]model.User, error)
 	GetUserByID(id int) (*model.User, error)
 	GetUserByUsername(names string) (*model.User, error)
+
+	AddRoleToUser(user *model.User, roleName string) error
+	RemoveRoleFromUser(user *model.User, roleName string) error
+
 	CreateUser(user *model.User) error
 	UpdateUser(user model.User) error
 	DeleteUser(id int) error
@@ -128,4 +132,26 @@ func (service *userService) Register(user model.User, roleNames []string) error 
 
 	log.Println("User creation event published successfully.")
 	return nil
+}
+
+func (s *userService) AddRoleToUser(user *model.User, roleName string) error {
+	role, err := s.repository.GetRoleByName(roleName)
+	if err != nil {
+		return err // Возвращаем ошибку, если роль не найдена
+	}
+	if err := s.repository.AddRoleToUser(user, role.Name); err != nil {
+		return err // Возвращаем ошибку, если не удалось добавить роль
+	}
+	return nil // Успех
+}
+
+func (s *userService) RemoveRoleFromUser(user *model.User, roleName string) error {
+	role, err := s.repository.GetRoleByName(roleName)
+	if err != nil {
+		return err // Возвращаем ошибку, если роль не найдена
+	}
+	if err := s.repository.RemoveRoleFromUser(user, role.Name); err != nil {
+		return err // Возвращаем ошибку, если не удалось добавить роль
+	}
+	return nil // Успех
 }

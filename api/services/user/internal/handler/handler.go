@@ -23,9 +23,18 @@ type Credentials struct {
 }
 
 type Claims struct {
-	Name   string `json:"name"`
-	UserId int    `json:"user_id"`
+	Name   string   `json:"name"`
+	UserId int      `json:"user_id"`
+	Roles  []string `json:"roles"`
 	jwt.StandardClaims
+}
+
+type AssignRoleRequest struct {
+	UserID uint   `json:"user_id"`
+	Name   string `json:"name"`
+}
+type RemoveRolesRequest struct {
+	Roles []string `json:"roles"`
 }
 
 func CreateUserHandler(service service.UserService) *UserHandler {
@@ -229,4 +238,157 @@ func (handler *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	// Возвращаем успешный ответ
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"message": "User updated successfully"})
+}
+
+// change roles user
+
+func (handler *UserHandler) AddRoleToUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	tokenString := r.Header.Get("Authorization")
+	tokenStr := tokenString[len("Bearer "):]
+	claims := &Claims{}
+
+	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return auth.JwtKey, nil
+	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	if !auth.ContainsRole(claims.Roles, "admin") {
+		http.Error(w, "Forbidden: Insufficient permissions", http.StatusForbidden)
+		return
+
+	}
+
+	// Извлекаем ID пользователя и роль из запроса
+	userID := vars["id"]
+
+	// Преобразуем userID в int
+	id, err := strconv.Atoi(userID)
+	if err != nil {
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+	// Извлекаем данные ролей из тела запроса
+	var request struct {
+		Roles []string `json:"roles"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// Получаем пользователя из базы данных
+	user, err := handler.service.GetUserByID(id)
+	if err != nil {
+		http.Error(w, "Failed to fetch user", http.StatusInternalServerError)
+		return
+	}
+
+	// Добавляем роли пользователю
+	for _, roleName := range request.Roles {
+		// Проверка, есть ли уже такая роль
+		roleExists := false
+		for _, role := range user.Roles {
+			if role.Name == roleName {
+				roleExists = true
+				break
+			}
+		}
+
+		if roleExists {
+			continue // Если роль уже есть, пропускаем её
+		}
+
+		// Добавляем роль
+		err = handler.service.AddRoleToUser(user, roleName)
+		if err != nil {
+			http.Error(w, "Failed to add role", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	// Успешный ответ
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Roles added successfully"))
+}
+
+func (handler *UserHandler) RemoveRolesFromUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	tokenString := r.Header.Get("Authorization")
+	tokenStr := tokenString[len("Bearer "):]
+	claims := &Claims{}
+
+	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return auth.JwtKey, nil
+	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	if !auth.ContainsRole(claims.Roles, "admin") {
+		http.Error(w, "Forbidden: Insufficient permissions", http.StatusForbidden)
+		return
+	}
+
+	// Извлекаем ID пользователя из URL
+	userID := vars["id"]
+
+	// Преобразуем userID в int
+	id, err := strconv.Atoi(userID)
+	if err != nil {
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+	// Извлекаем тело запроса
+	var request RemoveRolesRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// Извлекаем данные пользователя из базы
+	user, err := handler.service.GetUserByID(id)
+	if err != nil {
+		http.Error(w, "Failed to fetch user", http.StatusInternalServerError)
+		return
+	}
+
+	// Удаляем роли у пользователя
+	for _, roleName := range request.Roles {
+		err := handler.service.RemoveRoleFromUser(user, roleName)
+		if err != nil {
+			http.Error(w, "Failed to remove role: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	// Успешный ответ
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Roles removed successfully"))
 }
