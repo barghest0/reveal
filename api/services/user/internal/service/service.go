@@ -31,6 +31,11 @@ type userService struct {
 	publisherManager messaging.PublisherManager
 }
 
+type LoginResponse struct {
+	User  model.User `json:"user"`
+	Token string     `json:"token"`
+}
+
 func CreateUserService(repository repository.UserRepository, publisherManager *messaging.PublisherManager) UserService {
 	return &userService{repository, *publisherManager}
 }
