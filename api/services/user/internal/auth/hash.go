@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"errors"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -42,4 +44,27 @@ func GenerateToken(userID int, name string, roles []string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	return token.SignedString(JwtKey)
+}
+
+func GetAuthTokenClaims(tokenString string) (*jwt.Token, *Claims, error) {
+	claims := &Claims{}
+
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return JwtKey, nil
+	})
+
+	if err != nil {
+		return nil, nil, errors.New("invalid token")
+	}
+
+	return token, claims, nil
+}
+
+func ContainsRole(roles []string, targetRole string) bool {
+	for _, role := range roles {
+		if strings.ToLower(role) == strings.ToLower(targetRole) {
+			return true
+		}
+	}
+	return false
 }

@@ -19,6 +19,8 @@ type UserRepository interface {
 
 	AssociateRoles(user *model.User, roles []model.Role) error
 	GetRolesForUser(user *model.User, roles *[]model.Role) error
+	AddRoleToUser(user *model.User, roleName string) error
+	RemoveRoleFromUser(user *model.User, roleName string) error
 }
 
 type userRepository struct {
@@ -36,7 +38,7 @@ func (r *userRepository) Create(user *model.User) error {
 func (r *userRepository) GetAll() (*[]model.User, error) {
 
 	var users []model.User
-	if err := r.db.Find(&users).Error; err != nil {
+	if err := r.db.Preload("Roles").Find(&users).Error; err != nil {
 		return nil, err
 	}
 
@@ -45,7 +47,7 @@ func (r *userRepository) GetAll() (*[]model.User, error) {
 
 func (r *userRepository) GetByID(id int) (*model.User, error) {
 	var user model.User
-	if err := r.db.First(&user, id).Error; err != nil {
+	if err := r.db.Preload("Roles").First(&user, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &user, errors.New("пользователь не найден")
 		}
@@ -95,5 +97,38 @@ func (r *userRepository) GetRolesForUser(user *model.User, roles *[]model.Role) 
 		return fmt.Errorf("could not fetch roles: %v", err)
 	}
 	*roles = user.Roles
+	return nil
+}
+
+func (r *userRepository) AddRoleToUser(user *model.User, roleName string) error {
+	var role model.Role
+	if err := r.db.Where("name = ?", roleName).First(&role).Error; err != nil {
+		return errors.New("Role not find")
+	}
+
+	for _, r := range user.Roles {
+		if r.Name == roleName {
+			return errors.New("The user already has this role")
+		}
+	}
+
+	if err := r.db.Model(user).Association("Roles").Append(&role); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *userRepository) RemoveRoleFromUser(user *model.User, roleName string) error {
+	var role model.Role
+	if err := r.db.Where("name = ?", roleName).First(&role).Error; err != nil {
+		return errors.New("Role not find")
+	}
+
+	// Удаляем ассоциацию роли с пользователем
+	if err := r.db.Model(user).Association("Roles").Delete(&role); err != nil {
+		return fmt.Errorf("could not remove role from user: %v", err)
+	}
+
 	return nil
 }
