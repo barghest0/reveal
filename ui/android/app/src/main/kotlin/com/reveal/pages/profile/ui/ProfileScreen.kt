@@ -1,6 +1,7 @@
 package pages.profile
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,8 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 =======
+=======
+>>>>>>> develop
 import android.content.Context
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -32,11 +35,15 @@ import androidx.navigation.NavController
 import entities.user.UserRepository
 import features.profile.ProfileViewModel
 import features.profile.ProfileViewModelFactory
+<<<<<<< HEAD
 >>>>>>> cart-ui
+=======
+>>>>>>> develop
 import kotlinx.coroutines.*
 import shared.session.PreferencesManager
 import shared.ui.layout.ScreenLayout
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 var client = HttpClient(CIO) { install(ContentNegotiation) { json() } }
 
@@ -54,6 +61,8 @@ fun ProfileScreen(
                                 )
                 )
 =======
+=======
+>>>>>>> develop
 @Composable
 fun ProfileScreen(
         navController: NavController,
@@ -61,7 +70,10 @@ fun ProfileScreen(
         tokenManager: PreferencesManager = PreferencesManager(context),
         viewModel: ProfileViewModel =
                 viewModel(factory = ProfileViewModelFactory(UserRepository(), tokenManager))
+<<<<<<< HEAD
 >>>>>>> cart-ui
+=======
+>>>>>>> develop
 ) {
 
   val profile by viewModel.profileState
@@ -69,6 +81,7 @@ fun ProfileScreen(
   ScreenLayout {
     if (profile != null) {
       Text(text = "Имя: ${profile?.name}")
+<<<<<<< HEAD
 <<<<<<< HEAD
       // Отобразите другую информацию профиля
     } else {
@@ -94,6 +107,8 @@ fun ProfileScreen(
       )
     }
 =======
+=======
+>>>>>>> develop
     }
     Button(
             onClick = {
@@ -101,6 +116,9 @@ fun ProfileScreen(
               navController.navigate("login")
             }
     ) { Text("Logout") }
+<<<<<<< HEAD
 >>>>>>> cart-ui
+=======
+>>>>>>> develop
   }
 }
