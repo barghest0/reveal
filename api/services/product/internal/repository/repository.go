@@ -23,11 +23,8 @@ type productRepository struct {
 	cache cache.CacheService
 }
 
-<<<<<<< HEAD
-func CreateProductRepository(db *gorm.DB, cache packages.CacheService) ProductRepository {
-=======
+// func CreateProductRepository(db *gorm.DB, cache packages.CacheService) ProductRepository {
 func CreateProductRepository(db *gorm.DB, cache cache.CacheService) ProductRepository {
->>>>>>> cart-ui
 	return &productRepository{db, cache}
 }
 

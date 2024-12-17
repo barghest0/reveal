@@ -18,6 +18,7 @@ export namespace UserApi {
         try {
             const response = await axios.post<User>(`${baseUrl}/login`, {email, password});
             let token = response.data.token;
+            console.log(token, "Token")
             if (typeof token === 'string') { 
                 token = token.replace('Bearer ', '');
                 saveToken(token)
