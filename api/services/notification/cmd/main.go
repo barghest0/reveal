@@ -25,7 +25,7 @@ func main() {
 	}
 
 	// Инициализируем сервис уведомлений
-	service := service.CreateNotificationService()
+	service := service.CreateNotificationService(appConfig.Token)
 
 	handler.RegisterSubscribers(rmq, service)
 
