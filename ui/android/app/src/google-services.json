@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1046445183810",
+    "project_id": "reveal-ec60d",
+    "storage_bucket": "reveal-ec60d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046445183810:android:1bb82bbceb5a1d55fe2edb",
+        "android_client_info": {
+          "package_name": "com.reveal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYWCGWuHpG0qlUQXIN1MtALt40Qtzd4ts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
+
