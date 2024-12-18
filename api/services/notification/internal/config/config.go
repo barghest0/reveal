@@ -8,7 +8,6 @@ type Config struct {
 	Exchange   string
 	OrderQueue string
 	BrokerURL  string
-	Token      string
 }
 
 func getEnv(key, defaultValue string) string {
@@ -27,7 +26,6 @@ func LoadConfig() Config {
 	AppConfig.Exchange = "notifications"
 	AppConfig.OrderQueue = "orders"
 	AppConfig.BrokerURL = "amqp://guest:guest@rabbitmq:5672/"
-	AppConfig.Token = "7782679125:AAG33kQ2c7DX0AfUAyvgMFRjWI2mIuzKy7c"
 
 	return AppConfig
 }

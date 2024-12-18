@@ -33,7 +33,8 @@ func RegisterSubscribers(consumerManager *messaging.ConsumerManager, service *se
 	go func() {
 		log.Printf("Listening to queue %s...", queue.Name)
 		for msg := range msgs {
-			go service.HandleNotification(msg)
+			go service.HandleTelegramNotification(msg)
+			// go service.HandlePushNotification(msg)
 		}
 	}()
 }

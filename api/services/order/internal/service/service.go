@@ -38,7 +38,9 @@ func (s *productService) CreateOrder(order *model.Order) error {
 
 	// Создание события и его публикация в RabbitMQ
 	event := map[string]interface{}{
-		"message": "ORDER CREATED",
+		"message": "Order created",
+		"title":   "Order notification",
+		"token":   "eJNoPPBmTAiyAGUJtGTmbw:APA91bG2B3eBJQyLQnrzQbUX7Js1kFl5qGrb6u4ufr39wKdnoafrIgRjD7mMzweSZ5bSK3tHZYAKjJ8OAszmEwaOjLZVy-R8VQOBZsdjX83jUin6Tx2XPgs",
 	}
 
 	eventBody, err := json.Marshal(event)
