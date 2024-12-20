@@ -3,6 +3,14 @@ package widgets.ProductsList
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+<<<<<<< HEAD
+import entities.product.Product
+import entities.product.ProductCard
+
+@Composable
+fun ProductsList(products: List<Product>) {
+  LazyColumn { items(products) { product -> ProductCard(product = product) } }
+=======
 import androidx.navigation.NavController
 import entities.product.Product
 import entities.product.ProductCard
@@ -19,4 +27,5 @@ fun ProductsList(navController: NavController, products: List<Product>) {
       ) { AddToCartButton(product) }
     }
   }
+>>>>>>> cart-ui
 }

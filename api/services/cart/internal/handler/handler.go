@@ -5,12 +5,12 @@ import (
 	"cart-service/internal/model"
 	"cart-service/internal/service"
 	"encoding/json"
+
 	"fmt"
 	"log"
-	"strings"
-
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/streadway/amqp"
